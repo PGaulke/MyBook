@@ -36,3 +36,12 @@ Open Global Options and add Git Hub (cread ssh)
 Create Repo (same name)
 Quick Set Up (see the link)
 Add SSH Key
+
+* How to Use are, for example as a single calculator
+First put in the chunk as follows, than click on the right arrow to run the chunk
+```{r}
+2+6
+56/6
+```
+For further Mathoperators, check Fidalgos File
+
