@@ -1,0 +1,38 @@
+---
+title: "Second Lesson"
+author: "PGaulke"
+date: "22 März 2019"
+output: pdf_document
+---
+#Second Lesson
+
+* Task: Building a Book
+* To change the layout of a book, see output.yml
+To change the order of the pdf file, or what ever file: include:
+
+```
+bookdown::pdf_book:
+  includes:
+    in_header: preamble.tex
+```
+
+* check for special role of bookdown.ywml  
+    
+    
+* Writing your own webpage, use HTML output form
+use the file: custom_readthedown
+there you can change for example the layout of header etc. (See the Github of Fidalgo for downloading the customreadthedown file)
+
+
+* Chunks, see Fidalgo Book and its instructions for that.
+In brackets there are always these conditions such as eval or echo, and then eqaul false or true
+
+
+* to create a new chapter: new r markdown file, put hashtag in the first line to add chapter name, so that it will be displayed in the book as a new chapter (and appears in table of contents)
+
+* Create GitHub account
+Download GitHub
+Open Global Options and add Git Hub (cread ssh)
+Create Repo (same name)
+Quick Set Up (see the link)
+Add SSH Key
