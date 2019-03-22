@@ -45,3 +45,43 @@ First put in the chunk as follows, than click on the right arrow to run the chun
 ```
 For further Mathoperators, check Fidalgos File
 
+*next Chapter: Data structures
+How to store data
+Simplest: Vector: just a pile of observations
+(for example all the age information of the class)
+We have different types of vectors 
++ logical: such as false or true
++ double: also numeric (age information)
++ character: contains words
+
+* how to create a vector:
+trop1 as a name, and assigned to the name are the numbers (c is necessary to say: combine these values)
+```{r}
+trop1 <- c(24,23,23,24,24)
+trop1
+
+trop2 <- c("mi","ga","tr")
+trop2
+
+trop3 <- c(24,24,"trierweiler")
+trop3
+typeof(trop3)
+
+var <- c(2)
+var
+
+tar <- c("2")
+tar
+
+var+30
+tar+30
+
+```
+So now we have two vectors, trop1 which is including age information, and trop2 which includes name information
+
+to show which kind of vector we can use typeof
+
+see differences as definition of character and double
+
+* learnings of sec lesson: how to create a book, how to create chapter, how to creater vectors, how to upload on github
+
