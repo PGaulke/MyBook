@@ -73,8 +73,6 @@ var
 tar <- c("2")
 tar
 
-var+30
-tar+30
 
 ```
 So now we have two vectors, trop1 which is including age information, and trop2 which includes name information
