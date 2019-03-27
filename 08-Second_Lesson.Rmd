@@ -81,6 +81,7 @@ So now we have two vectors, trop1 which is including age information, and trop2 
 
 to show which kind of vector we can use typeof
 
+
 see differences as definition of character and double
 
 * learnings of sec lesson: how to create a book, how to create chapter, how to creater vectors, how to upload on github
