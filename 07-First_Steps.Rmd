@@ -30,6 +30,8 @@ Two ways to add something to a R Markdown file
 
 * written text, inclduing code which start with one backstick, and ends with one backstick
 * a Chunk: seperate field (see the grew field), it starts with 3 backsticks + r in brackets and ends with 3 backsticks + r in brackets
+
+
 further options:
   + use echo=false if you do not want to show it in the output file, if you say echo=true the chunk will be displayed
   + if you ad eval=False, then the chunk will be ignored and the code in the written text will ignore the chunk
