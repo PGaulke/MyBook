@@ -6,4 +6,200 @@ output: pdf_document
 ---
 
 #Third Lesson
+First Topic: Data Structure
 
+verschiedene Data Strucutre (arbeiten mit Vektoren)
+
+```{r}
+# populate a matrix with elements in of the vector, and give the dimension
+
+M <- matrix(c(2,3,4,5,6,7),nrow=3)
+
+M
+```
+
+
+Das obige ist um eine Matrix bzw. Tabelle zu erstellen
+
+
+
+
+```{r}
+school<-factor(c("PRimary","Secondary","Tertiary"), ordered=TRUE)
+mylist <-list (numbers=c(1:60),
+              somenames=c("jim", "jules"),
+              results=c(T,F,F,T),
+              school=school)
+
+mylist
+```
+
+Das obige ist um eine Liste zu generieren.
+
+
+```{r}
+df <- data.frame(let=LETTERS[1:7],
+                 num1=10:16,
+                 num2=floor(rnorm(7,100,10)))
+df
+names(df)
+```
+```{r}
+students <- data.frame(name=c("Corinna", "Philipp", "Freddy", "Moritz", "Niklas", "Laurin", "Forster", "Fidalgo"),
+                       age=c(23, 23, 24, 22, 23, 24, 30, 30),
+                       likeR=c(T,F,T,F,T,F,T,F))
+                    
+students
+length(students)
+```
+
+
+How are Functions by vectors?
+Element by Element Evaluation
+
+```{r}
+# create two numeric vetor of same length
+visits1 <- c(12,2,45,75,65,11,2)
+visits2 <- c(23,4,5,78,12,0,200)
+length(visits1)
+length(visits1) == length(visits2)
+
+total <- visits1 + visits2
+# their sum is the vecotr of same length, with the element by element sums
+
+length(total)
+total
+```
+
+above: element by element evaluation, weil jedes element (erster Zeitraum bei visit1 plus erster Zeitraum bei visit2) addiert wird
+
+```{r}
+total.p2 <- total^2
+total.p2
+
+(trop <- total - 2)
+
+```
+
+total p2 is just the name and totally replacable. No reason for the name, everything after is not replacable for this calc
+
+
+
+
+Another rule: Recyling
+
+```{r}
+l3 <- c(12,34,50)
+l2 <- c(10,3)
+tt <- l3 + 5
+tt
+
+ltotal <- l3+l2 # recycling!
+ltotal
+
+```
+
+recycling happens than, the red is not really an error message but it makes us aware that recycling happens (10+50)
+
+
+Attention: SOMETIMES RECYCLING AND ELEMENT BY ELEMENT EVALUATION HAPPENS
+
+
+
+
+Next Topic: To get help
+Type in into the console: ?mean to get the description in the help window
+
+Then this appears in the top:
+mean {base}	R Documentation
+Arithmetic Mean
+
+{base} shows the package
+
+```{r}
+ages <- c(28,33,39,56,34,45,27,40,NA)
+ages
+mean(ages, na.rm = T, trim = 30,40)
+
+
+```
+
+na.rm = t used to ignore the NA in the calc. Otherwise it would be an error message. na.rm = T stands for: ignoring NA. (By saying =false than we have the default (same as for writing nothing, so not na.rm at all))
+
+
+#Excercise 2 on simple vectors creation
+
+2.1creation of simple vectors
+
+## Creation of simple vectors
+
+Create the following simple vectors.
+
+  - \(a = (1, 2, 3, ..., 15)\),
+  - \(b = (15, 14, 13, ..., 0, -1, -2)\),
+  - \(c = (15, 14, 13, ..., 10, 9, -9, -10, ..., -13, -14, -15)\)
+```{r}
+#2.1 create vector with numbers
+a <- c(1:15)
+b <- c(15:-2)
+c <- c(15:9,-9:-15)
+
+a
+
+b
+
+c
+```
+
+2.2 ## Empty vector
+
+Create an empty vector with 30 numeric values. Check its type and its length.   
+(Hint: use `numeric()`.)
+
+
+```{r}
+# 2.2 empty vector
+empty <- numeric(c(30))
+
+
+empty
+
+length(empty)
+typeof(empty)
+
+# or
+
+empty2<- numeric(length=30)
+
+empty2
+```
+
+2.3 ## Character vector
+
+Create the vector `participants` with the names of the participants in the class.
+
+```{r}
+# 2.3 List all participants
+participants <- c("corinna", "philipp", "laurin", "freddy", "moritz", "niklas")
+
+participants
+```
+ 
+ 
+ 2.4
+Consider the following scores at a test.
+\[(60, 84, 65,67,75,72,80,85,63,82,70,75)\]
+Calculate the mean of the sample.  
+Recall the formula for the z-score of an observation:
+\[z_i=\frac{x_i-\mu}{\sigma}\]
+Create a vector with the z-score of each grade. 
+
+```{r}
+# 2.4 simple manipulation 
+scores <- c(60, 84, 65, 67, 75, 72, 80, 85, 63, 82, 70, 75)
+
+mean(scores)
+sd(scores)
+z.scores <- (scores-mean(scores))/sd(scores)
+z.scores
+```
