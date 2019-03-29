@@ -231,7 +231,7 @@ sum (sum (i^2-3*i))/length(i)
 
 #Subsetting
 
-Subsetting with [ and ] - square brackets
+Subsetting with [ and ] - square brackets --> a vector
 
 to get specific part of the set
 
@@ -248,4 +248,17 @@ va[c(-2,-7)] #all but second and seventh
 
 
 
+
+```
+
+if we want to subset a data frame, then we should take the name of the set$name of the subset
+
+for example
+```{r}
+df <- data.frame(let=LETTERS[1:7],
+                 num1=10:16,
+                 num2=floor(rnorm(7,100,10)))
+
+df$num2[7]
+df$num2[2:7]
 ```
