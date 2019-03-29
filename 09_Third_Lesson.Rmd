@@ -202,4 +202,50 @@ mean(scores)
 sd(scores)
 z.scores <- (scores-mean(scores))/sd(scores)
 z.scores
+
+
+```
+
+2.5 ## Simple calculations
+
+Calculate the following expressions, where \(n\) is the number of elements in the series.
+\[\frac{1}{n}\sum_{i=5}^{55} (i^2 - 3i)\]
+\[\frac{1}{n}\sum_{i=1}^{10} \left(\frac{3^i}{3i} + \sqrt{3i}\right)\]
+
+```{r}
+
+i <- c(5:55)
+
+aa<- i^2-3*i
+length(aa)
+
+sum(aa)/length(aa)
+
+#better
+
+sum (sum (i^2-3*i))/length(i)
+
+
+```
+
+
+#Subsetting
+
+Subsetting with [ and ] - square brackets
+
+to get specific part of the set
+
+
+```{r}
+va <- c(13.1, -15.2, 0.3, 2.4, 10.5, -3.6, 9.7)
+va[1] # first element
+va[c(3:5)] # element 3 to 5
+va[-1] # all elements, but without element 1
+va[c(T,T,T,F,F,T,F)] #just elements 1,2,3 and 6
+va [c(T,F)] #notice the recycling
+va[c(-2,-7)] #all but second and seventh
+
+
+
+
 ```
