@@ -23,12 +23,17 @@ Use the function all.equal to check that the last elements of each vector are in
 
 
 ```{r}
-a <- c(1:15)
+a <- seq(1,15,1)
+a
+
 b <- c(15:-2)
 
 x0=1
 c <- seq(x0,8,0.2)
 c
+
+d <- c(0.5^(seq(3,36,3))*1.3^seq(1,34,3))
+d
 
 xtfrm
 
@@ -147,5 +152,71 @@ pow(12,0.5)
 ```
 
 
+Excercise on function ( Excercise 4)
+
+A quadratic equation of the generic form
+
+\[ax^2 + bx + c =0\]
+
+has two real roots, if they exist, given by the formula: pq formel
+
+\[x_{1,2}=\frac{ -b \pm\sqrt{b^2 -4ac}}{2a}\]
+
+Write a function that gives the real roots of a quadratic equation.  
+Test your function on  various quadratic equations, including:
+\[\begin{split}5x^2 + 6x + 1 = 0\\ 5x^2 + 2x + 1 = 0\end{split}\] 
+
+```{r}
+
+roots <- function (a,b,c) {
+  
+  if (!is.numeric( c(a,b,c)) ){
+    print ("The function only makes sense with numeric values")
+    
+    } else if (b^2-4*a*c<0) {
+  print ("no solution found")
+  } else {
+  
+  x1 <- (-b + sqrt(b^2-4*a*c)) / 2*a
+  x2 <- (-b - sqrt(b^2-4*a*c)) / 2*a
+  return( c(x1, x2))
+}
+}
+
+roots(a=5,c=1,b=2)
+roots(a=5,b=6,c=1)
+roots("tri",c=4,b=4)
+
+```
 
 
+##ex. 2.6-2.8 with fidalgo solution
+
+ 2.6 Create vectors with rep
+For the following questions, you may want to check the help on the function rep.
+Start by creating the vector
+• dna = (A, C, G, T).
+Then, create the following vectors:
+• a = (A, C, G, T, A, C, G, T, A, C, G, T, . . . , A, C, G, T) where there are 12 A’s as shown.
+• b = (A, C, G, T, A, C, G, T, A, C, G, T, . . . , A, C) where there are 15 A’s as shown; the last element
+of the vector being C.
+• c = (A, . . . , A, C, . . . , C, G, . . . , G, T, . . . , T) where there are 12 A’s, 15 C’s, 30 G’s and 4 T’s, in the
+order shown.
+
+```{r}
+
+dna <- c("A","C", "G", "T")
+dna
+
+a <- rep(dna,12)
+
+
+b <- rep(dna,length.out=58)
+b
+
+b2 <- rep(dna, length.out= (14*length(dna) +2))
+b2
+
+c <- rep(dna, each=c(12,15,30,4))
+c
+```
