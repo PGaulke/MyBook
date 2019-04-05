@@ -8,8 +8,7 @@ output: pdf_document
 #Fourth Lesson
 
 
-2.7
-For the following questions, you may want to check the help on the function seq.
+####2.7 For the following questions, you may want to check the help on the function seq.
 Create the following vectors:
 • a = (1, 2, 3, ..., 15),
 • b = (15, 14, 13, ..., 0,−1,−2),
@@ -40,9 +39,7 @@ xtfrm
 
 ```
 
-
-2.8
- Use paste in vector creation
+####2.8Use paste in vector creation
 For the following questions, you may want to check the help on the function paste.
 Create the following vectors:
 • a = (City 1, City 2, . . . , City 6),
@@ -59,14 +56,15 @@ Create the following vectors:
 ```
 
 
-#What happens in the lesson:
+##What happens in the lesson:
 
 Differences between matrice and normal vectors. How we "access" or "subset" a matrice or vector: Vector just a list, Matrice has different dimension. Therefore, we need: mat.(row, column) to display what we want.
 Shorter writing style for getting all values of a column: matrice$column
 Than you can subset this matrice.
 
-How to get a subset out of a matrice. (BTW r condition has no logic, it is more a name)
 
+##How to get a subset out of a matrice
+(BTW r condition has no logic, it is more a name)
 ```{r condition}
 mtcars
 mtcars[mtcars$mpg<20,] # all cars with mpg smaller 20
@@ -115,8 +113,7 @@ class(gains)
 
 
 ##Structures of simple function
-How to write functions
-
+###How to write functions
 
 pow_two is just a random name here
 ```{r}
@@ -129,7 +126,7 @@ pow_two(12)
 you can also here apply element by element evaluation
 
 
-Return of a function
+###Return of a function
 
 ```{r}
 my_f2 <- function(a){
@@ -152,9 +149,9 @@ pow(12,0.5)
 ```
 
 
-Excercise on function ( Excercise 4)
+###Excercise on function (Excercise 4)
 
-A quadratic equation of the generic form
+####4.1 A quadratic equation of the generic form
 
 \[ax^2 + bx + c =0\]
 
@@ -190,7 +187,7 @@ roots("tri",c=4,b=4)
 ```
 
 
-##ex. 2.6-2.8 with fidalgo solution
+#### 2.6-2.8 with fidalgo solution
 
  2.6 Create vectors with rep
 For the following questions, you may want to check the help on the function rep.
