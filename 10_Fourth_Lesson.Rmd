@@ -124,5 +124,28 @@ pow_two(12)
 you can also here apply element by element evaluation
 
 
+Return of a function
 
+```{r}
+my_f2 <- function(a){
+  a^2
+  a^3 # this is the last exression executed
 }
+my_f2(5)
+
+```
+
+
+```{r}
+#multiple arguments and their identification
+
+pow <- function(a,p){
+  a^p
+}
+pow(12,0.5)
+
+```
+
+
+
+
