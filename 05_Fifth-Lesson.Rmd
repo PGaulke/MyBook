@@ -1,0 +1,217 @@
+---
+title: "05_Fifith_Lesson"
+author: "PGaulke"
+date: "10 April 2019"
+output: pdf_document
+---
+#Fifth Lesson
+
+##Sub-Setting
+####3.1 Excercise on Subsetting
+Subsetting with Indices
+
+```{r}
+#a=(a)
+alphabet <-c(letters)
+
+alphabet[1]#a
+
+alphabet[1:3]#b
+
+alphabet[c(-2,-3)]#c
+
+#d dont know
+
+alphabet[c(TRUE,FALSE,FALSE)]
+
+```
+
+####3.2 Excercise on Subsetting
+Subsetting with Conditions
+
+```{r}
+set.seed(30)#i
+set.seed
+
+data <- c(runif(50, min = 80, max = 120))#ii
+data
+
+#iii
+length(data[data<90])
+
+#iv
+#dont know
+
+#v
+which(data%%2==0)
+
+#vi
+data[data>(mean(data))]
+
+#vii
+#dont know
+
+```
+
+####3.3 Excercise on Subsetting
+Subsetting data frames
+
+```{r}
+#i
+A <-data.frame(iris)
+
+#ii
+max(iris$Sepal.Length)
+
+
+#iii
+
+#iv
+data.frame(iris$Sepal.Length,iris$Sepal.Width)
+#v
+
+#vi
+
+#vii
+
+
+
+```
+
+##Sub-Dialecct of R - Tidyverse
+
+Download packages tidyverse, tiddle
+
+Than: library(tidyverse) --> run this 
+
+###Use of tibble
+
+With making a dataset a tibble (see chunk below) it is possible to define the Spalten. For example it is easily possible to create different columns by using mathematically mixed informations
+
+Example: Column 1 = x, Column 2 = y, Column 3 = xy
+
+
+
+
+```{r}
+library(tidyverse)
+t_iris <- tibble(iris)
+class(t_iris)
+
+
+```
+
+
+
+###magrittr
+
+How to pipe= %>%
+
+```{r}
+
+#simple
+
+library(magrittr)
+mydata <- c(2:10,20,42)
+mean(mydata)
+
+mydata%>%
+  mean()
+
+#advanced
+
+round(sqrt(mean(mydata)),2)
+
+mydata %>%
+  mean() %>%
+  sqrt() %>%
+  round(2)
+
+
+##using a placeholder
+
+3 %>%
+  round(17.2342)
+
+
+```
+
+
+Transformations on a data frame
+
+df_after_f <-f(df)
+df_after_g <-g(df_after_f)
+df_after_h <-g(df_after_g)
+
+with piping it is
+
+df %>%
+  f %>%
+  g %>%
+  h
+  
+
+Own example
+```{r}
+
+library(magrittr)
+library(tidyverse)
+
+
+data (iris)
+t_iris <- as_tibble(iris)
+
+t_iris2 <- t_iris[t_iris$Sepal.Length>4.5 & t_iris$Sepal.Length<5.5,]
+t_iris2
+
+av.sw<-mean(t_iris$Sepal.Length)
+av.sw
+
+iris %>%
+  as_tibble() %>%
+  .[.$Sepal.Length==5,] %>%
+  {mean(.$Sepal.Width)}
+
+
+
+```
+
+###How to Tidy Up something: Install tidyr
+
+
+```{r}
+
+lottery <- tibble(person= c("Andre","Beth","Charles"),
+  mon= c(2,5,1),
+  tue= c(3,7,5),
+  wed= c(10,3,4),
+  thu= c(1,2,7)
+  )
+
+lottery
+
+
+
+#tidy it up
+
+tidy_lottery <- gather (lottery,
+                        key= "day",
+                        value= "gains",
+                        mon:thu
+                        )
+tidy_lottery
+
+
+
+#another example
+bisou <- tribble(
+  ~name, ~y
+  
+  
+  
+)
+
+```
+
+
+

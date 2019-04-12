@@ -115,7 +115,7 @@ mean(ages, na.rm = T, trim = 30,40)
 ```
 
 
-###Excercise 2 on simple vectors creation
+##Excercise 2 on simple vectors creation
 
 ####2.1 Creation of simple vectors
 
@@ -204,7 +204,7 @@ sum (sum (i^2-3*i))/length(i)
 ```
 
 
-###Subsetting
+##Subsetting
 
 Subsetting with [ and ] - square brackets --> a vector
 
