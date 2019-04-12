@@ -39,3 +39,69 @@ further options:
 
 * Header: YAML
 
+
+# Forth Lesson 
+
+```{r}
+roots <- function(a, b, c){
+  
+  if (b^2- 4*a*c <0) {
+    print("No solution! (negativ root cannot be squared)")
+  } else {}
+  
+  (-b + sqrt (b^2- 4*a*c)) / 2*a
+}
+roots(a=5, b=6, c=1)
+```
+``` {r}
+dna <- c ("A", "C", "G", "T")
+a <- rep (dna, 12)
+a
+```
+
+
+
+
+```{r}
+library(tidyverse)
+t_iris <- tibble(iris)
+class(t_iris)
+```
+
+```{r}
+my_data <- c(2:10, 20, 42)
+
+library(magrittr)
+my_data %>%
+  mean () %>%
+  sqrt () %>%
+  round (2)
+
+
+```
+
+
+```{r}
+my_data <- c(6:12, 23, 41)
+
+library(magrittr)
+my_data %>%
+  mean () %>%
+  sqrt () %>%
+  round (2)
+
+
+```
+
+
+```{r}
+library(tidyverse)
+
+
+data("iris")
+t_iris <- as_tibble(iris)
+t_iris2 <- t_iris [t_iris$sepal.lenght>4.5 & t_iris$sepal.length<5.5,]
+
+iris %>%
+  as_tibble
+```
