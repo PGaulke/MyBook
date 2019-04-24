@@ -178,7 +178,7 @@ iris %>%
 
 ###How to Tidy Up something: Install tidyr
 
-
+how to gather
 ```{r}
 
 lottery <- tibble(person= c("Andre","Beth","Charles"),
@@ -205,11 +205,53 @@ tidy_lottery
 
 #another example
 bisou <- tribble(
-  ~name, ~y
-  
-  
-  
+  ~name, ~`2016`, ~`2017`, ~`2018`,
+  "gau", 23,45,12,
+  "tri", 8,14,30,
+  "han", 12,43,8
 )
+  
+bisou
+
+tidy_bisou <- gather(bisou,
+                     key="Year",
+                     value="Number",
+                     `2016`, `2017`, `2018`)
+
+tidy_bisou
+
+```
+
+
+how to spread
+```{r}
+people<- tibble (name=rep(c("Andre", "Beth", "Charles"),2),
+                 info=rep(c("eyes","age"),3),
+                 measure= c("Blue",23,"brown",31,"brown",19)
+)
+                 
+                 
+tidy_people<- spread(people, key=info, value=measure)
+tidy_people
+
+people2<- tibble (name=c(rep(c("Andre", "Beth", "Charles"),2),"David"),
+                 info=c(rep(c("eyes","age"),3),
+                 "height"),
+                 measure= c("Blue",23,"brown",31,"brown",19, 175)
+)
+                 
+                 
+tidy_people2<- spread(people2, key=info, value=measure)
+tidy_people2
+
+```
+
+how to separate
+```{r}
+clients <- ("Andre, Porto")
+
+
+
 
 ```
 
