@@ -181,7 +181,7 @@ iris %>%
 how to gather
 ```{r}
 
-lottery <- tibble(person= c("Andre","Beth","Charles"),
+lottery <- tibble (person= c("Andre","Beth","Charles"),
   mon= c(2,5,1),
   tue= c(3,7,5),
   wed= c(10,3,4),
@@ -251,9 +251,9 @@ how to separate
 clients <- ("Andre, Porto")
 
 
-
-
 ```
 
+
+VERY IMPORTANT: EVERYTIME WE WANT TO USE TIBBLE OR PROCESS TIBBLE (OR ANY OTHER PART OF TIDYVERSE) WE NEED TO PUT IN THE CONSOLE: library(tidyverse) (BECAUSE TIDYVERSE IS A SUBLANGUAGE OF R/WE DIDNT DO ANY OTHER LANGUAGE SO FAR, JUST BASIC R)
 
 
