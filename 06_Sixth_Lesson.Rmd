@@ -145,9 +145,50 @@ starwars %>%
   filter(species == "Human") %>%
   summarise(av_m=mean(mass, na.rm = TRUE))
 
-#in regular R language
+# without pipe
 summarise(filter(starwars, species =="Human"),
           av_m=mean(mass, na.rm=TRUE))
 
+temp1 <- filter(starwars, species =="Human")
+summarise(temp1, av_m=mean(mass, na.rm=TRUE))
+
+# base r
+temp2 <- starwars[starwars$species== "Human",]
+av_m <- mean(temp2$mass, na.rm = TRUE)
+#or
+av_m <- mean(starwars[starwars$species=="Human",]$mass,
+             na.rm=TRUE)
+
+
+#example
+
+aa <- numeric(length(starwars$films))
+for (i in 1:length(starwars$films)){
+  aa[i] <- length(starwars$films[[i]])
+}
+starwars$n_films <- aa
+
+starwars %>%
+  select(name, species, n_films) %>%
+  filter(species  ==  "Human", n_films >=6)
+
+
+         
+```
+
+more example for summarise
+
+```{r}
+#combine it with group by
+starwars %>%
+  group_by(eye_color) %>%
+  summarise(
+    n_per_group = n()
+  ) %>%
+  filter(n_per_group >1)
+
 
 ```
+
+Also look at fulljoin and leftjoin functions (see Fidalgo "Keys for Joins")
+
