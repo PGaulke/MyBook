@@ -1,0 +1,79 @@
+---
+title: "07_Seventh_Lesson"
+author: "PGaulke"
+date: "10 Mai 2019"
+output: html_document
+---
+#Seventh Lesson
+
+no comments
+
+#Eighths Lesson
+
+##Linear Regression
+```{r}
+
+advertising <- read_csv("data/Advertising.csv")
+advertising
+
+advertising <- read_csv("data/Advertising.csv") %>%
+  select(-X1)
+advertising
+
+```
+
+```{r}
+model.slr <- lm(sales ~ TV, data = advertising)
+
+
+
+```
+
+```{r}
+summary(model.slr)
+
+
+names(summary(model.slr))
+#to understand what to subset in the next step, as in this example r.squared and not r-squared or however
+
+
+
+summary(model.slr)$r.squared
+summary(model.slr)$sigma
+summary(model.slr)$df
+```
+
+##Multiple Linear Regression
+```{r}
+model.mlr <- lm(sales ~ TV + radio + newspaper, data = advertising)
+model.mlr
+
+summary(model.mlr)
+
+
+```
+###How to get the graph
+```{r}
+##with the simple model (slr)
+
+names(model.slr)
+
+model.slr$fitted.values
+
+
+
+```
+
+```{r}
+advertising
+
+advertising$fritz <- model.slr$fitted.values
+advertising
+
+plot(advertising$TV, advertising$sales)
+# now add a line
+
+lines(advertising$TV, advertising$fritz, col="blue")
+
+
+```

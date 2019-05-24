@@ -1,0 +1,114 @@
+---
+title: "08_Ninth_Lesson"
+author: "PGaulke"
+date: "24 Mai 2019"
+output: html_document
+---
+
+#Ninth Lesson
+
+```{r}
+#load the data first
+
+advertising <- read_csv("data/Advertising.csv") %>%
+  select(-X1)
+advertising
+
+```
+
+```{r}
+model.slr <- lm (sales ~ TV, data = advertising)
+
+summary(model.slr)
+
+
+names(summary(model.slr))
+#to understand what to subset in the next step, as in this example r.squared and not r-squared or however
+
+
+
+summary(model.slr)$r.squared
+summary(model.slr)$sigma
+summary(model.slr)$df
+
+
+
+```
+
+```{r}
+advertising
+
+advertising$fritz <- model.slr$fitted.values
+advertising
+
+plot(advertising$TV, advertising$sales)
+# now add a line
+
+lines(advertising$TV, advertising$fritz, col="blue")
+
+
+```
+
+
+```{r}
+
+
+
+#tidyverse alternative/ second way of drawing the line
+#advertising %>%
+advertising
+
+advertising$fritz <- model.slr$fitted.values
+
+advertising$TV
+advertising$y.hat1 <- model.slr$fitted.values
+advertising$y.hat2 <- predict(model.slr)
+
+#third way of drawing the line
+
+# reminder
+#names(model.slr)
+#summary(model.slr)
+
+advertising$y.hat3 <- model.slr$coefficients [1] + model.slr$coefficients[2]*advertising$TV
+
+
+
+advertising
+plot(advertising$TV,advertising$sales)
+
+#plot function is just to draw the actual graph (y and x)
+lines(advertising$TV, advertising$y.hat1, col="red")
+lines(advertising$TV, advertising$y.hat2, col="blue")
+```
+
+Lets see the errors/ residuals of our prediction
+
+```{r}
+
+advertising$residuals <-  advertising$sales - advertising$y.hat2
+advertising
+
+sum(advertising$residuals)
+
+```
+
+How to use predictions
+
+```{r}
+#predict sales for TV=400
+
+#first: try with the normal formula, brute force way, very tedious in general
+sales_tv_400 <- model.slr$coefficients [1] + model.slr$coefficients[2]*400
+sales_tv_400
+
+#predict way
+#step 1 create a data frame for the new x data
+#step 2 predict with data=newdata
+#the question of my boss is: what is about 400
+my.boss.question <- data.frame(TV=400)
+my.boss.question
+
+sales_tv_400.2 <- predict(model.slr, data = my.boss.question)
+sales_tv_400.2
+```
