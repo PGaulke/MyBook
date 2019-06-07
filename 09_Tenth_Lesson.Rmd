@@ -1,0 +1,205 @@
+---
+title: "09_Tenth_Lesson"
+author: "PGaulke"
+date: "30 Mai 2019"
+output: html_document
+---
+
+#Tenth Lesson
+
+
+```{r}
+advertising <- read.csv("data/Advertising.csv")
+
+advertising
+
+```
+
+##Dataset
+
+
+see the Graph Credit Card Default. This is what we want to reproduce now.
+
+```{r}
+require(ISLR)
+require(tidyverse)
+#to load the packages that we need
+
+
+as_tibble(Default)
+#to make irt
+
+faster
+
+str(Default)
+Default
+# to see the structure
+
+```
+
+```{r}
+#now drawing the graph
+
+#basic way:
+#plot(Default$balance,Default$income)
+
+#now with colour
+#plot(Default$balance,Default$income, col = Default$default)
+
+#to decrease the size of the data set, get a sample out of the whole set
+#show.index <- sample(1:length(Default$income),1000)
+#or
+show.index <- sample(1:nrow(Default),1000)
+show.index
+
+#final
+plot(Default$balance[show.index], Default$income[show.index], col=Default$default[show.index])
+
+
+
+```
+
+
+##now the boxplo{r}
+
+```{r}
+boxplot(Default$balance ~ Default$default, col = "red")
+
+
+
+```
+
+##measure the accuracy on this non-numeric
+
+Instead of RSME (just numeric)
+
+
+```{r}
+
+table(Default$default)/nrow(Default)*100
+
+#reason why this is pracitcally a bad way to predict, (drawed matrice in the paper that we received)
+
+#Sensitivity
+#is better to, to check any variable (default or not default) seperately (other wise, all "save" guesses will increase unrealisticly the accuracy result)
+
+```
+
+##Why not linear regression
+
+```{r}
+#how we create the linear regression
+#modz <- lm(default ~ balance, data = Default)
+#will produce error, therefore change default to a numeric set
+
+modz <- lm(as.numeric(default) ~ balance, data =Default)
+summary(modz)
+
+#now default is not yes or now, but 1 or 2, therefore numeric
+
+#repetition: fitted values shows the data of a graph as a prediction: the streight line which is created
+#now we draw
+
+plot(Default$balance, Default$default)
+lines(Default$balance, modz$fitted.values, col = "blue")
+#modz$fitted.values
+
+```
+
+
+
+
+```{r}
+levels(Default$default)
+predicted.class <- ifelse(modz$fitted.values < 1.19,"No","Yes")
+
+#predicted.class is a vector, ifelse is a function: if the condition is met go for yes, if not, go for no
+#herefore we use the value of fitted values (which is basically the predicted value)
+
+#to now use accuracy or sensitvity model, make a table 
+table(predicted.class, Default$default)
+
+table(factor(predicted.class, levels=c("No", "Yes") ),Default$default)
+
+#thats all whats on the sleft side of the slide (printed out material, linear versus logistic regression)
+
+
+
+```
+###Logistic Regression
+
+```{r}
+#now we start to draw the right line (logistic regression)
+#we are orientieren an cumulative distribution
+
+#function that we us is glm (generealized linear model)
+
+#we want to estiamte the default with balance
+
+mod.pressure <-glm (default ~ balance, data = Default, family = binomial)
+mod.pressure
+
+
+#summary(mod.pressure)
+
+#now draw it
+
+#first plot, than check the accuracy
+
+
+#we dont hav fitted values, as before, therefore we need to create fitted values first
+#first create a new data frame, where the predict function gets the new data to check the actual prediction
+
+bal.pre <- data.frame(balance= seq(0,max(Default$balance), length.out = 100))
+
+#see the sequence formula to take 100 values from the min to maximum, with regular distance to each other
+fit_glm <- predict(mod.pressure, newdata = bal.pre, type ="response")
+fit_glm
+
+#plot (bal.pre$balance, fit_glm, type ="l", col="blue")
+
+#now points and lines
+#plot(Default$balance, Default$default)
+#lines(bal.pre$balance, fit_glm+1, col ="blue")
+
+#now check accuracy
+
+predicted.class.glm <- ifelse(mod.pressure$fitted.values < 0.5 ,"No","Yes")
+table(predicted.class.glm, Default$default)
+```
+
+###now with more variables than just balance, so also income and student
+```{r}
+mod.pressure2 <-glm (default ~ balance + income + student, data = Default, family = binomial)
+
+summary(mod.pressure2)
+
+predicted.class.glm2 <- ifelse(mod.pressure2$fitted.values < 0.5 ,"No","Yes")
+table(predicted.class.glm2, Default$default)
+```
+
+now try how to get the graph of the slide confounding (students and probability of credit default)
+
+
+```{r}
+mod.pressure3 <-glm (default ~ balance + student, data = Default, family = binomial)
+
+summary(mod.pressure3)
+
+#first step: create a data.frame for whcih we want to predict
+var.preYes <- data.frame(balance= seq(0,max(Default$balance), length.out = 100), student= "Yes")
+var.preNo <- data.frame(balance= seq(0,max(Default$balance), length.out = 100), student= "No")
+
+fit_glm3y <- predict(mod.pressure3, newdata = var.preYes, type ="response")
+fit_glm3y
+
+fit_glm3n <- predict(mod.pressure3, newdata = var.preNo, type ="response")
+fit_glm3n
+
+
+plot(Default$balance, Default$default)
+lines(var.preYes$balance, fit_glm3y + 1, col="red")
+lines(var.preNo$balance, fit_glm3n + 1, col="blue")
+
+
+```

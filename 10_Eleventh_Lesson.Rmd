@@ -1,0 +1,124 @@
+---
+title: "10_Eleventh_Lesson"
+author: "PGaulke"
+date: "7 Juni 2019"
+output: html_document
+---
+Task for today
+He gives us the X but not the Y
+
+Measure we want to track RSME in order to understand the difference between the actual value and the predicted value.
+
+ROUTE SQUARE: Sum of i to h(y-y(mit strich oben))^2
+
+
+
+```{r}
+# a function for caluclating the RMSE from two vectors
+
+c.rmse <- function(observed, predicted){
+  (observed - predicted)^2%>%
+  mean %>%
+  sqrt %>%
+  round(3)
+}
+
+c.rmse2 <- function(observed, predicted) {
+round(sqrt(mean((observed -predicted)^2)),3)
+}
+
+```
+
+```{r}
+require(ISLR)
+require(magrittr)
+#to load the required packages
+
+set.seed(43245)
+#in order to create random numbers, but to save this "seed" and not create new random numbers when you run the chunk again (as you would do if you put rnorm(41) instead of set.seed
+
+
+#in order to have our training data seperated, we need to half it
+
+n <- nrow(Auto) 
+# just to have an abbreviation
+
+train <- sample(1:n, ceiling(n/2))
+#1: to number of rows, ceiling is used to prevent that in case nrow(auto) is odd, you have a number such as 74,3 (also could use round)
+
+degrees<- 1:10
+#the different degrees we want to put in
+
+v.rmse <- numeric ()
+#to create a new vector where all values are putted in from the rmse
+
+for (i in degrees){
+#basically just creating an abbreviation for putting in several polynomals into the fit1
+  
+  
+    
+fit1 <- glm(mpg ~ poly(horsepower,i), data = Auto, subset = train)
+  v.rmse[i] <-
+# fit in into a linear model, in order to create a ine that fits the model    
+
+v.rmse[i] <- c.rmse(Auto$mpg[-train], predict(fit1, newdata=Auto[-train,]))  
+    
+# how it was before, against what it is now with v.rmse:c.rmse(Auto$mpg[-train], predict(fit1, newdata=Auto[-train,]))
+#here we create the function to later calculate the rmse
+
+}
+  #now we want to create a plot to see all the test error values for the different polys (the number after horsepower)
+  
+
+plot(degrees, v.rmse, type ="b", col = "red")   
+
+
+#type b just shows the type of the line ( can also be l for line or p for points instead of b for both)
+
+
+```
+
+As a result we probably take degree 2, because it is quite  good from its v.rmse and it is not complex (the lower the degree, the better is it to understand)
+
+And now for not just one split, but multiple splits:
+
+```{r}
+
+require(ISLR)
+require(magrittr)
+#to load the required packages
+
+set.seed(120)
+
+degrees <- 1:10
+
+n.splits <- 10
+
+m.rmse <- matrix(NA, length(degrees), n.splits)
+#here NA is the data(numbers), length = number of rows, n.splits = number columns
+
+
+for(s in 1:n.splits){
+  train <- sample(1:n, ceiling(n/2))
+for(i in degrees) {
+  fit1<- glm(mpg ~ poly (horsepower, i), data = Auto, subset = train)
+m.rmse[i,s] <- c.rmse(Auto$mpg[-train], predict(fit1, newdata = Auto[-train,]))
+
+}
+}
+  
+plot(degrees, m.rmse[,1], type ="l", col = "red", ylim=c(min(m.rmse), max(m.rmse)))
+for (s in 1:n.splits){
+  lines(degrees, m.rmse[,s], col =s)
+}
+
+```
+
+
+
+
+
+
+
+
+

@@ -93,7 +93,7 @@ sum(advertising$residuals)
 
 ```
 
-How to use predictions
+##How to use predictions
 
 ```{r}
 #predict sales for TV=400
@@ -109,6 +109,105 @@ sales_tv_400
 my.boss.question <- data.frame(TV=400)
 my.boss.question
 
-sales_tv_400.2 <- predict(model.slr, data = my.boss.question)
-sales_tv_400.2
+sales_tv_400.2 <- predict(model.slr, newdata = my.boss.question)
+#for more than just one
+
+my.boss.question2 <- data.frame(TV=c(400,500,600))
+my.boss.question2
+
+sales_tv_boss <- predict(model.slr, newdata = my.boss.question2)
+sales_tv_boss
+
+
+
 ```
+See root mean square erro{r}
+
+
+```{r}
+require(ISLR)
+data(Auto)
+
+```
+
+
+```{r}
+# a function for calculating
+
+c.rmse <- function(observed, predicted) {
+  (observerd - predicted)^2 %>%
+    mean %>%
+    sqrt %<%
+    round(3)
+}
+
+# c.rmse <- function(observed, predicted) {
+# round(sqrt(mean(observed - predicted)^2)),3)
+#}
+
+
+```
+
+###Nicht aufgepasst bei: Accuracy, Overfitting, Including Variables
+
+
+
+###Define Test Data and Training data
+
+Accuracy testing
+```{r}
+
+set.seed(42)
+n <- nrow(Auto)
+
+
+#train.index <- sample (1:n, 196)
+#better:
+train.index <- sample (1:n, ceiling((1/2)*n))
+train.index
+
+
+train.data <- Auto[train.index,]
+test.data <- Auto[-train.index,]
+
+train.data
+
+test.data
+```
+
+```{r}
+
+Auto %>%
+  select(1)
+
+c.rmse(predict(model, data))
+
+```
+
+
+
+Find a model with the lowest rsme for the test data
+TV, newspaper, radio
+
+```{r}
+fita1 <- lm(sales ~ TV + radio + newspaper, data=advertising)
+summary(fita1)
+
+fita2 <- lm(sales ~ poly(TV,5) + radio + newspaper, data=advertising )
+summary(fita2)
+
+fita3 <- lm(sales ~ poly(TV,5) + radio + newspaper, data=advertising)
+summary(fita3)
+
+fita4 <- lm(sales ~ TV + radio + newspaper + TV:radio, data=advertising)
+summary(fita4)
+
+# TV:Radio is to consider interaction/synergies
+#TV*radio will give me automaticall TV Radio seperate and TV:Radio
+
+fita5 <- lm(sales ~ TV*radio*newspaper, data=advertising)
+summary(fita5)
+
+#we can also do that with poly to get even more coefficient
+```
+
