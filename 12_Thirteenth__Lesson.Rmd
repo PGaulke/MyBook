@@ -1,0 +1,179 @@
+---
+title: "Thirteenth_Lesson"
+author: "PGaulke"
+date: "21 Juni 2019"
+output: html_document
+---
+
+```{r}
+require(microbenchmark)
+require(ggplot2)
+
+urn
+length(urn)
+
+p.red <- 0.2
+p.green <- 0.5
+p.yellow <- 1 - p.red - p.green
+
+
+urn <- c(rep("red", p.red*100),
+         rep("gree", p.green*100),
+         rep("yellow", p.yewllow*100)
+)
+urn
+
+sample(urn, 1,replace =TRUE)
+
+```
+
+```{r}
+x1 <- runif(100)*300
+bench.01 <- microbenchmark(builtin = sqrt(x1)
+                           alter = x1^0,5)
+
+
+
+
+```
+
+
+```{r}
+require(tidyverse)
+require(magrittr)
+
+samples <- 1e+03
+n <- 50
+
+matrix(1:12, nrow = 2)
+
+matrix(sample(0:1, samples*n, replace = TRUE),nrow=samples)
+
+
+
+
+```
+```{r}
+samples <- 1e+05
+
+n<- 50
+
+data <- matrix(sample(0:1, samples*n, replace = TRUE), nrow = samples)
+data
+s.means <- apply(data, 1, mean)
+
+
+n <- 5
+p <- 0.5
+samples <-1e+05
+
+urn <- c(rep(1,p*100), rep(0,(1-p)*100))
+
+data <- matrix(sample(urn, samples*n, replace = TRUE),
+               nrow=samples)
+
+Xx <- apply(data, 1,sum)
+Xx
+(table(Xx)/samples) %>%round(3)
+
+dbinom(0:n, n, p)
+```
+
+
+```{r}
+n <- 12
+p <- 0.8
+samples <-1e+05
+
+urn <- c(rep(1,p*100), rep(0,(1-p)*100))
+
+data <- matrix(sample(urn, samples*n, replace = TRUE),
+               nrow=samples)
+
+Xx <- apply(data, 1,sum)
+Xx
+my.table <- (table(Xx)/samples) %>% round(5)
+
+
+```
+
+Example 3
+Every day, and independetnly of the evolution of the other days, my stock can go down by 5% with probability 48% and up by 5% with probability of 52%
+It is worth 100 now, what will be its value after 30 days. Given the expected value and the confidence interval
+
+```{r}
+n <- 30
+p <- 0.52
+
+  
+samples <- 1e+06
+
+
+
+urn <- c(rep(1.05,p*100), rep(0.95,(1-p)*100))
+
+data <- matrix(sample(urn, samples*n, replace = TRUE),
+               nrow=samples)
+
+data
+
+
+Xx <- apply(data, 1, prod)
+
+summary(Xx)
+mean(Xx)*100
+max(Xx)*100
+
+ci.95 <- c(quantile(Xx, 0.025), quantile(Xx, 0.975))
+ci.95
+hist(Xx, breaks = seq(0.25, 3.6, 0.01))
+
+```
+```{r}
+n <- 64 #sample size
+samples <- 1e06
+s.mean <- 75
+t.sd <- 20
+
+data <- matrix(
+  rnorm(n*samples, mean = s.mean, sd = t.sd),
+  nrow = samples)
+
+data
+s.means <- apply(data,1,mean)
+quantile(s.means, 0.025)
+quantile(s.means, 0.975)
+
+
+```
+```{r}
+require(ISLR)
+require(boot)
+
+#bootstrap function
+
+model.lmf <- function(data, index){
+  lm(sales ~ TV + radio + newspaper,
+     data = data,
+     subset = index)$coefficients[2]
+}
+
+
+#manual bootstrap
+samples <- 1000L
+n <- nrow(advertising)
+
+tv.coef <- numeric()
+
+for(i in 1:samples){
+  tv.coef[i] <- lm (sales ~ TV + radio + newspaper, 
+                    data = advertising[sample(1:n, n, replace = TRUE),] )$coefficients[2]
+}
+
+tv.coef
+
+
+manual.ci <- c(quantile(tv.coef, 0.025),
+               quantile(tv.coef, 0.975))
+
+```

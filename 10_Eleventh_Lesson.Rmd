@@ -113,12 +113,71 @@ for (s in 1:n.splits){
 }
 
 ```
+Now we want to find out which line to take
+With K-fold cross validation
 
 
+```{r}
+
+#we subset the data into 5 parts instead of 2 (50 percent train data, 50 percent test data)
+#one part will be validation data, the rest will be train data
+#see slide 10
+#before we had just the validation approach (2 fold without crossing)
+
+require (boot)
+require (magrittr)
+require (ISLR)
+degrees <- 1:10
+loocv <- numeric()
+
+for(i in degrees){
+  fit1 <- glm(mpg ~ poly(horsepower,i), data= Auto)
+  
+loocv[i] <- cv.glm(Auto, fit1)$delta[1] %>% sqrt
+
+}
+
+plot(degrees, loocv, type ="b", col = "red")
+
+```
+
+##KFold
+
+```{r}
+
+require (boot)
+require (magrittr)
+require (ISLR)
+degrees <- 1:10
+n.trys <- 12
+
+m.k10 <- matrix(NA, length(degrees), n.trys)
+
+for (s in 1:n.trys){
+
+for(i in degrees){
+  fit1 <- glm(mpg ~ poly(horsepower,i), data= Auto)
+  
+m.k10[i,s] <- cv.glm(Auto, fit1, K=10)$delta[1] %>% sqrt
+
+}
+}
 
 
+plot(degrees, m.k10[,1], type ="l", col = "red", ylim=c(min(m.k10),max(m.k10)))
 
+for(s in 2:n.trys){
+  lines(degrees, m.k10[,s], col = s)
+}
 
+```
 
+##bootstrap
+
+To analyze the variance/ standard deviation
+
+If it is significant or not
+
+Resampling 
 
 
