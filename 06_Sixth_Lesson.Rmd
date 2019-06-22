@@ -1,0 +1,194 @@
+---
+title: "06_Sixth_Lesson"
+author: "PGaulke"
+date: "24 April 2019"
+output: pdf_document
+---
+
+#Sixth Lesson
+
+##Tidying
+####5.1 Excercise on Tidying
+Transform 'data' into 'data_tidy' by using using `gather` then `separate` then `spread`.
+
+```{r}
+data <- tribble(~famid, ~named, ~incd, ~namem, ~incm, 
+                1, "Bill", 30000, "Bess", 15000,
+                2, "Art", 22000, "Amy", 18000,
+                3, "Paul", 25000, "Pat", 50000
+                ) 
+data
+
+
+data_tidy <- gather(data, 
+                    key= "famid",
+                    value= "incd"
+                    )
+
+data_tidy
+```
+
+
+
+##Start of the lesson
+###dplyr
+easier and fast way to manipulate data
+this is another part of the sublanguage tidyverse, so again put in libraby(tidyverse) in the console
+(and of course download dplyr)
+
+First verbes: SELECT and MUTATE that can be applied on colunns
+
+```{r}
+starwars %>%
+  select(name, species)
+
+
+# compare with base R
+starwars [, c("name","species")]
+
+starwars %>%
+  select(
+    name, 
+    matches("color")
+    )
+
+
+```
+### Helper arguments
+
+These are arguments to help `select` the variables/columns. Here are a few of them (see `?select` for a complete list):
+
+- `starts_with("x")`
+- `ends_with("x")`
+- `contains("x")`
+- `matches("x")`
+
+
+```{r}
+starwars %>%
+  select(name, gender, films)
+```
+
+Now switching from SELECT to MUTATE
+
+```{r}
+starwars %>%
+  mutate(bmi = mass / (height/100)^2)
+
+df_b <- starwars %>%
+  mutate(
+    bmi = mass/ (height/100)^2,
+    sr.bmi =sqrt(bmi)
+  )
+
+df_b
+
+df_a <- starwars %>%
+  mutate(g_b = sample(c("G","B"), 87, replace = TRUE)
+  )
+df_b
+```
+
+Now switching to FILTER (for rows now, and not for columsn as for SELECT and MUTATE)
+
+```{r}
+starwars %>%
+  filter (
+    species !="human" &
+    eye_color == "red"
+  )
+
+starwars
+
+
+# in base r
+starwars[starwars$species!="Human" &
+           starwars$eye_color=="red",]
+
+```
+
+now switch to ARRANGE (also rows)
+```{r}
+starwars %>%
+  arrange(
+    height,
+    desc(mass)
+  )
+
+starwars %>%
+  arrange(
+    desc(name)
+  )
+
+starwars %>%
+  arrange(
+    name
+  )
+
+```
+
+now switch to SUMMARISE
+```{r}
+#creates a new df by collpasing values
+starwars %>%
+  summarise(
+    min_h = min(height, na.rm = TRUE),
+    av_m=mean(mass, na.rm =TRUE)
+  )
+
+#site comment: to remove not available data, na.rm =TRUE
+```
+```{r}
+#combine the verbs
+starwars %>%
+  select(species, mass) %>%
+  filter(species == "Human") %>%
+  summarise(av_m=mean(mass, na.rm = TRUE))
+
+# without pipe
+summarise(filter(starwars, species =="Human"),
+          av_m=mean(mass, na.rm=TRUE))
+
+temp1 <- filter(starwars, species =="Human")
+summarise(temp1, av_m=mean(mass, na.rm=TRUE))
+
+# base r
+temp2 <- starwars[starwars$species== "Human",]
+av_m <- mean(temp2$mass, na.rm = TRUE)
+#or
+av_m <- mean(starwars[starwars$species=="Human",]$mass,
+             na.rm=TRUE)
+
+
+#example
+
+aa <- numeric(length(starwars$films))
+for (i in 1:length(starwars$films)){
+  aa[i] <- length(starwars$films[[i]])
+}
+starwars$n_films <- aa
+
+starwars %>%
+  select(name, species, n_films) %>%
+  filter(species  ==  "Human", n_films >=6)
+
+
+         
+```
+
+more example for summarise
+
+```{r}
+#combine it with group by
+starwars %>%
+  group_by(eye_color) %>%
+  summarise(
+    n_per_group = n()
+  ) %>%
+  filter(n_per_group >1)
+
+
+```
+
+Also look at fulljoin and leftjoin functions (see Fidalgo "Keys for Joins")
+

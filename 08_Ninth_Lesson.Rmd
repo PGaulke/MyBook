@@ -1,0 +1,213 @@
+---
+title: "08_Ninth_Lesson"
+author: "PGaulke"
+date: "24 Mai 2019"
+output: html_document
+---
+
+#Ninth Lesson
+
+```{r}
+#load the data first
+
+advertising <- read_csv("data/Advertising.csv") %>%
+  select(-X1)
+advertising
+
+```
+
+```{r}
+model.slr <- lm (sales ~ TV, data = advertising)
+
+summary(model.slr)
+
+
+names(summary(model.slr))
+#to understand what to subset in the next step, as in this example r.squared and not r-squared or however
+
+
+
+summary(model.slr)$r.squared
+summary(model.slr)$sigma
+summary(model.slr)$df
+
+
+
+```
+
+```{r}
+advertising
+
+advertising$fritz <- model.slr$fitted.values
+advertising
+
+plot(advertising$TV, advertising$sales)
+# now add a line
+
+lines(advertising$TV, advertising$fritz, col="blue")
+
+
+```
+
+
+```{r}
+
+
+
+#tidyverse alternative/ second way of drawing the line
+#advertising %>%
+advertising
+
+advertising$fritz <- model.slr$fitted.values
+
+advertising$TV
+advertising$y.hat1 <- model.slr$fitted.values
+advertising$y.hat2 <- predict(model.slr)
+
+#third way of drawing the line
+
+# reminder
+#names(model.slr)
+#summary(model.slr)
+
+advertising$y.hat3 <- model.slr$coefficients [1] + model.slr$coefficients[2]*advertising$TV
+
+
+
+advertising
+plot(advertising$TV,advertising$sales)
+
+#plot function is just to draw the actual graph (y and x)
+lines(advertising$TV, advertising$y.hat1, col="red")
+lines(advertising$TV, advertising$y.hat2, col="blue")
+```
+
+Lets see the errors/ residuals of our prediction
+
+```{r}
+
+advertising$residuals <-  advertising$sales - advertising$y.hat2
+advertising
+
+sum(advertising$residuals)
+
+```
+
+##How to use predictions
+
+```{r}
+#predict sales for TV=400
+
+#first: try with the normal formula, brute force way, very tedious in general
+sales_tv_400 <- model.slr$coefficients [1] + model.slr$coefficients[2]*400
+sales_tv_400
+
+#predict way
+#step 1 create a data frame for the new x data
+#step 2 predict with data=newdata
+#the question of my boss is: what is about 400
+my.boss.question <- data.frame(TV=400)
+my.boss.question
+
+sales_tv_400.2 <- predict(model.slr, newdata = my.boss.question)
+#for more than just one
+
+my.boss.question2 <- data.frame(TV=c(400,500,600))
+my.boss.question2
+
+sales_tv_boss <- predict(model.slr, newdata = my.boss.question2)
+sales_tv_boss
+
+
+
+```
+See root mean square erro{r}
+
+
+```{r}
+require(ISLR)
+data(Auto)
+
+```
+
+
+```{r}
+# a function for calculating
+
+c.rmse <- function(observed, predicted) {
+  (observerd - predicted)^2 %>%
+    mean %>%
+    sqrt %<%
+    round(3)
+}
+
+# c.rmse <- function(observed, predicted) {
+# round(sqrt(mean(observed - predicted)^2)),3)
+#}
+
+
+```
+
+###Nicht aufgepasst bei: Accuracy, Overfitting, Including Variables
+
+
+
+###Define Test Data and Training data
+
+Accuracy testing
+```{r}
+
+set.seed(42)
+n <- nrow(Auto)
+
+
+#train.index <- sample (1:n, 196)
+#better:
+train.index <- sample (1:n, ceiling((1/2)*n))
+train.index
+
+
+train.data <- Auto[train.index,]
+test.data <- Auto[-train.index,]
+
+train.data
+
+test.data
+```
+
+```{r}
+
+Auto %>%
+  select(1)
+
+c.rmse(predict(model, data))
+
+```
+
+
+
+Find a model with the lowest rsme for the test data
+TV, newspaper, radio
+
+```{r}
+fita1 <- lm(sales ~ TV + radio + newspaper, data=advertising)
+summary(fita1)
+
+fita2 <- lm(sales ~ poly(TV,5) + radio + newspaper, data=advertising )
+summary(fita2)
+
+fita3 <- lm(sales ~ poly(TV,5) + radio + newspaper, data=advertising)
+summary(fita3)
+
+fita4 <- lm(sales ~ TV + radio + newspaper + TV:radio, data=advertising)
+summary(fita4)
+
+# TV:Radio is to consider interaction/synergies
+#TV*radio will give me automaticall TV Radio seperate and TV:Radio
+
+fita5 <- lm(sales ~ TV*radio*newspaper, data=advertising)
+summary(fita5)
+
+#we can also do that with poly to get even more coefficient
+```
+

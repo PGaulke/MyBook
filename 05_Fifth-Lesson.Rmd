@@ -178,10 +178,10 @@ iris %>%
 
 ###How to Tidy Up something: Install tidyr
 
-
+how to gather
 ```{r}
 
-lottery <- tibble(person= c("Andre","Beth","Charles"),
+lottery <- tibble (person= c("Andre","Beth","Charles"),
   mon= c(2,5,1),
   tue= c(3,7,5),
   wed= c(10,3,4),
@@ -205,14 +205,48 @@ tidy_lottery
 
 #another example
 bisou <- tribble(
-  ~name, ~y
-  
-  
-  
+  ~name, ~`2016`, ~`2017`, ~`2018`,
+  "gau", 23,45,12,
+  "tri", 8,14,30,
+  "han", 12,43,8
 )
+  
+bisou
+
+tidy_bisou <- gather(bisou,
+                     key="Year",
+                     value="Number",
+                     `2016`, `2017`, `2018`)
+
+tidy_bisou
 
 ```
 
+
+how to spread
+```{r}
+people<- tibble (name=rep(c("Andre", "Beth", "Charles"),2),
+                 info=rep(c("eyes","age"),3),
+                 measure= c("Blue",23,"brown",31,"brown",19)
+)
+                 
+                 
+tidy_people<- spread(people, key=info, value=measure)
+tidy_people
+
+people2<- tibble (name=c(rep(c("Andre", "Beth", "Charles"),2),"David"),
+                 info=c(rep(c("eyes","age"),3),
+                 "height"),
+                 measure= c("Blue",23,"brown",31,"brown",19, 175)
+)
+                 
+                 
+tidy_people2<- spread(people2, key=info, value=measure)
+tidy_people2
+
+```
+
+<<<<<<< HEAD
 #Unite 
 #Exercises on sub-setting
 
@@ -253,5 +287,16 @@ max(iris$Sepal.Length)
 iris2 <- iris [, c("Sepal.Length", "Sepal.Width")]
 ```
 
+=======
+how to separate
+```{r}
+clients <- ("Andre, Porto")
+
+
+```
+
+
+VERY IMPORTANT: EVERYTIME WE WANT TO USE TIBBLE OR PROCESS TIBBLE (OR ANY OTHER PART OF TIDYVERSE) WE NEED TO PUT IN THE CONSOLE: library(tidyverse) (BECAUSE TIDYVERSE IS A SUBLANGUAGE OF R/WE DIDNT DO ANY OTHER LANGUAGE SO FAR, JUST BASIC R)
+>>>>>>> b5b9a9d2087ef2869d0701f2b10cd730c6eb23f3
 
 

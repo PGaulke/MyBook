@@ -1,0 +1,114 @@
+---
+title: "11_Twelveth_Lesson"
+author: "PGaulke"
+date: "14 Juni 2019"
+output: html_document
+---
+#Twelveth_Lesson
+
+##Tree-Based-Methods
+
+Some notes on trees...
+
+
+
+```{r}
+#load some packages
+
+#require(tree) not as package
+require(randomForest)
+require(rpart)
+require(MASS)
+require(ISLR)
+
+#for piping
+require(magrittr)
+require(tidyverse)
+
+#now we work with data hitters
+
+data("Hitters")
+
+
+```
+
+```{r}
+data("Hitters")
+
+summary(Hitters$Salary)
+
+hist(Hitters$Salary)
+
+Hitters$Salary <-log(Hitters$Salary)
+
+#why dow we do the log: sometimes the data is too spread (example: from 60 to 2300), therefore we take the log to comprimise the data to a smaller representable . After our calculation, we can turn around (e to the power of the outcome)
+
+Hitters %>%
+  mutate(Salary = log(Salary))
+
+plot(Hitters$Years, Hitters$Hits, col = Hitters$Salary)
+
+
+# to illustrate the x and y axis, and colour another dimension (the salary), but actually the solution above is crap
+
+#How we do it in base r
+
+Hitters %>%
+  ggplot(aes(x=Years, y=Hits, col=Salary)) +
+  geom_point()
+
+
+
+```
+
+
+
+A tree for the (log) 'Salary' ... depending on 'Years' and 'Hits'.
+
+```{r}
+b.tree <- rpart(Salary ~ Years + Hits, data = Hitters)
+
+plot(b.tree)
+text(b.tree, pretty = 0)
+
+#plotcp(b.tree)
+
+min.of.cp <- b.tree$cptable[which.min(b.tree$cptable[,"xerror"]),"CP"]
+
+pruned.b.tree <- prune(b.tree, cp = min.of.cp)
+plot(pruned.b.tree)
+text(pruned.b.tree, pretty = 0)
+
+
+
+# how we would do it with the package tree
+
+t.b.tree <- tree(Salary ~ Years + Hits,data = Hitters)
+plot(t.b.tree)
+text(t.b.tree, pretty = 0)
+
+
+cv.t.b.tree <- cv.tree(t.b.tree, FUN=prune.tree, K = 5)
+plot(cv.t.b.tree)
+
+pruned.t.b.tree<- prune.tree(t.b.tree, best=3)
+plot(pruned.t.b.tree)
+text(pruned.t.b.tree)
+#need to be careful in terms of overfitting, sometimes it could be too bushy
+#therefore we need to limit the internal nodes
+
+
+#the general process here is to grow the tree with a formula and then cut the tree down to the strongest internal nodes
+
+
+#why does it start with years? because the rsme for years is smaller
+```
+
+
+
+
+```{r}
+
+
+
+```
