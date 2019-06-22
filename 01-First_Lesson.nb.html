@@ -30,80 +30,6 @@
 <script src="data:application/x-javascript;base64,CndpbmRvdy5pbml0aWFsaXplU291cmNlRW1iZWQgPSBmdW5jdGlvbihmaWxlbmFtZSkgewogICQoIiNybWQtZG93bmxvYWQtc291cmNlIikuY2xpY2soZnVuY3Rpb24oKSB7CiAgICB2YXIgc3JjID0gJCgiI3JtZC1zb3VyY2UtY29kZSIpLmh0bWwoKTsKICAgIHZhciBhID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnYScpOwogICAgYS5ocmVmID0gImRhdGE6dGV4dC94LXItbWFya2Rvd247YmFzZTY0LCIgKyBzcmM7CiAgICBhLmRvd25sb2FkID0gZmlsZW5hbWU7CiAgICBkb2N1bWVudC5ib2R5LmFwcGVuZENoaWxkKGEpOwogICAgYS5jbGljaygpOwogICAgZG9jdW1lbnQuYm9keS5yZW1vdmVDaGlsZChhKTsKICB9KTsKfTsK"></script>
 
 
-<style type="text/css">code{white-space: pre;}</style>
-<style type="text/css" data-origin="pandoc">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-pre, code { background-color: #f8f8f8; }
-code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
-code > span.dt { color: #204a87; } /* DataType */
-code > span.dv { color: #0000cf; } /* DecVal */
-code > span.bn { color: #0000cf; } /* BaseN */
-code > span.fl { color: #0000cf; } /* Float */
-code > span.ch { color: #4e9a06; } /* Char */
-code > span.st { color: #4e9a06; } /* String */
-code > span.co { color: #8f5902; font-style: italic; } /* Comment */
-code > span.ot { color: #8f5902; } /* Other */
-code > span.al { color: #ef2929; } /* Alert */
-code > span.fu { color: #000000; } /* Function */
-code > span.er { color: #a40000; font-weight: bold; } /* Error */
-code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #000000; } /* Constant */
-code > span.sc { color: #000000; } /* SpecialChar */
-code > span.vs { color: #4e9a06; } /* VerbatimString */
-code > span.ss { color: #4e9a06; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #000000; } /* Variable */
-code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
-code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
-code > span.ex { } /* Extension */
-code > span.at { color: #c4a000; } /* Attribute */
-code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
-code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
-
-.sourceCode .row {
-  width: 100%;
-}
-.sourceCode {
-  overflow-x: auto;
-}
-.code-folding-btn {
-  margin-right: -30px;
-}
-</style>
-<script>
-// apply pandoc div.sourceCode style to pre.sourceCode instead
-(function() {
-  var sheets = document.styleSheets;
-  for (var i = 0; i < sheets.length; i++) {
-    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
-    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
-      var rule = rules[j];
-      // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
-      var style = rule.style.cssText;
-      // check if color or background-color is set
-      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
-      // replace div.sourceCode by a pre.sourceCode rule
-      sheets[i].deleteRule(j);
-      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
-    }
-  }
-})();
-</script>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 
 
 <style type="text/css">
@@ -267,7 +193,7 @@ $(document).ready(function () {
 </style>
 <script>
 $(document).ready(function () {
-  window.initializeSourceEmbed("07-First_Steps.Rmd");
+  window.initializeSourceEmbed("01-First_Lesson.Rmd");
   window.initializeCodeFolding("hide" === "show");
 });
 </script>
@@ -397,166 +323,27 @@ div.tocify {
 
 <h1 class="title toc-ignore">First Mark Down</h1>
 <h4 class="author">Philipp Gaulke</h4>
-<h4 class="date">Last update: 12:04, April 12, 2019</h4>
+<h4 class="date">Last update: 22:04, April 05, 2019</h4>
 
 </div>
 
 
 <!-- rnb-text-begin -->
-<div id="first-lesson-changed" class="section level1">
-<h1>First Lesson changed</h1>
-<p>Two ways to add something to a R Markdown file</p>
-<ul>
-<li>written text, inclduing code which start with one backstick, and ends with one backstick</li>
-<li>a Chunk: seperate field (see the grew field), it starts with 3 backsticks + r in brackets and ends with 3 backsticks + r in brackets</li>
-</ul>
-<p>further options: + use echo=false if you do not want to show it in the output file, if you say echo=true the chunk will be displayed + if you ad eval=False, then the chunk will be ignored and the code in the written text will ignore the chunk</p>
-<ul>
-<li>Header: YAML</li>
-</ul>
+<div id="first-lesson" class="section level1">
+<h1>First Lesson</h1>
+<div id="how-to-add-something-in-a-r-markdown-file" class="section level2">
+<h2>How to Add Something in a R Markdown File</h2>
+<p>Two Ways * written text, inclduing code which start with one backstick and ends with one backstick * a Chunk: seperate field (see the grew field), it starts with 3 backsticks + r in brackets and ends with 3 backsticks</p>
+<p>Further Options: <em>use echo=false if you do not want to show it in the output file, if you say echo=true the chunk will be displayed </em>if you ad eval=False, then the chunk will be ignored and the code in the written text will ignore the chunk</p>
 </div>
-<div id="forth-lesson" class="section level1">
-<h1>Forth Lesson</h1>
+<div id="how-to-change-the-header" class="section level2">
+<h2>How to Change the Header</h2>
+<p>Headerlanguage: YAML</p>
 <!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucm9vdHMgPC0gZnVuY3Rpb24oYSwgYiwgYyl7XG4gIFxuICBpZiAoYl4yLSA0KmEqYyA8MCkge1xuICAgIHByaW50KFwiTm8gc29sdXRpb24hIChuZWdhdGl2IHJvb3QgY2Fubm90IGJlIHNxdWFyZWQpXCIpXG4gIH0gZWxzZSB7fVxuICBcbiAgKC1iICsgc3FydCAoYl4yLSA0KmEqYykpIC8gMiphXG59XG5yb290cyhhPTUsIGI9NiwgYz0xKVxuYGBgIn0= -->
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">roots &lt;-<span class="st"> </span><span class="cf">function</span>(a, b, c){
-  
-  <span class="cf">if</span> (b<span class="op">^</span><span class="dv">2</span><span class="op">-</span><span class="st"> </span><span class="dv">4</span><span class="op">*</span>a<span class="op">*</span>c <span class="op">&lt;</span><span class="dv">0</span>) {
-    <span class="kw">print</span>(<span class="st">&quot;No solution! (negativ root cannot be squared)&quot;</span>)
-  } <span class="cf">else</span> {}
-  
-  (<span class="op">-</span>b <span class="op">+</span><span class="st"> </span><span class="kw">sqrt</span> (b<span class="op">^</span><span class="dv">2</span><span class="op">-</span><span class="st"> </span><span class="dv">4</span><span class="op">*</span>a<span class="op">*</span>c)) <span class="op">/</span><span class="st"> </span><span class="dv">2</span><span class="op">*</span>a
-}
-<span class="kw">roots</span>(<span class="dt">a=</span><span class="dv">5</span>, <span class="dt">b=</span><span class="dv">6</span>, <span class="dt">c=</span><span class="dv">1</span>)</code></pre></div>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIC01XG4ifQ== -->
-<pre><code>[1] -5</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZG5hIDwtIGMgKFwiQVwiLCBcIkNcIiwgXCJHXCIsIFwiVFwiKVxuYSA8LSByZXAgKGRuYSwgMTIpXG5hXG5gYGAifQ== -->
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dna &lt;-<span class="st"> </span><span class="kw">c</span> (<span class="st">&quot;A&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;G&quot;</span>, <span class="st">&quot;T&quot;</span>)
-a &lt;-<span class="st"> </span><span class="kw">rep</span> (dna, <span class="dv">12</span>)
-a</code></pre></div>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiIFsxXSBcIkFcIiBcIkNcIiBcIkdcIiBcIlRcIiBcIkFcIiBcIkNcIiBcIkdcIiBcIlRcIiBcIkFcIiBcIkNcIiBcIkdcIiBcIlRcIiBcIkFcIiBcIkNcIiBcIkdcIiBcIlRcIiBcIkFcIlxuWzE4XSBcIkNcIiBcIkdcIiBcIlRcIiBcIkFcIiBcIkNcIiBcIkdcIiBcIlRcIiBcIkFcIiBcIkNcIiBcIkdcIiBcIlRcIiBcIkFcIiBcIkNcIiBcIkdcIiBcIlRcIiBcIkFcIiBcIkNcIlxuWzM1XSBcIkdcIiBcIlRcIiBcIkFcIiBcIkNcIiBcIkdcIiBcIlRcIiBcIkFcIiBcIkNcIiBcIkdcIiBcIlRcIiBcIkFcIiBcIkNcIiBcIkdcIiBcIlRcIlxuIn0= -->
-<pre><code> [1] &quot;A&quot; &quot;C&quot; &quot;G&quot; &quot;T&quot; &quot;A&quot; &quot;C&quot; &quot;G&quot; &quot;T&quot; &quot;A&quot; &quot;C&quot; &quot;G&quot; &quot;T&quot; &quot;A&quot; &quot;C&quot; &quot;G&quot; &quot;T&quot; &quot;A&quot;
-[18] &quot;C&quot; &quot;G&quot; &quot;T&quot; &quot;A&quot; &quot;C&quot; &quot;G&quot; &quot;T&quot; &quot;A&quot; &quot;C&quot; &quot;G&quot; &quot;T&quot; &quot;A&quot; &quot;C&quot; &quot;G&quot; &quot;T&quot; &quot;A&quot; &quot;C&quot;
-[35] &quot;G&quot; &quot;T&quot; &quot;A&quot; &quot;C&quot; &quot;G&quot; &quot;T&quot; &quot;A&quot; &quot;C&quot; &quot;G&quot; &quot;T&quot; &quot;A&quot; &quot;C&quot; &quot;G&quot; &quot;T&quot;</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG50X2lyaXMgPC0gdGliYmxlKGlyaXMpXG5jbGFzcyh0X2lyaXMpXG5gYGAifQ== -->
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
-t_iris &lt;-<span class="st"> </span><span class="kw">tibble</span>(iris)
-<span class="kw">class</span>(t_iris)</code></pre></div>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwidGJsX2RmXCIgICAgIFwidGJsXCIgICAgICAgIFwiZGF0YS5mcmFtZVwiXG4ifQ== -->
-<pre><code>[1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubXlfZGF0YSA8LSBjKDI6MTAsIDIwLCA0MilcbmxpYnJhcnkobWFncml0dHIpXG5teV9kYXRhICU+JVxuICBtZWFuICgpICU+JVxuICBzcXJ0ICgpICU+JVxuICByb3VuZCAoMilcbmBgYCJ9 -->
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_data &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">42</span>)
-<span class="kw">library</span>(magrittr)
-my_data <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mean</span> () <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">sqrt</span> () <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">round</span> (<span class="dv">2</span>)</code></pre></div>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDMuMjVcbiJ9 -->
-<pre><code>[1] 3.25</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubXlfZGF0YSA8LSBjKDY6MTIsIDIzLCA0MSlcbmxpYnJhcnkobWFncml0dHIpXG5teV9kYXRhICU+JVxuICBtZWFuICgpICU+JVxuICBzcXJ0ICgpICU+JVxuICByb3VuZCAoMilcbmBgYCJ9 -->
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_data &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">6</span><span class="op">:</span><span class="dv">12</span>, <span class="dv">23</span>, <span class="dv">41</span>)
-<span class="kw">library</span>(magrittr)
-my_data <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mean</span> () <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">sqrt</span> () <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">round</span> (<span class="dv">2</span>)</code></pre></div>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDMuNzZcbiJ9 -->
-<pre><code>[1] 3.76</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5kYXRhKFwiaXJpc1wiKVxudF9pcmlzIDwtIGFzX3RpYmJsZShpcmlzKVxudF9pcmlzMiA8LSB0X2lyaXMgW3RfaXJpcyRzZXBhbC5sZW5naHQ+NC41ICYgdF9pcmlzJHNlcGFsLmxlbmd0aDw1LjUsXVxuYGBgIn0= -->
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
-<span class="kw">data</span>(<span class="st">&quot;iris&quot;</span>)
-t_iris &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(iris)
-t_iris2 &lt;-<span class="st"> </span>t_iris [t_iris<span class="op">$</span>sepal.lenght<span class="op">&gt;</span><span class="fl">4.5</span> <span class="op">&amp;</span><span class="st"> </span>t_iris<span class="op">$</span>sepal.length<span class="op">&lt;</span><span class="fl">5.5</span>,]</code></pre></div>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiVW5rbm93biBvciB1bmluaXRpYWxpc2VkIGNvbHVtbjogJ3NlcGFsLmxlbmdodCcuVW5rbm93biBvciB1bmluaXRpYWxpc2VkIGNvbHVtbjogJ3NlcGFsLmxlbmd0aCcuTGVuZ3RoIG9mIGxvZ2ljYWwgaW5kZXggbXVzdCBiZSAxIG9yIDE1MCwgbm90IDBcbiJ9 -->
-<pre><code>Unknown or uninitialised column: 'sepal.lenght'.Unknown or uninitialised column: 'sepal.length'.Length of logical index must be 1 or 150, not 0</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaXJpcyAlPiVcbiAgYXNfdGliYmxlXG5gYGAifQ== -->
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">iris <span class="op">%&gt;%</span>
-<span class="st">  </span>as_tibble</code></pre></div>
-<!-- rnb-source-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibmNvbCI6NSwibnJvdyI6MTUwfSwicmRmIjoiSDRzSUFBQUFBQUFBQTkyWXkyNWFWeFNHdHpsZ0F5WXV2aEZNbk9RSmd0VExQQXc2N0tCcUJzMlU0dU9FbG9JRnhPMndUMkdwZlpNOFFxVjIxRkZtbGZvQ2pscFZqUnJoSHVEL2R1MmZISkd4ajRRWDYvNnZ0ZmZaZStFdlBuMzZVZlZwTllSUUNFa3BDWVVrKzFvc1pIODJRakZVNXZUN0VKTDk3RXNwKyt4a240dk93ZW5pNmV6L09IOSs2dXo5TW45KzdleEpmaEFXVCtjUXZjbDNKY2NmdS8yUEYwK2t1NkozUlJ2S2d6MDRrTU83UHVZSHQrS0JKMUxpVUk4bzlqR3U1QTM1VVFkeFhMNXJlTERiczM1RUhJN1Q2amcwL01laVI0cHpUeFFjTFhBSjl4RjlsbDBMWE5Rdis3dlNOOFUzNmJkb2l6NklaNTJhTGllT2VQSkgzbkRjazU3NFRjTlBYZENZMS9ZZGZNdnFCcGZIYVZvZGNUMXRuMEdwMC9jaGVZaHpiSFd6SGcvc1BicHZkUitMWWgvWDE5NEg4c1ErRWw5NktQMkkrMFA1SHhodXowK2R2bDdvNzR0L0tJcmUxOW56SE5rNmdZdjg4TlRuKzhMWGxickJxMzBYejYyYTlHWFJpdUtYWlY4VC9VRHh0bzF1aVdKL1IvN295eGEvYnU4M2NjR3hvNzVBaVVOYzhGUk5UL3h0aXdmdmRTR3ZLMDVkY3ZUWUU0ZThlWGtLaXVOKzFGRTJIanZxcXByYzhSSi8weWgraWExSFNmN0IrcjhoK1piWmw2MCsvTEV2MnY0Z1AzTDRHTS9rOE9pTHlnZnV4SEJEdmQvZUQvVGdLRm9kUmJQM3VONEhyNmU2eHMvM2Q5SDA4RFhiVng3UDgxWk16NzZoSHRiRjEyUFQ4UHErOHZYSTQzY3NYbHp2blBmQTkwL2tqWllNZDlYeTA0ZVYrSUZuY1c0OS9udnBGK2xmeS9pUC8xa2FSZm0vUy8vSXV4NGUrbWFKSytwZmkvOVRjYkFqbitkQjcveWx5V2Z5SXgvVThlWHA4K29BcCtQei9zQTdKUS80SEVkT0gvK2ZkN1Z1M045MThjeHA2TEZuL2RIN2ZjQzVYRGMvM2lmdUVlTFdMUS94OWpudkRSL3htS3ZqSEM3ZTUxSS8xem0veVhQZ2RScHU0c2Q3Ui9wWWg4bnBUK3lEVVhESCsxWDJ6QS9nWWQ1c3dNdXZaWGg5VG1OT2liOGpKR2MrOVBuYzlUNjN4UGxSOGpodkd4L25TZGFMZGN5cHcrZXdodUdHOTNtOVlmRVBjL3hYK2loOC92c0EzbjV2QmM2dG4vVWVyYU92UkgvVCsrejZsemwrTDNQMHI0d1MxNm5idy8rdTl6MFA1L3ZXazRmN2Zldkx3L3VIK0hWOWMrcm5tWitQenIrUjM2WEppWE5wY2VEUnU3M2J3WFB2dkxYemVkMDVEODI3ZjE0YmZ1SlFsOStENis0TC9Na0w3LzF4dkZEd2lPZis1LzdwQk5tcEQzSHVRVTZkYjgyT09TSzhPeDd5T0hkcVBsekpVN2k1VG5HT0RCWWZQOE83Z2dzOS9aMVp2QTNydS9vYTh5WTU5VktYMXpNei8rTE5PbGJ5V3g5Q1NPNWs0b3N3LytmWDdmZ1Vic2tudVIyZkcvOVkzUnlrNStsZ2tuMnJMN1NTVHRMcGFOSVZWejFQeDVOK2J6UVlqU1dwblBmSHovckRmcTlyNFVxOVFYZEN0SmpqdE51YlpyNGh6Tng4MlAwMnhid2tZZTFKZXRZZHREOUxoOCttenlYYlhzcSs3SjlFVWUzemRMcGl0cFJkTjl0NmNwYjIrdk1rTnpKWHhxUHYybVNmdjNDRkg3SS9WMWRYWHk4Tmt5c3JvbnJTblhiYnArUE01UjJGYkkzT3B2M1JNQXRXNEwvVTE1MDN4aWFvdnhqT2s1ODg2ajEvTWZ6bTBZZWZ6RE9FNWVzU2hHaisvZUxhOTlJeVp4Rms5R3N6NjBCL21OTFNRZmVyZENCbUo2dHlVV1Q3Yk53ZlRpa2xrMDdhMDFIV0tpVFo0aUpaRkJkbS93Rk92d0d3bEJjQUFBPT0ifQ== -->
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["Sepal.Length"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Sepal.Width"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Petal.Length"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Petal.Width"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Species"],"name":[5],"type":["fctr"],"align":["left"]}],"data":[{"1":"5.1","2":"3.5","3":"1.4","4":"0.2","5":"setosa"},{"1":"4.9","2":"3.0","3":"1.4","4":"0.2","5":"setosa"},{"1":"4.7","2":"3.2","3":"1.3","4":"0.2","5":"setosa"},{"1":"4.6","2":"3.1","3":"1.5","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.6","3":"1.4","4":"0.2","5":"setosa"},{"1":"5.4","2":"3.9","3":"1.7","4":"0.4","5":"setosa"},{"1":"4.6","2":"3.4","3":"1.4","4":"0.3","5":"setosa"},{"1":"5.0","2":"3.4","3":"1.5","4":"0.2","5":"setosa"},{"1":"4.4","2":"2.9","3":"1.4","4":"0.2","5":"setosa"},{"1":"4.9","2":"3.1","3":"1.5","4":"0.1","5":"setosa"},{"1":"5.4","2":"3.7","3":"1.5","4":"0.2","5":"setosa"},{"1":"4.8","2":"3.4","3":"1.6","4":"0.2","5":"setosa"},{"1":"4.8","2":"3.0","3":"1.4","4":"0.1","5":"setosa"},{"1":"4.3","2":"3.0","3":"1.1","4":"0.1","5":"setosa"},{"1":"5.8","2":"4.0","3":"1.2","4":"0.2","5":"setosa"},{"1":"5.7","2":"4.4","3":"1.5","4":"0.4","5":"setosa"},{"1":"5.4","2":"3.9","3":"1.3","4":"0.4","5":"setosa"},{"1":"5.1","2":"3.5","3":"1.4","4":"0.3","5":"setosa"},{"1":"5.7","2":"3.8","3":"1.7","4":"0.3","5":"setosa"},{"1":"5.1","2":"3.8","3":"1.5","4":"0.3","5":"setosa"},{"1":"5.4","2":"3.4","3":"1.7","4":"0.2","5":"setosa"},{"1":"5.1","2":"3.7","3":"1.5","4":"0.4","5":"setosa"},{"1":"4.6","2":"3.6","3":"1.0","4":"0.2","5":"setosa"},{"1":"5.1","2":"3.3","3":"1.7","4":"0.5","5":"setosa"},{"1":"4.8","2":"3.4","3":"1.9","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.0","3":"1.6","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.4","3":"1.6","4":"0.4","5":"setosa"},{"1":"5.2","2":"3.5","3":"1.5","4":"0.2","5":"setosa"},{"1":"5.2","2":"3.4","3":"1.4","4":"0.2","5":"setosa"},{"1":"4.7","2":"3.2","3":"1.6","4":"0.2","5":"setosa"},{"1":"4.8","2":"3.1","3":"1.6","4":"0.2","5":"setosa"},{"1":"5.4","2":"3.4","3":"1.5","4":"0.4","5":"setosa"},{"1":"5.2","2":"4.1","3":"1.5","4":"0.1","5":"setosa"},{"1":"5.5","2":"4.2","3":"1.4","4":"0.2","5":"setosa"},{"1":"4.9","2":"3.1","3":"1.5","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.2","3":"1.2","4":"0.2","5":"setosa"},{"1":"5.5","2":"3.5","3":"1.3","4":"0.2","5":"setosa"},{"1":"4.9","2":"3.6","3":"1.4","4":"0.1","5":"setosa"},{"1":"4.4","2":"3.0","3":"1.3","4":"0.2","5":"setosa"},{"1":"5.1","2":"3.4","3":"1.5","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.5","3":"1.3","4":"0.3","5":"setosa"},{"1":"4.5","2":"2.3","3":"1.3","4":"0.3","5":"setosa"},{"1":"4.4","2":"3.2","3":"1.3","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.5","3":"1.6","4":"0.6","5":"setosa"},{"1":"5.1","2":"3.8","3":"1.9","4":"0.4","5":"setosa"},{"1":"4.8","2":"3.0","3":"1.4","4":"0.3","5":"setosa"},{"1":"5.1","2":"3.8","3":"1.6","4":"0.2","5":"setosa"},{"1":"4.6","2":"3.2","3":"1.4","4":"0.2","5":"setosa"},{"1":"5.3","2":"3.7","3":"1.5","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.3","3":"1.4","4":"0.2","5":"setosa"},{"1":"7.0","2":"3.2","3":"4.7","4":"1.4","5":"versicolor"},{"1":"6.4","2":"3.2","3":"4.5","4":"1.5","5":"versicolor"},{"1":"6.9","2":"3.1","3":"4.9","4":"1.5","5":"versicolor"},{"1":"5.5","2":"2.3","3":"4.0","4":"1.3","5":"versicolor"},{"1":"6.5","2":"2.8","3":"4.6","4":"1.5","5":"versicolor"},{"1":"5.7","2":"2.8","3":"4.5","4":"1.3","5":"versicolor"},{"1":"6.3","2":"3.3","3":"4.7","4":"1.6","5":"versicolor"},{"1":"4.9","2":"2.4","3":"3.3","4":"1.0","5":"versicolor"},{"1":"6.6","2":"2.9","3":"4.6","4":"1.3","5":"versicolor"},{"1":"5.2","2":"2.7","3":"3.9","4":"1.4","5":"versicolor"},{"1":"5.0","2":"2.0","3":"3.5","4":"1.0","5":"versicolor"},{"1":"5.9","2":"3.0","3":"4.2","4":"1.5","5":"versicolor"},{"1":"6.0","2":"2.2","3":"4.0","4":"1.0","5":"versicolor"},{"1":"6.1","2":"2.9","3":"4.7","4":"1.4","5":"versicolor"},{"1":"5.6","2":"2.9","3":"3.6","4":"1.3","5":"versicolor"},{"1":"6.7","2":"3.1","3":"4.4","4":"1.4","5":"versicolor"},{"1":"5.6","2":"3.0","3":"4.5","4":"1.5","5":"versicolor"},{"1":"5.8","2":"2.7","3":"4.1","4":"1.0","5":"versicolor"},{"1":"6.2","2":"2.2","3":"4.5","4":"1.5","5":"versicolor"},{"1":"5.6","2":"2.5","3":"3.9","4":"1.1","5":"versicolor"},{"1":"5.9","2":"3.2","3":"4.8","4":"1.8","5":"versicolor"},{"1":"6.1","2":"2.8","3":"4.0","4":"1.3","5":"versicolor"},{"1":"6.3","2":"2.5","3":"4.9","4":"1.5","5":"versicolor"},{"1":"6.1","2":"2.8","3":"4.7","4":"1.2","5":"versicolor"},{"1":"6.4","2":"2.9","3":"4.3","4":"1.3","5":"versicolor"},{"1":"6.6","2":"3.0","3":"4.4","4":"1.4","5":"versicolor"},{"1":"6.8","2":"2.8","3":"4.8","4":"1.4","5":"versicolor"},{"1":"6.7","2":"3.0","3":"5.0","4":"1.7","5":"versicolor"},{"1":"6.0","2":"2.9","3":"4.5","4":"1.5","5":"versicolor"},{"1":"5.7","2":"2.6","3":"3.5","4":"1.0","5":"versicolor"},{"1":"5.5","2":"2.4","3":"3.8","4":"1.1","5":"versicolor"},{"1":"5.5","2":"2.4","3":"3.7","4":"1.0","5":"versicolor"},{"1":"5.8","2":"2.7","3":"3.9","4":"1.2","5":"versicolor"},{"1":"6.0","2":"2.7","3":"5.1","4":"1.6","5":"versicolor"},{"1":"5.4","2":"3.0","3":"4.5","4":"1.5","5":"versicolor"},{"1":"6.0","2":"3.4","3":"4.5","4":"1.6","5":"versicolor"},{"1":"6.7","2":"3.1","3":"4.7","4":"1.5","5":"versicolor"},{"1":"6.3","2":"2.3","3":"4.4","4":"1.3","5":"versicolor"},{"1":"5.6","2":"3.0","3":"4.1","4":"1.3","5":"versicolor"},{"1":"5.5","2":"2.5","3":"4.0","4":"1.3","5":"versicolor"},{"1":"5.5","2":"2.6","3":"4.4","4":"1.2","5":"versicolor"},{"1":"6.1","2":"3.0","3":"4.6","4":"1.4","5":"versicolor"},{"1":"5.8","2":"2.6","3":"4.0","4":"1.2","5":"versicolor"},{"1":"5.0","2":"2.3","3":"3.3","4":"1.0","5":"versicolor"},{"1":"5.6","2":"2.7","3":"4.2","4":"1.3","5":"versicolor"},{"1":"5.7","2":"3.0","3":"4.2","4":"1.2","5":"versicolor"},{"1":"5.7","2":"2.9","3":"4.2","4":"1.3","5":"versicolor"},{"1":"6.2","2":"2.9","3":"4.3","4":"1.3","5":"versicolor"},{"1":"5.1","2":"2.5","3":"3.0","4":"1.1","5":"versicolor"},{"1":"5.7","2":"2.8","3":"4.1","4":"1.3","5":"versicolor"},{"1":"6.3","2":"3.3","3":"6.0","4":"2.5","5":"virginica"},{"1":"5.8","2":"2.7","3":"5.1","4":"1.9","5":"virginica"},{"1":"7.1","2":"3.0","3":"5.9","4":"2.1","5":"virginica"},{"1":"6.3","2":"2.9","3":"5.6","4":"1.8","5":"virginica"},{"1":"6.5","2":"3.0","3":"5.8","4":"2.2","5":"virginica"},{"1":"7.6","2":"3.0","3":"6.6","4":"2.1","5":"virginica"},{"1":"4.9","2":"2.5","3":"4.5","4":"1.7","5":"virginica"},{"1":"7.3","2":"2.9","3":"6.3","4":"1.8","5":"virginica"},{"1":"6.7","2":"2.5","3":"5.8","4":"1.8","5":"virginica"},{"1":"7.2","2":"3.6","3":"6.1","4":"2.5","5":"virginica"},{"1":"6.5","2":"3.2","3":"5.1","4":"2.0","5":"virginica"},{"1":"6.4","2":"2.7","3":"5.3","4":"1.9","5":"virginica"},{"1":"6.8","2":"3.0","3":"5.5","4":"2.1","5":"virginica"},{"1":"5.7","2":"2.5","3":"5.0","4":"2.0","5":"virginica"},{"1":"5.8","2":"2.8","3":"5.1","4":"2.4","5":"virginica"},{"1":"6.4","2":"3.2","3":"5.3","4":"2.3","5":"virginica"},{"1":"6.5","2":"3.0","3":"5.5","4":"1.8","5":"virginica"},{"1":"7.7","2":"3.8","3":"6.7","4":"2.2","5":"virginica"},{"1":"7.7","2":"2.6","3":"6.9","4":"2.3","5":"virginica"},{"1":"6.0","2":"2.2","3":"5.0","4":"1.5","5":"virginica"},{"1":"6.9","2":"3.2","3":"5.7","4":"2.3","5":"virginica"},{"1":"5.6","2":"2.8","3":"4.9","4":"2.0","5":"virginica"},{"1":"7.7","2":"2.8","3":"6.7","4":"2.0","5":"virginica"},{"1":"6.3","2":"2.7","3":"4.9","4":"1.8","5":"virginica"},{"1":"6.7","2":"3.3","3":"5.7","4":"2.1","5":"virginica"},{"1":"7.2","2":"3.2","3":"6.0","4":"1.8","5":"virginica"},{"1":"6.2","2":"2.8","3":"4.8","4":"1.8","5":"virginica"},{"1":"6.1","2":"3.0","3":"4.9","4":"1.8","5":"virginica"},{"1":"6.4","2":"2.8","3":"5.6","4":"2.1","5":"virginica"},{"1":"7.2","2":"3.0","3":"5.8","4":"1.6","5":"virginica"},{"1":"7.4","2":"2.8","3":"6.1","4":"1.9","5":"virginica"},{"1":"7.9","2":"3.8","3":"6.4","4":"2.0","5":"virginica"},{"1":"6.4","2":"2.8","3":"5.6","4":"2.2","5":"virginica"},{"1":"6.3","2":"2.8","3":"5.1","4":"1.5","5":"virginica"},{"1":"6.1","2":"2.6","3":"5.6","4":"1.4","5":"virginica"},{"1":"7.7","2":"3.0","3":"6.1","4":"2.3","5":"virginica"},{"1":"6.3","2":"3.4","3":"5.6","4":"2.4","5":"virginica"},{"1":"6.4","2":"3.1","3":"5.5","4":"1.8","5":"virginica"},{"1":"6.0","2":"3.0","3":"4.8","4":"1.8","5":"virginica"},{"1":"6.9","2":"3.1","3":"5.4","4":"2.1","5":"virginica"},{"1":"6.7","2":"3.1","3":"5.6","4":"2.4","5":"virginica"},{"1":"6.9","2":"3.1","3":"5.1","4":"2.3","5":"virginica"},{"1":"5.8","2":"2.7","3":"5.1","4":"1.9","5":"virginica"},{"1":"6.8","2":"3.2","3":"5.9","4":"2.3","5":"virginica"},{"1":"6.7","2":"3.3","3":"5.7","4":"2.5","5":"virginica"},{"1":"6.7","2":"3.0","3":"5.2","4":"2.3","5":"virginica"},{"1":"6.3","2":"2.5","3":"5.0","4":"1.9","5":"virginica"},{"1":"6.5","2":"3.0","3":"5.2","4":"2.0","5":"virginica"},{"1":"6.2","2":"3.4","3":"5.4","4":"2.3","5":"virginica"},{"1":"5.9","2":"3.0","3":"5.1","4":"1.8","5":"virginica"}],"options":{"columns":{"min":{},"max":[10],"total":[5]},"rows":{"min":[10],"max":[10],"total":[150]},"pages":{}}}
-  </script>
 </div>
-<!-- rnb-frame-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5sb3R0ZXJ5IDwtIHRpYmJsZShwZXJzb249IGMoXCJBbmRyZVwiLCBcIkJldGhcIiwgXCJDaGFybGVzXCIpLFxubW9uPSBjKDIsIDUsIDEpLFxudHVlPSBjKDMsIDcsIDUpLFxud2VkPSBjKDEwLCAzLCA0KSxcbnRodT0gYygxLCAyLCA3KVxuKVxudGlkeV9sb3R0ZXJ5IDwtZ2F0aGVyIChsb3R0ZXJ5LFxua2V5ID0gXCJkYXlcIixcbnZhbHVlID0gXCJnYWluc1wiLFxubW9uOiB0aHVcbilcbmBgYCJ9 -->
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-lottery &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">person=</span> <span class="kw">c</span>(<span class="st">&quot;Andre&quot;</span>, <span class="st">&quot;Beth&quot;</span>, <span class="st">&quot;Charles&quot;</span>),
-<span class="dt">mon=</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">1</span>),
-<span class="dt">tue=</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">5</span>),
-<span class="dt">wed=</span> <span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">3</span>, <span class="dv">4</span>),
-<span class="dt">thu=</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">7</span>)
-)
-tidy_lottery &lt;-<span class="kw">gather</span> (lottery,
-<span class="dt">key =</span> <span class="st">&quot;day&quot;</span>,
-<span class="dt">value =</span> <span class="st">&quot;gains&quot;</span>,
-mon<span class="op">:</span><span class="st"> </span>thu
-)</code></pre></div>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmlzb3UgPC0gdHJpYmJsZShcbiAgfm5hbWUsIH5gMjAxNmAsIH5gMjAxN2AsIH5gMjAxOGAsXG5cImdhdVwiLCAyMywgNDUsIDEyLFxuXCJ0cmlcIiwgOCwgMTQsIDMwLFxuXCJoYW5cIiwgMTIsIDQzLCA4XG4pXG5iaXNvdVxuXG50aWR5X2Jpc291IDwtIGdhdGhlcihiaXNvdSwga2V5PXllYXIsIHZhbHVlPWtpc3NlcywgYDIwMTZgLCBgMjAxN2AsIGAyMDE4YClcbiAgXG4gIHRpZHlfYmlzb3VcbmBgYCJ9 -->
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bisou &lt;-<span class="st"> </span><span class="kw">tribble</span>(
-  <span class="op">~</span>name, <span class="op">~</span><span class="st">`</span><span class="dt">2016</span><span class="st">`</span>, <span class="op">~</span><span class="st">`</span><span class="dt">2017</span><span class="st">`</span>, <span class="op">~</span><span class="st">`</span><span class="dt">2018</span><span class="st">`</span>,
-<span class="st">&quot;gau&quot;</span>, <span class="dv">23</span>, <span class="dv">45</span>, <span class="dv">12</span>,
-<span class="st">&quot;tri&quot;</span>, <span class="dv">8</span>, <span class="dv">14</span>, <span class="dv">30</span>,
-<span class="st">&quot;han&quot;</span>, <span class="dv">12</span>, <span class="dv">43</span>, <span class="dv">8</span>
-)
-bisou
-
-tidy_bisou &lt;-<span class="st"> </span><span class="kw">gather</span>(bisou, <span class="dt">key=</span>year, <span class="dt">value=</span>kisses, <span class="st">`</span><span class="dt">2016</span><span class="st">`</span>, <span class="st">`</span><span class="dt">2017</span><span class="st">`</span>, <span class="st">`</span><span class="dt">2018</span><span class="st">`</span>)
-  
-  tidy_bisou</code></pre></div>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2VwYXJhdGUgPC1cbmBgYCJ9 -->
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">separate &lt;-</code></pre></div>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiRmlyc3QgTWFyayBEb3duIgphdXRob3I6ICJQaGlsaXBwIEdhdWxrZSIKZGF0ZTogJ0xhc3QgdXBkYXRlOiBgciBmb3JtYXQoU3lzLnRpbWUoKSwgIiVIOiVtLCAlQiAlZCwgJVkiKWAnCm91dHB1dDoKICBwZGZfZG9jdW1lbnQ6CiAgICBoaWdobGlnaHQ6ICJ0YW5nbyIKICAgIG51bWJlcl9zZWN0aW9uczogeWVzCiAgICB0b2M6IHllcwogIGh0bWxfZG9jdW1lbnQ6CiAgICB0b2M6IG5vCiAgaHRtbF9ub3RlYm9vazoKICAgIGNvZGVfZm9sZGluZzogaGlkZQogICAgaGlnaGxpZ2h0OiB0YW5nbwogICAgbnVtYmVyX3NlY3Rpb25zOiBubwogICAgdGhlbWU6IGNlcnVsZWFuCiAgICB0b2M6IHllcwogICAgdG9jX2RlcHRoOiAyCiAgICB0b2NfZmxvYXQ6CiAgICAgIGNvbGxhcHNlZDogeWVzCiAgICAgIHNtb290aF9zY3JvbGw6IHllcwogIHdvcmRfZG9jdW1lbnQ6CiAgICB0b2M6IG5vCiAgICB0b2NfZGVwdGg6ICcyJwotLS0KCiNGaXJzdCBMZXNzb24gY2hhbmdlZAoKVHdvIHdheXMgdG8gYWRkIHNvbWV0aGluZyB0byBhIFIgTWFya2Rvd24gZmlsZSAKCiogd3JpdHRlbiB0ZXh0LCBpbmNsZHVpbmcgY29kZSB3aGljaCBzdGFydCB3aXRoIG9uZSBiYWNrc3RpY2ssIGFuZCBlbmRzIHdpdGggb25lIGJhY2tzdGljawoqIGEgQ2h1bms6IHNlcGVyYXRlIGZpZWxkIChzZWUgdGhlIGdyZXcgZmllbGQpLCBpdCBzdGFydHMgd2l0aCAzIGJhY2tzdGlja3MgKyByIGluIGJyYWNrZXRzIGFuZCBlbmRzIHdpdGggMyBiYWNrc3RpY2tzICsgciBpbiBicmFja2V0cwoKCmZ1cnRoZXIgb3B0aW9uczoKICArIHVzZSBlY2hvPWZhbHNlIGlmIHlvdSBkbyBub3Qgd2FudCB0byBzaG93IGl0IGluIHRoZSBvdXRwdXQgZmlsZSwgaWYgeW91IHNheSBlY2hvPXRydWUgdGhlIGNodW5rIHdpbGwgYmUgZGlzcGxheWVkCiAgKyBpZiB5b3UgYWQgZXZhbD1GYWxzZSwgdGhlbiB0aGUgY2h1bmsgd2lsbCBiZSBpZ25vcmVkIGFuZCB0aGUgY29kZSBpbiB0aGUgd3JpdHRlbiB0ZXh0IHdpbGwgaWdub3JlIHRoZSBjaHVuawoKCiogSGVhZGVyOiBZQU1MCgoKIyBGb3J0aCBMZXNzb24gCgpgYGB7cn0Kcm9vdHMgPC0gZnVuY3Rpb24oYSwgYiwgYyl7CiAgCiAgaWYgKGJeMi0gNCphKmMgPDApIHsKICAgIHByaW50KCJObyBzb2x1dGlvbiEgKG5lZ2F0aXYgcm9vdCBjYW5ub3QgYmUgc3F1YXJlZCkiKQogIH0gZWxzZSB7fQogIAogICgtYiArIHNxcnQgKGJeMi0gNCphKmMpKSAvIDIqYQp9CnJvb3RzKGE9NSwgYj02LCBjPTEpCmBgYApgYGAge3J9CmRuYSA8LSBjICgiQSIsICJDIiwgIkciLCAiVCIpCmEgPC0gcmVwIChkbmEsIDEyKQphCmBgYAoKCgoKYGBge3J9CmxpYnJhcnkodGlkeXZlcnNlKQp0X2lyaXMgPC0gdGliYmxlKGlyaXMpCmNsYXNzKHRfaXJpcykKYGBgCgpgYGB7cn0KbXlfZGF0YSA8LSBjKDI6MTAsIDIwLCA0MikKCmxpYnJhcnkobWFncml0dHIpCm15X2RhdGEgJT4lCiAgbWVhbiAoKSAlPiUKICBzcXJ0ICgpICU+JQogIHJvdW5kICgyKQoKCmBgYAoKCmBgYHtyfQpteV9kYXRhIDwtIGMoNjoxMiwgMjMsIDQxKQoKbGlicmFyeShtYWdyaXR0cikKbXlfZGF0YSAlPiUKICBtZWFuICgpICU+JQogIHNxcnQgKCkgJT4lCiAgcm91bmQgKDIpCgoKYGBgCgoKYGBge3J9CmxpYnJhcnkodGlkeXZlcnNlKQoKCmRhdGEoImlyaXMiKQp0X2lyaXMgPC0gYXNfdGliYmxlKGlyaXMpCnRfaXJpczIgPC0gdF9pcmlzIFt0X2lyaXMkc2VwYWwubGVuZ2h0PjQuNSAmIHRfaXJpcyRzZXBhbC5sZW5ndGg8NS41LF0KCmlyaXMgJT4lCiAgYXNfdGliYmxlCmBgYAoKCmBgYHtyfQoKbG90dGVyeSA8LSB0aWJibGUocGVyc29uPSBjKCJBbmRyZSIsICJCZXRoIiwgIkNoYXJsZXMiKSwKbW9uPSBjKDIsIDUsIDEpLAp0dWU9IGMoMywgNywgNSksCndlZD0gYygxMCwgMywgNCksCnRodT0gYygxLCAyLCA3KQopCnRpZHlfbG90dGVyeSA8LWdhdGhlciAobG90dGVyeSwKa2V5ID0gImRheSIsCnZhbHVlID0gImdhaW5zIiwKbW9uOiB0aHUKKQpgYGAKCmBgYHtyfQpiaXNvdSA8LSB0cmliYmxlKAogIH5uYW1lLCB+YDIwMTZgLCB+YDIwMTdgLCB+YDIwMThgLAoiZ2F1IiwgMjMsIDQ1LCAxMiwKInRyaSIsIDgsIDE0LCAzMCwKImhhbiIsIDEyLCA0MywgOAopCmJpc291Cgp0aWR5X2Jpc291IDwtIGdhdGhlcihiaXNvdSwga2V5PXllYXIsIHZhbHVlPWtpc3NlcywgYDIwMTZgLCBgMjAxN2AsIGAyMDE4YCkKICAKICB0aWR5X2Jpc291CmBgYAoKYGBge3J9CnNlcGFyYXRlIDwt</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkZpcnN0IE1hcmsgRG93biINCmF1dGhvcjogIlBoaWxpcHAgR2F1bGtlIg0KZGF0ZTogJ0xhc3QgdXBkYXRlOiBgciBmb3JtYXQoU3lzLnRpbWUoKSwgIiVIOiVtLCAlQiAlZCwgJVkiKWAnDQpvdXRwdXQ6DQogIHBkZl9kb2N1bWVudDoNCiAgICBoaWdobGlnaHQ6ICJ0YW5nbyINCiAgICBudW1iZXJfc2VjdGlvbnM6IHllcw0KICAgIHRvYzogeWVzDQogIGh0bWxfZG9jdW1lbnQ6DQogICAgdG9jOiBubw0KICBodG1sX25vdGVib29rOg0KICAgIGNvZGVfZm9sZGluZzogaGlkZQ0KICAgIGhpZ2hsaWdodDogdGFuZ28NCiAgICBudW1iZXJfc2VjdGlvbnM6IG5vDQogICAgdGhlbWU6IGNlcnVsZWFuDQogICAgdG9jOiB5ZXMNCiAgICB0b2NfZGVwdGg6IDINCiAgICB0b2NfZmxvYXQ6DQogICAgICBjb2xsYXBzZWQ6IHllcw0KICAgICAgc21vb3RoX3Njcm9sbDogeWVzDQogIHdvcmRfZG9jdW1lbnQ6DQogICAgdG9jOiBubw0KICAgIHRvY19kZXB0aDogJzInDQotLS0NCg0KI0ZpcnN0IExlc3Nvbg0KDQoNCiMjSG93IHRvIEFkZCBTb21ldGhpbmcgaW4gYSBSIE1hcmtkb3duIEZpbGUNCg0KVHdvIFdheXMNCiogd3JpdHRlbiB0ZXh0LCBpbmNsZHVpbmcgY29kZSB3aGljaCBzdGFydCB3aXRoIG9uZSBiYWNrc3RpY2sgYW5kIGVuZHMgd2l0aCBvbmUgYmFja3N0aWNrDQoqIGEgQ2h1bms6IHNlcGVyYXRlIGZpZWxkIChzZWUgdGhlIGdyZXcgZmllbGQpLCBpdCBzdGFydHMgd2l0aCAzIGJhY2tzdGlja3MgKyByIGluIGJyYWNrZXRzIGFuZCBlbmRzIHdpdGggMyBiYWNrc3RpY2tzDQoNCg0KRnVydGhlciBPcHRpb25zOg0KKnVzZSBlY2hvPWZhbHNlIGlmIHlvdSBkbyBub3Qgd2FudCB0byBzaG93IGl0IGluIHRoZSBvdXRwdXQgZmlsZSwgaWYgeW91IHNheSBlY2hvPXRydWUgdGhlIGNodW5rIHdpbGwgYmUgZGlzcGxheWVkDQoqaWYgeW91IGFkIGV2YWw9RmFsc2UsIHRoZW4gdGhlIGNodW5rIHdpbGwgYmUgaWdub3JlZCBhbmQgdGhlIGNvZGUgaW4gdGhlIHdyaXR0ZW4gdGV4dCB3aWxsIGlnbm9yZSB0aGUgY2h1bmsNCg0KIyNIb3cgdG8gQ2hhbmdlIHRoZSBIZWFkZXINCkhlYWRlcmxhbmd1YWdlOiBZQU1M</div>
 
 
 </div>

@@ -6,12 +6,13 @@ output: pdf_document
 ---
 
 #Third Lesson
-First Topic: Data Structure
 
-verschiedene Data Strucutre (arbeiten mit Vektoren)
+##Continue of Data Structure
 
+work with different data structures
+How to generate a matrice/table
 ```{r}
-# populate a matrix with elements in of the vector, and give the dimension
+# populate a matrice with elements in of the vector, and give the dimension
 
 M <- matrix(c(2,3,4,5,6,7),nrow=3)
 
@@ -19,13 +20,9 @@ M
 ```
 
 
-Das obige ist um eine Matrix bzw. Tabelle zu erstellen
-
-
-
-
+How to generate a list
 ```{r}
-school<-factor(c("PRimary","Secondary","Tertiary"), ordered=TRUE)
+school<-factor(c("Primary","Secondary","Tertiary"), ordered=TRUE)
 mylist <-list (numbers=c(1:60),
               somenames=c("jim", "jules"),
               results=c(T,F,F,T),
@@ -34,8 +31,7 @@ mylist <-list (numbers=c(1:60),
 mylist
 ```
 
-Das obige ist um eine Liste zu generieren.
-
+How to create a data frame
 
 ```{r}
 df <- data.frame(let=LETTERS[1:7],
@@ -44,6 +40,8 @@ df <- data.frame(let=LETTERS[1:7],
 df
 names(df)
 ```
+
+How to understand the length of data frame
 ```{r}
 students <- data.frame(name=c("Corinna", "Philipp", "Freddy", "Moritz", "Niklas", "Laurin", "Forster", "Fidalgo"),
                        age=c(23, 23, 24, 22, 23, 24, 30, 30),
@@ -53,10 +51,7 @@ students
 length(students)
 ```
 
-
-How are Functions by vectors?
-Element by Element Evaluation
-
+###Rule 1: Element by Element Evaluation
 ```{r}
 # create two numeric vetor of same length
 visits1 <- c(12,2,45,75,65,11,2)
@@ -69,24 +64,20 @@ total <- visits1 + visits2
 
 length(total)
 total
-```
 
-above: element by element evaluation, weil jedes element (erster Zeitraum bei visit1 plus erster Zeitraum bei visit2) addiert wird
+##element by element evaluation, because each element is added up (first value visit one plus first value visit two)
+```
 
 ```{r}
 total.p2 <- total^2
 total.p2
 
 (trop <- total - 2)
+##Total.p2 is just the name and totally replacable. No reason for the name, everything after is not replacable for this calc
 
 ```
 
-total p2 is just the name and totally replacable. No reason for the name, everything after is not replacable for this calc
-
-
-
-
-Another rule: Recyling
+##Rule 2: Recycling
 
 ```{r}
 l3 <- c(12,34,50)
@@ -101,13 +92,11 @@ ltotal
 
 recycling happens than, the red is not really an error message but it makes us aware that recycling happens (10+50)
 
-
-Attention: SOMETIMES RECYCLING AND ELEMENT BY ELEMENT EVALUATION HAPPENS
-
+**Attention: SOMETIMES RECYCLING AND ELEMENT BY ELEMENT EVALUATION HAPPENS**
 
 
 
-Next Topic: To get help
+##How to Get Help
 Type in into the console: ?mean to get the description in the help window
 
 Then this appears in the top:
@@ -121,17 +110,14 @@ ages <- c(28,33,39,56,34,45,27,40,NA)
 ages
 mean(ages, na.rm = T, trim = 30,40)
 
+#na.rm = t used to ignore the NA in the calc. Otherwise it would be an error message. na.rm = T stands for: ignoring NA. (By saying =false than we have the default (same as for writing nothing, so not na.rm at all))
 
 ```
 
-na.rm = t used to ignore the NA in the calc. Otherwise it would be an error message. na.rm = T stands for: ignoring NA. (By saying =false than we have the default (same as for writing nothing, so not na.rm at all))
 
+##Excercise 2 on simple vectors creation
 
-#Excercise 2 on simple vectors creation
-
-2.1creation of simple vectors
-
-## Creation of simple vectors
+####2.1 Creation of simple vectors
 
 Create the following simple vectors.
 
@@ -151,17 +137,12 @@ b
 c
 ```
 
-2.2 ## Empty vector
-
+#### 2.2 Empty Vector
 Create an empty vector with 30 numeric values. Check its type and its length.   
 (Hint: use `numeric()`.)
-
-
 ```{r}
 # 2.2 empty vector
 empty <- numeric(c(30))
-
-
 empty
 
 length(empty)
@@ -173,9 +154,7 @@ empty2<- numeric(length=30)
 
 empty2
 ```
-
-2.3 ## Character vector
-
+#### 2.3 Character Vector
 Create the vector `participants` with the names of the participants in the class.
 
 ```{r}
@@ -185,9 +164,7 @@ participants <- c("corinna", "philipp", "laurin", "freddy", "moritz", "niklas")
 participants
 ```
  
- 
- 2.4
-Consider the following scores at a test.
+####2.4 Consider the following scores at a test.
 \[(60, 84, 65,67,75,72,80,85,63,82,70,75)\]
 Calculate the mean of the sample.  
 Recall the formula for the z-score of an observation:
@@ -205,9 +182,7 @@ z.scores
 
 
 ```
-
-2.5 ## Simple calculations
-
+#### 2.5 Simple Calculations
 Calculate the following expressions, where \(n\) is the number of elements in the series.
 \[\frac{1}{n}\sum_{i=5}^{55} (i^2 - 3i)\]
 \[\frac{1}{n}\sum_{i=1}^{10} \left(\frac{3^i}{3i} + \sqrt{3i}\right)\]
@@ -229,13 +204,11 @@ sum (sum (i^2-3*i))/length(i)
 ```
 
 
-#Subsetting
+##Subsetting
 
 Subsetting with [ and ] - square brackets --> a vector
 
 to get specific part of the set
-
-
 ```{r}
 va <- c(13.1, -15.2, 0.3, 2.4, 10.5, -3.6, 9.7)
 va[1] # first element

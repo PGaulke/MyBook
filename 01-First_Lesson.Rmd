@@ -24,19 +24,21 @@ output:
     toc_depth: '2'
 ---
 
-#First Lesson changed
-
-Two ways to add something to a R Markdown file 
-
-* written text, inclduing code which start with one backstick, and ends with one backstick
-* a Chunk: seperate field (see the grew field), it starts with 3 backsticks + r in brackets and ends with 3 backsticks + r in brackets
+#First Lesson
 
 
-further options:
-  + use echo=false if you do not want to show it in the output file, if you say echo=true the chunk will be displayed
-  + if you ad eval=False, then the chunk will be ignored and the code in the written text will ignore the chunk
+##How to Add Something in a R Markdown File
+
+Two Ways
+* written text, inclduing code which start with one backstick and ends with one backstick
+* a Chunk: seperate field (see the grew field), it starts with 3 backsticks + r in brackets and ends with 3 backsticks
 
 
+Further Options:
+*use echo=false if you do not want to show it in the output file, if you say echo=true the chunk will be displayed
+*if you ad eval=False, then the chunk will be ignored and the code in the written text will ignore the chunk
+
+<<<<<<< HEAD:07-First_Steps.Rmd
 * Header: YAML
 
 
@@ -105,36 +107,7 @@ t_iris2 <- t_iris [t_iris$sepal.lenght>4.5 & t_iris$sepal.length<5.5,]
 iris %>%
   as_tibble
 ```
-
-
-```{r}
-
-lottery <- tibble(person= c("Andre", "Beth", "Charles"),
-mon= c(2, 5, 1),
-tue= c(3, 7, 5),
-wed= c(10, 3, 4),
-thu= c(1, 2, 7)
-)
-tidy_lottery <-gather (lottery,
-key = "day",
-value = "gains",
-mon: thu
-)
-```
-
-```{r}
-bisou <- tribble(
-  ~name, ~`2016`, ~`2017`, ~`2018`,
-"gau", 23, 45, 12,
-"tri", 8, 14, 30,
-"han", 12, 43, 8
-)
-bisou
-
-tidy_bisou <- gather(bisou, key=year, value=kisses, `2016`, `2017`, `2018`)
-  
-  tidy_bisou
-```
-
-```{r}
-separate <-
+=======
+##How to Change the Header
+Headerlanguage: YAML
+>>>>>>> 2380010ebad2b5d0f1d845bd9cd8145df6bc82b6:01-First_Lesson.Rmd

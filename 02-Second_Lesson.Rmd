@@ -6,8 +6,8 @@ output: pdf_document
 ---
 #Second Lesson
 
-* Task: Building a Book
-* To change the layout of a book, see output.yml
+##Task: Building a Book
+To change the layout of a book, see output.yml
 To change the order of the pdf file, or what ever file: include:
 
 ```
@@ -16,28 +16,32 @@ bookdown::pdf_book:
     in_header: preamble.tex
 ```
 
-* check for special role of bookdown.ywml  
-    
-    
-* Writing your own webpage, use HTML output form
-use the file: custom_readthedown
+check for special role of bookdown.ywml  
+Writing your own webpage, use HTML output form
+
+
+##Use of the File custom_readthedown
+
 there you can change for example the layout of header etc. (See the Github of Fidalgo for downloading the customreadthedown file)
 
 
 * Chunks, see Fidalgo Book and its instructions for that.
-In brackets there are always these conditions such as eval or echo, and then eqaul false or true
+In brackets there are always these conditions such as eval or echo, and then equal false or true
 
 
 * to create a new chapter: new r markdown file, put hashtag in the first line to add chapter name, so that it will be displayed in the book as a new chapter (and appears in table of contents)
 
-* Create GitHub account
+
+##Create GitHub account
 Download GitHub
 Open Global Options and add Git Hub (cread ssh)
 Create Repo (same name)
 Quick Set Up (see the link)
 Add SSH Key
 
-* How to Use are, for example as a single calculator
+
+
+##Calculation Example of R
 First put in the chunk as follows, than click on the right arrow to run the chunk
 ```{r}
 2+6
@@ -45,16 +49,17 @@ First put in the chunk as follows, than click on the right arrow to run the chun
 ```
 For further Mathoperators, check Fidalgos File
 
-*next Chapter: Data structures
+
+##Data Strucutres
 How to store data
 Simplest: Vector: just a pile of observations
 (for example all the age information of the class)
 We have different types of vectors 
-+ logical: such as false or true
-+ double: also numeric (age information)
-+ character: contains words
+* logical: such as false or true
+* double: also numeric (age information)
+* character: contains word
 
-* how to create a vector:
+###How to create a vector:
 trop1 as a name, and assigned to the name are the numbers (c is necessary to say: combine these values)
 ```{r}
 trop1 <- c(24,23,23,24,24)
@@ -65,7 +70,7 @@ trop2
 
 trop3 <- c(24,24,"trierweiler")
 trop3
-typeof(trop3)
+typeof(trop3) # to undestand which kind of vector we can use
 
 var <- c(2)
 var
@@ -77,10 +82,7 @@ tar
 ```
 So now we have two vectors, trop1 which is including age information, and trop2 which includes name information
 
-to show which kind of vector we can use typeof
+see differences as definition of character and numeric
 
-
-see differences as definition of character and double
-
-* learnings of sec lesson: how to create a book, how to create chapter, how to creater vectors, how to upload on github
+**learnings of sec lesson: how to create a book, how to create chapter, how to creater vectors, how to upload on github**
 
