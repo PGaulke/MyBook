@@ -1,0 +1,172 @@
+---
+<title: "Sixth-Lesson"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+# Select 
+
+```r
+select(df, var1, ..., varn)
+```
+
+```r
+df %>%
+  select(var1, ..., varn)
+```
+
+#Second
+```r
+piece_df <- df %>%
+              select(var1, ..., varn)
+```
+
+```{r}
+starwars %>%
+  select(name, species)
+# compare with base R
+
+starwars[,c("name""species")]
+```
+
+```{r}
+starwars %>%
+  select(
+  name, 
+  matches("color")
+  )
+
+starwars %>%
+  select(name, gender, films)
+```
+
+```r
+mutate(df, new_variable = expression)
+# with pipe
+df %>%
+  mutate(new_variable = expression)
+``` 
+
+```{r}
+## add variable bmi
+starwars %>%
+         mutate(bmi = mass / (height/100)^2 )  
+## two variables created, including one created in the same call
+df_b <- starwars %>%
+          mutate(
+            bmi = mass / (height/100)^2,
+            sr.bmi = sqrt(bmi)
+            ) 
+df_b
+
+starways %>%
+mutate (g_b = sample(c("G","B"), 1 ))
+```
+
+#filter 
+
+
+```{r}
+starwars %>%
+  filter(species != "Human")
+starwars %>%
+  filter(
+    species != "Human" &
+    eye_color == "red"
+    )
+# in base R 
+
+starwars[starwars$species!="Human" & 
+           starwars$eye_color=="red",]
+
+
+```
+
+```r
+## in case of several rows with same value of var1, use var2
+df %>%
+  arrange(
+    var1,
+    var2)
+```
+
+```{r, results='hide'}
+starwars %>%
+        arrange(
+          height, 
+          desc(mass))
+
+starwars %>%
+  arrange(name)
+```
+
+```{r}
+starwars %>%
+  summarise(min_h = min(height, na.rm = TRUE),
+            av_m= mean(mass, na.rm = TRUE)
+            )
+```
+```{r}
+## average mass of humans 
+starwars %>%
+  filter(species == "Human") %>%
+  summarise(av_m=mean(mass, na.rm=TRUE))
+
+best because clear 
+
+# without pipe
+
+summarise(filter (starwars, species == "Human"), 
+          av_m=mean(mass, na.rm=TRUE))
+
+temp1 <- filter (starwars, species == "Human")
+summarise(temp1, av_m=mean(mass, na.rm=TRUE)))
+
+# with base R
+
+av_m <- mean starwars[starwars$species =="Human", "mass"],$mass, na:rm=TRUE
+av_m 
+```
+
+
+# Another Example 
+
+``` {r}
+for (i in length(starwars$films))
+  
+  starwars %>%
+  select(name, species, n_films) %>%
+  filter (n_films >=6)
+
+```r
+left_join(df1, df2, by=c("key1", "key2"))
+# with pipe
+df1 %>%
+  left_join(
+    df2,
+    by=c("key1", "key2")
+    )
+```

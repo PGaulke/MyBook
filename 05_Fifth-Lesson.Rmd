@@ -246,6 +246,48 @@ tidy_people2
 
 ```
 
+<<<<<<< HEAD
+#Unite 
+#Exercises on sub-setting
+
+```{r}
+letters 
+v1 <- letters [1]
+
+v2 <- letters [c(1,2,3)]
+v2
+
+v3 <- letters[-c(2,3)]
+
+
+v4 <- letters[-c(24, 25, 26)] # bad one
+
+v4 <- letters[-c(length(letters)-2, length(letters)-1, length(letters))]
+lv <- length (letters)
+
+
+
+v5 <- letters[seq(from=1, to=26, by 3)]
+v5
+```
+
+```{r}
+data (iris)
+max(Sepal.Lenght) # not found bc. it is in the data frame of iris, tell them, it should look in the data frame
+```
+
+```{r}
+data (iris)
+max(iris$Sepal.Length)
+```
+
+# iii
+
+```{r}
+iris2 <- iris [, c("Sepal.Length", "Sepal.Width")]
+```
+
+=======
 how to separate
 ```{r}
 clients <- ("Andre, Porto")
@@ -255,5 +297,6 @@ clients <- ("Andre, Porto")
 
 
 VERY IMPORTANT: EVERYTIME WE WANT TO USE TIBBLE OR PROCESS TIBBLE (OR ANY OTHER PART OF TIDYVERSE) WE NEED TO PUT IN THE CONSOLE: library(tidyverse) (BECAUSE TIDYVERSE IS A SUBLANGUAGE OF R/WE DIDNT DO ANY OTHER LANGUAGE SO FAR, JUST BASIC R)
+>>>>>>> b5b9a9d2087ef2869d0701f2b10cd730c6eb23f3
 
 
