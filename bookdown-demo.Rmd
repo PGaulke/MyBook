@@ -1,0 +1,2248 @@
+--- 
+title: "A Minimal Book Example"
+author: "Yihui Xie"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+github-repo: rstudio/bookdown-demo
+description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
+---
+
+# Prerequisites
+
+This is a _sample_ book written in **Markdown**. You can use anything that Pandoc's Markdown supports, e.g., a math equation $a^2 + b^2 = c^2$.
+
+The **bookdown** package can be installed from CRAN or Github:
+
+```{r eval=FALSE}
+install.packages("bookdown")
+# or the development version
+# devtools::install_github("rstudio/bookdown")
+```
+
+Remember each Rmd file contains one and only one chapter, and a chapter is defined by the first-level heading `#`.
+
+To compile this example to PDF, you need XeLaTeX. You are recommended to install TinyTeX (which includes XeLaTeX): <https://yihui.name/tinytex/>.
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```
+
+<!--chapter:end:index.Rmd-->
+
+---
+title: "First Mark Down"
+author: "Philipp Gaulke"
+date: 'Last update: `r format(Sys.time(), "%H:%m, %B %d, %Y")`'
+output:
+  pdf_document:
+    highlight: "tango"
+    number_sections: yes
+    toc: yes
+  html_document:
+    toc: no
+  html_notebook:
+    code_folding: hide
+    highlight: tango
+    number_sections: no
+    theme: cerulean
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: yes
+      smooth_scroll: yes
+  word_document:
+    toc: no
+    toc_depth: '2'
+---
+
+#First Lesson
+
+
+##How to Add Something in a R Markdown File
+
+Two Ways
+* written text, inclduing code which start with one backstick and ends with one backstick
+* a Chunk: seperate field (see the grew field), it starts with 3 backsticks + r in brackets and ends with 3 backsticks
+
+
+Further Options:
+*use echo=false if you do not want to show it in the output file, if you say echo=true the chunk will be displayed
+*if you ad eval=False, then the chunk will be ignored and the code in the written text will ignore the chunk
+
+##How to Change the Header
+Headerlanguage: YAML
+
+<!--chapter:end:01-First_Lesson.Rmd-->
+
+---
+title: "Second Lesson"
+author: "PGaulke"
+date: "22 März 2019"
+output: pdf_document
+---
+#Second Lesson
+
+##Task: Building a Book
+To change the layout of a book, see output.yml
+To change the order of the pdf file, or what ever file: include:
+
+```
+bookdown::pdf_book:
+  includes:
+    in_header: preamble.tex
+```
+
+check for special role of bookdown.ywml  
+Writing your own webpage, use HTML output form
+
+
+##Use of the File custom_readthedown
+
+there you can change for example the layout of header etc. (See the Github of Fidalgo for downloading the customreadthedown file)
+
+
+* Chunks, see Fidalgo Book and its instructions for that.
+In brackets there are always these conditions such as eval or echo, and then equal false or true
+
+
+* to create a new chapter: new r markdown file, put hashtag in the first line to add chapter name, so that it will be displayed in the book as a new chapter (and appears in table of contents)
+
+
+##Create GitHub account
+Download GitHub
+Open Global Options and add Git Hub (cread ssh)
+Create Repo (same name)
+Quick Set Up (see the link)
+Add SSH Key
+
+
+
+##Calculation Example of R
+First put in the chunk as follows, than click on the right arrow to run the chunk
+```{r}
+2+6
+56/6
+```
+For further Mathoperators, check Fidalgos File
+
+
+##Data Strucutres
+How to store data
+Simplest: Vector: just a pile of observations
+(for example all the age information of the class)
+We have different types of vectors 
+* logical: such as false or true
+* double: also numeric (age information)
+* character: contains word
+
+###How to create a vector:
+trop1 as a name, and assigned to the name are the numbers (c is necessary to say: combine these values)
+```{r}
+trop1 <- c(24,23,23,24,24)
+trop1
+
+trop2 <- c("mi","ga","tr")
+trop2
+
+trop3 <- c(24,24,"trierweiler")
+trop3
+typeof(trop3) # to undestand which kind of vector we can use
+
+var <- c(2)
+var
+
+tar <- c("2")
+tar
+
+
+```
+So now we have two vectors, trop1 which is including age information, and trop2 which includes name information
+
+see differences as definition of character and numeric
+
+**learnings of sec lesson: how to create a book, how to create chapter, how to creater vectors, how to upload on github**
+
+
+<!--chapter:end:02-Second_Lesson.Rmd-->
+
+---
+title: "09_Third_Lesson"
+author: "PGaulke"
+date: "29 März 2019"
+output: pdf_document
+---
+
+#Third Lesson
+
+##Continue of Data Structure
+
+work with different data structures
+How to generate a matrice/table
+```{r}
+# populate a matrice with elements in of the vector, and give the dimension
+
+M <- matrix(c(2,3,4,5,6,7),nrow=3)
+
+M
+```
+
+
+How to generate a list
+```{r}
+school<-factor(c("Primary","Secondary","Tertiary"), ordered=TRUE)
+mylist <-list (numbers=c(1:60),
+              somenames=c("jim", "jules"),
+              results=c(T,F,F,T),
+              school=school)
+
+mylist
+```
+
+How to create a data frame
+
+```{r}
+df <- data.frame(let=LETTERS[1:7],
+                 num1=10:16,
+                 num2=floor(rnorm(7,100,10)))
+df
+names(df)
+```
+
+How to understand the length of data frame
+```{r}
+students <- data.frame(name=c("Corinna", "Philipp", "Freddy", "Moritz", "Niklas", "Laurin", "Forster", "Fidalgo"),
+                       age=c(23, 23, 24, 22, 23, 24, 30, 30),
+                       likeR=c(T,F,T,F,T,F,T,F))
+                    
+students
+length(students)
+```
+
+###Rule 1: Element by Element Evaluation
+```{r}
+# create two numeric vetor of same length
+visits1 <- c(12,2,45,75,65,11,2)
+visits2 <- c(23,4,5,78,12,0,200)
+length(visits1)
+length(visits1) == length(visits2)
+
+total <- visits1 + visits2
+# their sum is the vecotr of same length, with the element by element sums
+
+length(total)
+total
+
+##element by element evaluation, because each element is added up (first value visit one plus first value visit two)
+```
+
+```{r}
+total.p2 <- total^2
+total.p2
+
+(trop <- total - 2)
+##Total.p2 is just the name and totally replacable. No reason for the name, everything after is not replacable for this calc
+
+```
+
+##Rule 2: Recycling
+
+```{r}
+l3 <- c(12,34,50)
+l2 <- c(10,3)
+tt <- l3 + 5
+tt
+
+ltotal <- l3+l2 # recycling!
+ltotal
+
+```
+
+recycling happens than, the red is not really an error message but it makes us aware that recycling happens (10+50)
+
+**Attention: SOMETIMES RECYCLING AND ELEMENT BY ELEMENT EVALUATION HAPPENS**
+
+
+
+##How to Get Help
+Type in into the console: ?mean to get the description in the help window
+
+Then this appears in the top:
+mean {base}	R Documentation
+Arithmetic Mean
+
+{base} shows the package
+
+```{r}
+ages <- c(28,33,39,56,34,45,27,40,NA)
+ages
+mean(ages, na.rm = T, trim = 30,40)
+
+#na.rm = t used to ignore the NA in the calc. Otherwise it would be an error message. na.rm = T stands for: ignoring NA. (By saying =false than we have the default (same as for writing nothing, so not na.rm at all))
+
+```
+
+
+##Excercise 2 on simple vectors creation
+
+####2.1 Creation of simple vectors
+
+Create the following simple vectors.
+
+  - \(a = (1, 2, 3, ..., 15)\),
+  - \(b = (15, 14, 13, ..., 0, -1, -2)\),
+  - \(c = (15, 14, 13, ..., 10, 9, -9, -10, ..., -13, -14, -15)\)
+```{r}
+#2.1 create vector with numbers
+a <- c(1:15)
+b <- c(15:-2)
+c <- c(15:9,-9:-15)
+
+a
+
+b
+
+c
+```
+
+#### 2.2 Empty Vector
+Create an empty vector with 30 numeric values. Check its type and its length.   
+(Hint: use `numeric()`.)
+```{r}
+# 2.2 empty vector
+empty <- numeric(c(30))
+empty
+
+length(empty)
+typeof(empty)
+
+# or
+
+empty2<- numeric(length=30)
+
+empty2
+```
+#### 2.3 Character Vector
+Create the vector `participants` with the names of the participants in the class.
+
+```{r}
+# 2.3 List all participants
+participants <- c("corinna", "philipp", "laurin", "freddy", "moritz", "niklas")
+
+participants
+```
+ 
+####2.4 Consider the following scores at a test.
+\[(60, 84, 65,67,75,72,80,85,63,82,70,75)\]
+Calculate the mean of the sample.  
+Recall the formula for the z-score of an observation:
+\[z_i=\frac{x_i-\mu}{\sigma}\]
+Create a vector with the z-score of each grade. 
+
+```{r}
+# 2.4 simple manipulation 
+scores <- c(60, 84, 65, 67, 75, 72, 80, 85, 63, 82, 70, 75)
+
+mean(scores)
+sd(scores)
+z.scores <- (scores-mean(scores))/sd(scores)
+z.scores
+
+
+```
+#### 2.5 Simple Calculations
+Calculate the following expressions, where \(n\) is the number of elements in the series.
+\[\frac{1}{n}\sum_{i=5}^{55} (i^2 - 3i)\]
+\[\frac{1}{n}\sum_{i=1}^{10} \left(\frac{3^i}{3i} + \sqrt{3i}\right)\]
+
+```{r}
+
+i <- c(5:55)
+
+aa<- i^2-3*i
+length(aa)
+
+sum(aa)/length(aa)
+
+#better
+
+sum (sum (i^2-3*i))/length(i)
+
+
+```
+
+
+##Subsetting
+
+Subsetting with [ and ] - square brackets --> a vector
+
+to get specific part of the set
+```{r}
+va <- c(13.1, -15.2, 0.3, 2.4, 10.5, -3.6, 9.7)
+va[1] # first element
+va[c(3:5)] # element 3 to 5
+va[-1] # all elements, but without element 1
+va[c(T,T,T,F,F,T,F)] #just elements 1,2,3 and 6
+va [c(T,F)] #notice the recycling
+va[c(-2,-7)] #all but second and seventh
+
+
+
+
+```
+
+if we want to subset a data frame, then we should take the name of the set$name of the subset
+
+for example
+```{r}
+df <- data.frame(let=LETTERS[1:7],
+                 num1=10:16,
+                 num2=floor(rnorm(7,100,10)))
+
+df$num2[7]
+df$num2[2:7]
+```
+
+<!--chapter:end:03_Third_Lesson.Rmd-->
+
+---
+title: "10_Fourth_Lesson"
+author: "PGaulke"
+date: "5 April 2019"
+output: pdf_document
+---
+
+#Fourth Lesson
+
+
+####2.7 For the following questions, you may want to check the help on the function seq.
+Create the following vectors:
+• a = (1, 2, 3, ..., 15),
+• b = (15, 14, 13, ..., 0,−1,−2),
+• c = (1, 1.2, 1.4, ..., 8).
+Create the following vectors, potentially based on auxiliary vectors.
+• d = (0.531.31, 0.561.34, ..., 0.5361.334),
+• e = (5, 52, 2 , 53, 3 , ..., 525
+25 ).
+Use the function all.equal to check that the last elements of each vector are indeed 1.0889154 × 10−7 and
+1.1920929 × 1016, respectively.
+
+
+```{r}
+a <- seq(1,15,1)
+a
+
+b <- c(15:-2)
+
+x0=1
+c <- seq(x0,8,0.2)
+c
+
+d <- c(0.5^(seq(3,36,3))*1.3^seq(1,34,3))
+d
+
+xtfrm
+
+
+```
+
+####2.8Use paste in vector creation
+For the following questions, you may want to check the help on the function paste.
+Create the following vectors:
+• a = (City 1, City 2, . . . , City 6),
+• b = (n1, n2, . . . , n6)
+• b = (Gender=M, Gender=F, Gender=M, Gender=F, Gender=M, Gender=F)
+3
+
+
+```{r}
+
+
+
+
+```
+
+
+##What happens in the lesson:
+
+Differences between matrice and normal vectors. How we "access" or "subset" a matrice or vector: Vector just a list, Matrice has different dimension. Therefore, we need: mat.(row, column) to display what we want.
+Shorter writing style for getting all values of a column: matrice$column
+Than you can subset this matrice.
+
+
+##How to get a subset out of a matrice
+(BTW r condition has no logic, it is more a name)
+```{r condition}
+mtcars
+mtcars[mtcars$mpg<20,] # all cars with mpg smaller 20
+
+
+```
+
+Further on vectors, put in conditions to display something like a statement
+
+```{r}
+
+gains <- c(10,3,-5,-4,12,4)
+sum(gains)
+
+# change the element -4 to -40 with a formula
+# subset gains and assign new values
+gains[gains==-4]<- -40
+gains
+
+if (sum(gains) >0) {
+  print("Congratulations, you are winning")
+} else  {
+  print ("You are not winning")
+}
+# else statement for display something else in case the if condition is false
+
+```
+
+
+Less trivial ways of writing condition
+  
+```{r}
+gains <- c(10,3,-5,0,-4,12,4)
+
+if (is.numeric(gains)) {
+  print ("Seems like it is a numeric vector...")
+}
+
+# here is-numeric (gains) evaluates to true hece the code is exceuted.
+
+!is.data.frame(gains)
+
+class(gains)
+
+```
+
+
+##Structures of simple function
+###How to write functions
+
+pow_two is just a random name here
+```{r}
+pow_two <- function (a){
+  a^2
+}
+pow_two(12)
+```
+
+you can also here apply element by element evaluation
+
+
+###Return of a function
+
+```{r}
+my_f2 <- function(a){
+  a^2
+  a^3 # this is the last exression executed
+}
+my_f2(5)
+
+```
+
+
+```{r}
+#multiple arguments and their identification
+
+pow <- function(a,p){
+  a^p
+}
+pow(12,0.5)
+
+```
+
+
+###Excercise on function (Excercise 4)
+
+####4.1 A quadratic equation of the generic form
+
+\[ax^2 + bx + c =0\]
+
+has two real roots, if they exist, given by the formula: pq formel
+
+\[x_{1,2}=\frac{ -b \pm\sqrt{b^2 -4ac}}{2a}\]
+
+Write a function that gives the real roots of a quadratic equation.  
+Test your function on  various quadratic equations, including:
+\[\begin{split}5x^2 + 6x + 1 = 0\\ 5x^2 + 2x + 1 = 0\end{split}\] 
+
+```{r}
+
+roots <- function (a,b,c) {
+  
+  if (!is.numeric( c(a,b,c)) ){
+    print ("The function only makes sense with numeric values")
+    
+    } else if (b^2-4*a*c<0) {
+  print ("no solution found")
+  } else {
+  
+  x1 <- (-b + sqrt(b^2-4*a*c)) / 2*a
+  x2 <- (-b - sqrt(b^2-4*a*c)) / 2*a
+  return( c(x1, x2))
+}
+}
+
+roots(a=5,c=1,b=2)
+roots(a=5,b=6,c=1)
+roots("tri",c=4,b=4)
+
+```
+
+
+#### 2.6-2.8 with fidalgo solution
+
+ 2.6 Create vectors with rep
+For the following questions, you may want to check the help on the function rep.
+Start by creating the vector
+• dna = (A, C, G, T).
+Then, create the following vectors:
+• a = (A, C, G, T, A, C, G, T, A, C, G, T, . . . , A, C, G, T) where there are 12 A’s as shown.
+• b = (A, C, G, T, A, C, G, T, A, C, G, T, . . . , A, C) where there are 15 A’s as shown; the last element
+of the vector being C.
+• c = (A, . . . , A, C, . . . , C, G, . . . , G, T, . . . , T) where there are 12 A’s, 15 C’s, 30 G’s and 4 T’s, in the
+order shown.
+
+```{r}
+
+dna <- c("A","C", "G", "T")
+dna
+
+a <- rep(dna,12)
+
+
+b <- rep(dna,length.out=58)
+b
+
+b2 <- rep(dna, length.out= (14*length(dna) +2))
+b2
+
+c <- rep(dna, each=c(12,15,30,4))
+c
+```
+
+<!--chapter:end:04-Fourth_Lesson.Rmd-->
+
+---
+title: "05_Fifith_Lesson"
+author: "PGaulke"
+date: "10 April 2019"
+output: pdf_document
+---
+#Fifth Lesson
+
+##Sub-Setting
+####3.1 Excercise on Subsetting
+Subsetting with Indices
+
+```{r}
+#a=(a)
+alphabet <-c(letters)
+
+alphabet[1]#a
+
+alphabet[1:3]#b
+
+alphabet[c(-2,-3)]#c
+
+#d dont know
+
+alphabet[c(TRUE,FALSE,FALSE)]
+
+```
+
+####3.2 Excercise on Subsetting
+Subsetting with Conditions
+
+```{r}
+set.seed(30)#i
+set.seed
+
+data <- c(runif(50, min = 80, max = 120))#ii
+data
+
+#iii
+length(data[data<90])
+
+#iv
+#dont know
+
+#v
+which(data%%2==0)
+
+#vi
+data[data>(mean(data))]
+
+#vii
+#dont know
+
+```
+
+####3.3 Excercise on Subsetting
+Subsetting data frames
+
+```{r}
+#i
+A <-data.frame(iris)
+
+#ii
+max(iris$Sepal.Length)
+
+
+#iii
+
+#iv
+data.frame(iris$Sepal.Length,iris$Sepal.Width)
+#v
+
+#vi
+
+#vii
+
+
+
+```
+
+##Sub-Dialecct of R - Tidyverse
+
+Download packages tidyverse, tiddle
+
+Than: library(tidyverse) --> run this 
+
+###Use of tibble
+
+With making a dataset a tibble (see chunk below) it is possible to define the Spalten. For example it is easily possible to create different columns by using mathematically mixed informations
+
+Example: Column 1 = x, Column 2 = y, Column 3 = xy
+
+
+
+
+```{r}
+library(tidyverse)
+t_iris <- tibble(iris)
+class(t_iris)
+
+
+```
+
+
+
+###magrittr
+
+How to pipe= %>%
+
+```{r}
+
+#simple
+
+library(magrittr)
+mydata <- c(2:10,20,42)
+mean(mydata)
+
+mydata%>%
+  mean()
+
+#advanced
+
+round(sqrt(mean(mydata)),2)
+
+mydata %>%
+  mean() %>%
+  sqrt() %>%
+  round(2)
+
+
+##using a placeholder
+
+3 %>%
+  round(17.2342)
+
+
+```
+
+
+Transformations on a data frame
+
+df_after_f <-f(df)
+df_after_g <-g(df_after_f)
+df_after_h <-g(df_after_g)
+
+with piping it is
+
+df %>%
+  f %>%
+  g %>%
+  h
+  
+
+Own example
+```{r}
+
+library(magrittr)
+library(tidyverse)
+
+
+data (iris)
+t_iris <- as_tibble(iris)
+
+t_iris2 <- t_iris[t_iris$Sepal.Length>4.5 & t_iris$Sepal.Length<5.5,]
+t_iris2
+
+av.sw<-mean(t_iris$Sepal.Length)
+av.sw
+
+iris %>%
+  as_tibble() %>%
+  .[.$Sepal.Length==5,] %>%
+  {mean(.$Sepal.Width)}
+
+
+
+```
+
+###How to Tidy Up something: Install tidyr
+
+how to gather
+```{r}
+
+lottery <- tibble (person= c("Andre","Beth","Charles"),
+  mon= c(2,5,1),
+  tue= c(3,7,5),
+  wed= c(10,3,4),
+  thu= c(1,2,7)
+  )
+
+lottery
+
+
+
+#tidy it up
+
+tidy_lottery <- gather (lottery,
+                        key= "day",
+                        value= "gains",
+                        mon:thu
+                        )
+tidy_lottery
+
+
+
+#another example
+bisou <- tribble(
+  ~name, ~`2016`, ~`2017`, ~`2018`,
+  "gau", 23,45,12,
+  "tri", 8,14,30,
+  "han", 12,43,8
+)
+  
+bisou
+
+tidy_bisou <- gather(bisou,
+                     key="Year",
+                     value="Number",
+                     `2016`, `2017`, `2018`)
+
+tidy_bisou
+
+```
+
+
+how to spread
+```{r}
+people<- tibble (name=rep(c("Andre", "Beth", "Charles"),2),
+                 info=rep(c("eyes","age"),3),
+                 measure= c("Blue",23,"brown",31,"brown",19)
+)
+                 
+                 
+tidy_people<- spread(people, key=info, value=measure)
+tidy_people
+
+people2<- tibble (name=c(rep(c("Andre", "Beth", "Charles"),2),"David"),
+                 info=c(rep(c("eyes","age"),3),
+                 "height"),
+                 measure= c("Blue",23,"brown",31,"brown",19, 175)
+)
+                 
+                 
+tidy_people2<- spread(people2, key=info, value=measure)
+tidy_people2
+
+```
+
+how to separate
+```{r}
+clients <- ("Andre, Porto")
+
+
+```
+
+
+VERY IMPORTANT: EVERYTIME WE WANT TO USE TIBBLE OR PROCESS TIBBLE (OR ANY OTHER PART OF TIDYVERSE) WE NEED TO PUT IN THE CONSOLE: library(tidyverse) (BECAUSE TIDYVERSE IS A SUBLANGUAGE OF R/WE DIDNT DO ANY OTHER LANGUAGE SO FAR, JUST BASIC R)
+
+
+
+<!--chapter:end:05_Fifth-Lesson.Rmd-->
+
+---
+title: "06_Sixth_Lesson"
+author: "PGaulke"
+date: "24 April 2019"
+output: pdf_document
+---
+
+#Sixth Lesson
+
+##Tidying
+####5.1 Excercise on Tidying
+Transform 'data' into 'data_tidy' by using using `gather` then `separate` then `spread`.
+
+```{r}
+data <- tribble(~famid, ~named, ~incd, ~namem, ~incm, 
+                1, "Bill", 30000, "Bess", 15000,
+                2, "Art", 22000, "Amy", 18000,
+                3, "Paul", 25000, "Pat", 50000
+                ) 
+data
+
+
+data_tidy <- gather(data, 
+                    key= "famid",
+                    value= "incd"
+                    )
+
+data_tidy
+```
+
+
+
+##Start of the lesson
+###dplyr
+easier and fast way to manipulate data
+this is another part of the sublanguage tidyverse, so again put in libraby(tidyverse) in the console
+(and of course download dplyr)
+
+First verbes: SELECT and MUTATE that can be applied on colunns
+
+```{r}
+starwars %>%
+  select(name, species)
+
+
+# compare with base R
+starwars [, c("name","species")]
+
+starwars %>%
+  select(
+    name, 
+    matches("color")
+    )
+
+
+```
+### Helper arguments
+
+These are arguments to help `select` the variables/columns. Here are a few of them (see `?select` for a complete list):
+
+- `starts_with("x")`
+- `ends_with("x")`
+- `contains("x")`
+- `matches("x")`
+
+
+```{r}
+starwars %>%
+  select(name, gender, films)
+```
+
+Now switching from SELECT to MUTATE
+
+```{r}
+starwars %>%
+  mutate(bmi = mass / (height/100)^2)
+
+df_b <- starwars %>%
+  mutate(
+    bmi = mass/ (height/100)^2,
+    sr.bmi =sqrt(bmi)
+  )
+
+df_b
+
+df_a <- starwars %>%
+  mutate(g_b = sample(c("G","B"), 87, replace = TRUE)
+  )
+df_b
+```
+
+Now switching to FILTER (for rows now, and not for columsn as for SELECT and MUTATE)
+
+```{r}
+starwars %>%
+  filter (
+    species !="human" &
+    eye_color == "red"
+  )
+
+starwars
+
+
+# in base r
+starwars[starwars$species!="Human" &
+           starwars$eye_color=="red",]
+
+```
+
+now switch to ARRANGE (also rows)
+```{r}
+starwars %>%
+  arrange(
+    height,
+    desc(mass)
+  )
+
+starwars %>%
+  arrange(
+    desc(name)
+  )
+
+starwars %>%
+  arrange(
+    name
+  )
+
+```
+
+now switch to SUMMARISE
+```{r}
+#creates a new df by collpasing values
+starwars %>%
+  summarise(
+    min_h = min(height, na.rm = TRUE),
+    av_m=mean(mass, na.rm =TRUE)
+  )
+
+#site comment: to remove not available data, na.rm =TRUE
+```
+```{r}
+#combine the verbs
+starwars %>%
+  select(species, mass) %>%
+  filter(species == "Human") %>%
+  summarise(av_m=mean(mass, na.rm = TRUE))
+
+# without pipe
+summarise(filter(starwars, species =="Human"),
+          av_m=mean(mass, na.rm=TRUE))
+
+temp1 <- filter(starwars, species =="Human")
+summarise(temp1, av_m=mean(mass, na.rm=TRUE))
+
+# base r
+temp2 <- starwars[starwars$species== "Human",]
+av_m <- mean(temp2$mass, na.rm = TRUE)
+#or
+av_m <- mean(starwars[starwars$species=="Human",]$mass,
+             na.rm=TRUE)
+
+
+#example
+
+aa <- numeric(length(starwars$films))
+for (i in 1:length(starwars$films)){
+  aa[i] <- length(starwars$films[[i]])
+}
+starwars$n_films <- aa
+
+starwars %>%
+  select(name, species, n_films) %>%
+  filter(species  ==  "Human", n_films >=6)
+
+
+         
+```
+
+more example for summarise
+
+```{r}
+#combine it with group by
+starwars %>%
+  group_by(eye_color) %>%
+  summarise(
+    n_per_group = n()
+  ) %>%
+  filter(n_per_group >1)
+
+
+```
+
+Also look at fulljoin and leftjoin functions (see Fidalgo "Keys for Joins")
+
+
+<!--chapter:end:06_Sixth_Lesson.Rmd-->
+
+---
+title: "07_Seventh_Lesson"
+author: "PGaulke"
+date: "10 Mai 2019"
+output: html_document
+---
+#Seventh Lesson
+
+no comments
+
+#Eighths Lesson
+
+##Linear Regression
+```{r}
+
+advertising <- read_csv("data/Advertising.csv")
+advertising
+
+advertising <- read_csv("data/Advertising.csv") %>%
+  select(-X1)
+advertising
+
+```
+
+```{r}
+model.slr <- lm(sales ~ TV, data = advertising)
+
+
+
+```
+
+```{r}
+summary(model.slr)
+
+
+names(summary(model.slr))
+#to understand what to subset in the next step, as in this example r.squared and not r-squared or however
+
+
+
+summary(model.slr)$r.squared
+summary(model.slr)$sigma
+summary(model.slr)$df
+```
+
+##Multiple Linear Regression
+```{r}
+model.mlr <- lm(sales ~ TV + radio + newspaper, data = advertising)
+model.mlr
+
+summary(model.mlr)
+
+
+```
+###How to get the graph
+```{r}
+##with the simple model (slr)
+
+names(model.slr)
+
+model.slr$fitted.values
+
+
+
+```
+
+```{r}
+advertising
+
+advertising$fritz <- model.slr$fitted.values
+advertising
+
+plot(advertising$TV, advertising$sales)
+# now add a line
+
+lines(advertising$TV, advertising$fritz, col="blue")
+
+
+```
+
+<!--chapter:end:07_Seventh+Eigth_Lesson.Rmd-->
+
+---
+title: "08_Ninth_Lesson"
+author: "PGaulke"
+date: "24 Mai 2019"
+output: html_document
+---
+
+#Ninth Lesson
+
+```{r}
+#load the data first
+
+advertising <- read_csv("data/Advertising.csv") %>%
+  select(-X1)
+advertising
+
+```
+
+```{r}
+model.slr <- lm (sales ~ TV, data = advertising)
+
+summary(model.slr)
+
+
+names(summary(model.slr))
+#to understand what to subset in the next step, as in this example r.squared and not r-squared or however
+
+
+
+summary(model.slr)$r.squared
+summary(model.slr)$sigma
+summary(model.slr)$df
+
+
+
+```
+
+```{r}
+advertising
+
+advertising$fritz <- model.slr$fitted.values
+advertising
+
+plot(advertising$TV, advertising$sales)
+# now add a line
+
+lines(advertising$TV, advertising$fritz, col="blue")
+
+
+```
+
+
+```{r}
+
+
+
+#tidyverse alternative/ second way of drawing the line
+#advertising %>%
+advertising
+
+advertising$fritz <- model.slr$fitted.values
+
+advertising$TV
+advertising$y.hat1 <- model.slr$fitted.values
+advertising$y.hat2 <- predict(model.slr)
+
+#third way of drawing the line
+
+# reminder
+#names(model.slr)
+#summary(model.slr)
+
+advertising$y.hat3 <- model.slr$coefficients [1] + model.slr$coefficients[2]*advertising$TV
+
+
+
+advertising
+plot(advertising$TV,advertising$sales)
+
+#plot function is just to draw the actual graph (y and x)
+lines(advertising$TV, advertising$y.hat1, col="red")
+lines(advertising$TV, advertising$y.hat2, col="blue")
+```
+
+Lets see the errors/ residuals of our prediction
+
+```{r}
+
+advertising$residuals <-  advertising$sales - advertising$y.hat2
+advertising
+
+sum(advertising$residuals)
+
+```
+
+##How to use predictions
+
+```{r}
+#predict sales for TV=400
+
+#first: try with the normal formula, brute force way, very tedious in general
+sales_tv_400 <- model.slr$coefficients [1] + model.slr$coefficients[2]*400
+sales_tv_400
+
+#predict way
+#step 1 create a data frame for the new x data
+#step 2 predict with data=newdata
+#the question of my boss is: what is about 400
+my.boss.question <- data.frame(TV=400)
+my.boss.question
+
+sales_tv_400.2 <- predict(model.slr, newdata = my.boss.question)
+#for more than just one
+
+my.boss.question2 <- data.frame(TV=c(400,500,600))
+my.boss.question2
+
+sales_tv_boss <- predict(model.slr, newdata = my.boss.question2)
+sales_tv_boss
+
+
+
+```
+See root mean square erro{r}
+
+
+```{r}
+require(ISLR)
+data(Auto)
+
+```
+
+
+```{r}
+# a function for calculating
+
+c.rmse <- function(observed, predicted) {
+  (observerd - predicted)^2 %>%
+    mean %>%
+    sqrt %<%
+    round(3)
+}
+
+# c.rmse <- function(observed, predicted) {
+# round(sqrt(mean(observed - predicted)^2)),3)
+#}
+
+
+```
+
+###Nicht aufgepasst bei: Accuracy, Overfitting, Including Variables
+
+
+
+###Define Test Data and Training data
+
+Accuracy testing
+```{r}
+
+set.seed(42)
+n <- nrow(Auto)
+
+
+#train.index <- sample (1:n, 196)
+#better:
+train.index <- sample (1:n, ceiling((1/2)*n))
+train.index
+
+
+train.data <- Auto[train.index,]
+test.data <- Auto[-train.index,]
+
+train.data
+
+test.data
+```
+
+```{r}
+
+Auto %>%
+  select(1)
+
+c.rmse(predict(model, data))
+
+```
+
+
+
+Find a model with the lowest rsme for the test data
+TV, newspaper, radio
+
+```{r}
+fita1 <- lm(sales ~ TV + radio + newspaper, data=advertising)
+summary(fita1)
+
+fita2 <- lm(sales ~ poly(TV,5) + radio + newspaper, data=advertising )
+summary(fita2)
+
+fita3 <- lm(sales ~ poly(TV,5) + radio + newspaper, data=advertising)
+summary(fita3)
+
+fita4 <- lm(sales ~ TV + radio + newspaper + TV:radio, data=advertising)
+summary(fita4)
+
+# TV:Radio is to consider interaction/synergies
+#TV*radio will give me automaticall TV Radio seperate and TV:Radio
+
+fita5 <- lm(sales ~ TV*radio*newspaper, data=advertising)
+summary(fita5)
+
+#we can also do that with poly to get even more coefficient
+```
+
+
+<!--chapter:end:08_Ninth_Lesson.Rmd-->
+
+---
+title: "09_Tenth_Lesson"
+author: "PGaulke"
+date: "30 Mai 2019"
+output: html_document
+---
+
+#Tenth Lesson
+
+
+```{r}
+advertising <- read.csv("data/Advertising.csv")
+
+advertising
+
+```
+
+##Dataset
+
+
+see the Graph Credit Card Default. This is what we want to reproduce now.
+
+```{r}
+require(ISLR)
+require(tidyverse)
+#to load the packages that we need
+
+
+as_tibble(Default)
+#to make irt
+
+faster
+
+str(Default)
+Default
+# to see the structure
+
+```
+
+```{r}
+#now drawing the graph
+
+#basic way:
+#plot(Default$balance,Default$income)
+
+#now with colour
+#plot(Default$balance,Default$income, col = Default$default)
+
+#to decrease the size of the data set, get a sample out of the whole set
+#show.index <- sample(1:length(Default$income),1000)
+#or
+show.index <- sample(1:nrow(Default),1000)
+show.index
+
+#final
+plot(Default$balance[show.index], Default$income[show.index], col=Default$default[show.index])
+
+
+
+```
+
+
+##now the boxplo{r}
+
+```{r}
+boxplot(Default$balance ~ Default$default, col = "red")
+
+
+
+```
+
+##measure the accuracy on this non-numeric
+
+Instead of RSME (just numeric)
+
+
+```{r}
+
+table(Default$default)/nrow(Default)*100
+
+#reason why this is pracitcally a bad way to predict, (drawed matrice in the paper that we received)
+
+#Sensitivity
+#is better to, to check any variable (default or not default) seperately (other wise, all "save" guesses will increase unrealisticly the accuracy result)
+
+```
+
+##Why not linear regression
+
+```{r}
+#how we create the linear regression
+#modz <- lm(default ~ balance, data = Default)
+#will produce error, therefore change default to a numeric set
+
+modz <- lm(as.numeric(default) ~ balance, data =Default)
+summary(modz)
+
+#now default is not yes or now, but 1 or 2, therefore numeric
+
+#repetition: fitted values shows the data of a graph as a prediction: the streight line which is created
+#now we draw
+
+plot(Default$balance, Default$default)
+lines(Default$balance, modz$fitted.values, col = "blue")
+#modz$fitted.values
+
+```
+
+
+
+
+```{r}
+levels(Default$default)
+predicted.class <- ifelse(modz$fitted.values < 1.19,"No","Yes")
+
+#predicted.class is a vector, ifelse is a function: if the condition is met go for yes, if not, go for no
+#herefore we use the value of fitted values (which is basically the predicted value)
+
+#to now use accuracy or sensitvity model, make a table 
+table(predicted.class, Default$default)
+
+table(factor(predicted.class, levels=c("No", "Yes") ),Default$default)
+
+#thats all whats on the sleft side of the slide (printed out material, linear versus logistic regression)
+
+
+
+```
+###Logistic Regression
+
+```{r}
+#now we start to draw the right line (logistic regression)
+#we are orientieren an cumulative distribution
+
+#function that we us is glm (generealized linear model)
+
+#we want to estiamte the default with balance
+
+mod.pressure <-glm (default ~ balance, data = Default, family = binomial)
+mod.pressure
+
+
+#summary(mod.pressure)
+
+#now draw it
+
+#first plot, than check the accuracy
+
+
+#we dont hav fitted values, as before, therefore we need to create fitted values first
+#first create a new data frame, where the predict function gets the new data to check the actual prediction
+
+bal.pre <- data.frame(balance= seq(0,max(Default$balance), length.out = 100))
+
+#see the sequence formula to take 100 values from the min to maximum, with regular distance to each other
+fit_glm <- predict(mod.pressure, newdata = bal.pre, type ="response")
+fit_glm
+
+#plot (bal.pre$balance, fit_glm, type ="l", col="blue")
+
+#now points and lines
+#plot(Default$balance, Default$default)
+#lines(bal.pre$balance, fit_glm+1, col ="blue")
+
+#now check accuracy
+
+predicted.class.glm <- ifelse(mod.pressure$fitted.values < 0.5 ,"No","Yes")
+table(predicted.class.glm, Default$default)
+```
+
+###now with more variables than just balance, so also income and student
+```{r}
+mod.pressure2 <-glm (default ~ balance + income + student, data = Default, family = binomial)
+
+summary(mod.pressure2)
+
+predicted.class.glm2 <- ifelse(mod.pressure2$fitted.values < 0.5 ,"No","Yes")
+table(predicted.class.glm2, Default$default)
+```
+
+now try how to get the graph of the slide confounding (students and probability of credit default)
+
+
+```{r}
+mod.pressure3 <-glm (default ~ balance + student, data = Default, family = binomial)
+
+summary(mod.pressure3)
+
+#first step: create a data.frame for whcih we want to predict
+var.preYes <- data.frame(balance= seq(0,max(Default$balance), length.out = 100), student= "Yes")
+var.preNo <- data.frame(balance= seq(0,max(Default$balance), length.out = 100), student= "No")
+
+fit_glm3y <- predict(mod.pressure3, newdata = var.preYes, type ="response")
+fit_glm3y
+
+fit_glm3n <- predict(mod.pressure3, newdata = var.preNo, type ="response")
+fit_glm3n
+
+
+plot(Default$balance, Default$default)
+lines(var.preYes$balance, fit_glm3y + 1, col="red")
+lines(var.preNo$balance, fit_glm3n + 1, col="blue")
+
+
+```
+
+<!--chapter:end:09_Tenth_Lesson.Rmd-->
+
+---
+title: "10_Eleventh_Lesson"
+author: "PGaulke"
+date: "7 Juni 2019"
+output: html_document
+---
+Task for today
+He gives us the X but not the Y
+
+Measure we want to track RSME in order to understand the difference between the actual value and the predicted value.
+
+ROUTE SQUARE: Sum of i to h(y-y(mit strich oben))^2
+
+
+
+```{r}
+# a function for caluclating the RMSE from two vectors
+
+c.rmse <- function(observed, predicted){
+  (observed - predicted)^2%>%
+  mean %>%
+  sqrt %>%
+  round(3)
+}
+
+c.rmse2 <- function(observed, predicted) {
+round(sqrt(mean((observed -predicted)^2)),3)
+}
+
+```
+
+```{r}
+require(ISLR)
+require(magrittr)
+#to load the required packages
+
+set.seed(43245)
+#in order to create random numbers, but to save this "seed" and not create new random numbers when you run the chunk again (as you would do if you put rnorm(41) instead of set.seed
+
+
+#in order to have our training data seperated, we need to half it
+
+n <- nrow(Auto) 
+# just to have an abbreviation
+
+train <- sample(1:n, ceiling(n/2))
+#1: to number of rows, ceiling is used to prevent that in case nrow(auto) is odd, you have a number such as 74,3 (also could use round)
+
+degrees<- 1:10
+#the different degrees we want to put in
+
+v.rmse <- numeric ()
+#to create a new vector where all values are putted in from the rmse
+
+for (i in degrees){
+#basically just creating an abbreviation for putting in several polynomals into the fit1
+  
+  
+    
+fit1 <- glm(mpg ~ poly(horsepower,i), data = Auto, subset = train)
+  v.rmse[i] <-
+# fit in into a linear model, in order to create a ine that fits the model    
+
+v.rmse[i] <- c.rmse(Auto$mpg[-train], predict(fit1, newdata=Auto[-train,]))  
+    
+# how it was before, against what it is now with v.rmse:c.rmse(Auto$mpg[-train], predict(fit1, newdata=Auto[-train,]))
+#here we create the function to later calculate the rmse
+
+}
+  #now we want to create a plot to see all the test error values for the different polys (the number after horsepower)
+  
+
+plot(degrees, v.rmse, type ="b", col = "red")   
+
+
+#type b just shows the type of the line ( can also be l for line or p for points instead of b for both)
+
+
+```
+
+As a result we probably take degree 2, because it is quite  good from its v.rmse and it is not complex (the lower the degree, the better is it to understand)
+
+And now for not just one split, but multiple splits:
+
+```{r}
+
+require(ISLR)
+require(magrittr)
+#to load the required packages
+
+set.seed(120)
+
+degrees <- 1:10
+
+n.splits <- 10
+
+m.rmse <- matrix(NA, length(degrees), n.splits)
+#here NA is the data(numbers), length = number of rows, n.splits = number columns
+
+
+for(s in 1:n.splits){
+  train <- sample(1:n, ceiling(n/2))
+for(i in degrees) {
+  fit1<- glm(mpg ~ poly (horsepower, i), data = Auto, subset = train)
+m.rmse[i,s] <- c.rmse(Auto$mpg[-train], predict(fit1, newdata = Auto[-train,]))
+
+}
+}
+  
+plot(degrees, m.rmse[,1], type ="l", col = "red", ylim=c(min(m.rmse), max(m.rmse)))
+for (s in 1:n.splits){
+  lines(degrees, m.rmse[,s], col =s)
+}
+
+```
+Now we want to find out which line to take
+With K-fold cross validation
+
+
+```{r}
+
+#we subset the data into 5 parts instead of 2 (50 percent train data, 50 percent test data)
+#one part will be validation data, the rest will be train data
+#see slide 10
+#before we had just the validation approach (2 fold without crossing)
+
+require (boot)
+require (magrittr)
+require (ISLR)
+degrees <- 1:10
+loocv <- numeric()
+
+for(i in degrees){
+  fit1 <- glm(mpg ~ poly(horsepower,i), data= Auto)
+  
+loocv[i] <- cv.glm(Auto, fit1)$delta[1] %>% sqrt
+
+}
+
+plot(degrees, loocv, type ="b", col = "red")
+
+```
+
+##KFold
+
+```{r}
+
+require (boot)
+require (magrittr)
+require (ISLR)
+degrees <- 1:10
+n.trys <- 12
+
+m.k10 <- matrix(NA, length(degrees), n.trys)
+
+for (s in 1:n.trys){
+
+for(i in degrees){
+  fit1 <- glm(mpg ~ poly(horsepower,i), data= Auto)
+  
+m.k10[i,s] <- cv.glm(Auto, fit1, K=10)$delta[1] %>% sqrt
+
+}
+}
+
+
+plot(degrees, m.k10[,1], type ="l", col = "red", ylim=c(min(m.k10),max(m.k10)))
+
+for(s in 2:n.trys){
+  lines(degrees, m.k10[,s], col = s)
+}
+
+```
+
+##bootstrap
+
+To analyze the variance/ standard deviation
+
+If it is significant or not
+
+Resampling 
+
+
+
+<!--chapter:end:10_Eleventh_Lesson.Rmd-->
+
+---
+title: "11_Twelveth_Lesson"
+author: "PGaulke"
+date: "14 Juni 2019"
+output: html_document
+---
+#Twelveth_Lesson
+
+##Tree-Based-Methods
+
+Some notes on trees...
+
+
+
+```{r}
+#load some packages
+
+#require(tree) not as package
+require(randomForest)
+require(rpart)
+require(MASS)
+require(ISLR)
+
+#for piping
+require(magrittr)
+require(tidyverse)
+
+#now we work with data hitters
+
+data("Hitters")
+
+
+```
+
+```{r}
+data("Hitters")
+
+summary(Hitters$Salary)
+
+hist(Hitters$Salary)
+
+Hitters$Salary <-log(Hitters$Salary)
+
+#why dow we do the log: sometimes the data is too spread (example: from 60 to 2300), therefore we take the log to comprimise the data to a smaller representable . After our calculation, we can turn around (e to the power of the outcome)
+
+Hitters %>%
+  mutate(Salary = log(Salary))
+
+plot(Hitters$Years, Hitters$Hits, col = Hitters$Salary)
+
+
+# to illustrate the x and y axis, and colour another dimension (the salary), but actually the solution above is crap
+
+#How we do it in base r
+
+Hitters %>%
+  ggplot(aes(x=Years, y=Hits, col=Salary)) +
+  geom_point()
+
+
+
+```
+
+
+
+A tree for the (log) 'Salary' ... depending on 'Years' and 'Hits'.
+
+```{r}
+b.tree <- rpart(Salary ~ Years + Hits, data = Hitters)
+
+plot(b.tree)
+text(b.tree, pretty = 0)
+
+#plotcp(b.tree)
+
+min.of.cp <- b.tree$cptable[which.min(b.tree$cptable[,"xerror"]),"CP"]
+
+pruned.b.tree <- prune(b.tree, cp = min.of.cp)
+plot(pruned.b.tree)
+text(pruned.b.tree, pretty = 0)
+
+
+
+# how we would do it with the package tree
+
+t.b.tree <- tree(Salary ~ Years + Hits,data = Hitters)
+plot(t.b.tree)
+text(t.b.tree, pretty = 0)
+
+
+cv.t.b.tree <- cv.tree(t.b.tree, FUN=prune.tree, K = 5)
+plot(cv.t.b.tree)
+
+pruned.t.b.tree<- prune.tree(t.b.tree, best=3)
+plot(pruned.t.b.tree)
+text(pruned.t.b.tree)
+#need to be careful in terms of overfitting, sometimes it could be too bushy
+#therefore we need to limit the internal nodes
+
+
+#the general process here is to grow the tree with a formula and then cut the tree down to the strongest internal nodes
+
+
+#why does it start with years? because the rsme for years is smaller
+```
+
+
+
+
+```{r}
+
+
+
+```
+
+<!--chapter:end:11_Twelveth_Lesson.Rmd-->
+
+---
+title: "Thirteenth_Lesson"
+author: "PGaulke"
+date: "21 Juni 2019"
+output: html_document
+---
+
+```{r}
+require(microbenchmark)
+require(ggplot2)
+
+urn
+length(urn)
+
+p.red <- 0.2
+p.green <- 0.5
+p.yellow <- 1 - p.red - p.green
+
+
+urn <- c(rep("red", p.red*100),
+         rep("gree", p.green*100),
+         rep("yellow", p.yewllow*100)
+)
+urn
+
+sample(urn, 1,replace =TRUE)
+
+```
+
+```{r}
+x1 <- runif(100)*300
+bench.01 <- microbenchmark(builtin = sqrt(x1)
+                           alter = x1^0,5)
+
+
+
+
+```
+
+
+```{r}
+require(tidyverse)
+require(magrittr)
+
+samples <- 1e+03
+n <- 50
+
+matrix(1:12, nrow = 2)
+
+matrix(sample(0:1, samples*n, replace = TRUE),nrow=samples)
+
+
+
+
+```
+```{r}
+samples <- 1e+05
+
+n<- 50
+
+data <- matrix(sample(0:1, samples*n, replace = TRUE), nrow = samples)
+data
+s.means <- apply(data, 1, mean)
+
+
+n <- 5
+p <- 0.5
+samples <-1e+05
+
+urn <- c(rep(1,p*100), rep(0,(1-p)*100))
+
+data <- matrix(sample(urn, samples*n, replace = TRUE),
+               nrow=samples)
+
+Xx <- apply(data, 1,sum)
+Xx
+(table(Xx)/samples) %>%round(3)
+
+dbinom(0:n, n, p)
+```
+
+
+```{r}
+n <- 12
+p <- 0.8
+samples <-1e+05
+
+urn <- c(rep(1,p*100), rep(0,(1-p)*100))
+
+data <- matrix(sample(urn, samples*n, replace = TRUE),
+               nrow=samples)
+
+Xx <- apply(data, 1,sum)
+Xx
+my.table <- (table(Xx)/samples) %>% round(5)
+
+
+```
+
+Example 3
+Every day, and independetnly of the evolution of the other days, my stock can go down by 5% with probability 48% and up by 5% with probability of 52%
+It is worth 100 now, what will be its value after 30 days. Given the expected value and the confidence interval
+
+```{r}
+n <- 30
+p <- 0.52
+
+  
+samples <- 1e+06
+
+
+
+urn <- c(rep(1.05,p*100), rep(0.95,(1-p)*100))
+
+data <- matrix(sample(urn, samples*n, replace = TRUE),
+               nrow=samples)
+
+data
+
+
+Xx <- apply(data, 1, prod)
+
+summary(Xx)
+mean(Xx)*100
+max(Xx)*100
+
+ci.95 <- c(quantile(Xx, 0.025), quantile(Xx, 0.975))
+ci.95
+hist(Xx, breaks = seq(0.25, 3.6, 0.01))
+
+```
+```{r}
+n <- 64 #sample size
+samples <- 1e06
+s.mean <- 75
+t.sd <- 20
+
+data <- matrix(
+  rnorm(n*samples, mean = s.mean, sd = t.sd),
+  nrow = samples)
+
+data
+s.means <- apply(data,1,mean)
+quantile(s.means, 0.025)
+quantile(s.means, 0.975)
+
+
+```
+```{r}
+require(ISLR)
+require(boot)
+
+#bootstrap function
+
+model.lmf <- function(data, index){
+  lm(sales ~ TV + radio + newspaper,
+     data = data,
+     subset = index)$coefficients[2]
+}
+
+#manual bootstrap
+samples <- 1000L
+n <- nrow(advertising)
+
+tv.coef <- numeric()
+
+for(i in 1:samples){
+  tv.coef[i] <- lm (sales ~ TV + radio + newspaper, 
+                    data = advertising[sample(1:n, n, replace = TRUE),] )$coefficients[2]
+}
+
+tv.coef
+
+
+manual.ci <- c(quantile(tv.coef, 0.025),
+               quantile(tv.coef, 0.975))
+
+
+
+
+```
+
+For the exam, we will receive 
+
+<!--chapter:end:12_Thirteenth__Lesson.Rmd-->
+
+---
+title: "Chapter_01_R_10"
+author: "PGaulke"
+date: "13 Juli 2019"
+output: html_document
+---
+
+# Introduction
+
+This book is created in order to provide programming beginners a clear and understandable overview of how to use R for statistical investigations. This includes the explanation for the set up and an introduction to the basic skills for R, as well as an overview of major statistical methods for data science.
+
+- What is R? -
+
+R is a programming language and free software environment for statistical computing created by the R Foundation for Statistical Computing. It is a common tool to create statistical software that can be used to analyze and interprete data sets. Apart from the ground infrastructure and function, R can be individualized easy and quickly by downloading additional tools and packages which are free avalaibale. These packages may include further function for calculation, data sets or even own programming features.
+
+- How do we approach it? -
+
+Learning programming is broadly declared as a herculean task. Firstly, this is simply not true especially when you consider that most of us learn a second real language in the age of 10, which is by far more difficult. Secondly, learning success is like everywhere else depending on how you approach it. Opening in the first step some R file and apply random statistical methods on a 7 terrabyte file will most probably not lead to a result that makes any sense, especially when you are not too familiar with statistics. However, in the following we will make one step after the other, so that any of you will be able to follow and understand the next step. This will include at first the software set-up, which is quite easy but highly important for further steps. After that, we will introduce you the structure of R and the basic skills. Having you then on a "I now somehow know how to import and calculate things"-level we will go over to the statistical part.
+Before you now go on and start with your R career, answer yourself some questions:
+
+- Are you able to read, write and calculate?
+
+- Have you ever worked on a computer in your life (surfing, writing a text or dowload something?)
+
+- Are you actually interested in how to understand and analyze data?
+
+If there is any "No" here, then think about it once again. As already said, this is not a herculean task but of course it will need some effort and time to get into R. If it is "yes, yes, and yes" then great! Let's get started, you will probably be able to write "Basic R skills" into your CV, before you even think about it.
+
+# Chapter 1 - Setup
+
+You will need the following software:
+
+The R software itself, RStudio (so to say, the environment where you will work in) and a Latex distribution for creating output files such as pdf files with R graphics.
+
+R Software - https://cran.uni-muenster.de/
+
+FreeVersion of RStudio -  https://www.rstudio.com/products/rstudio/download/#download
+
+Latex distribution - for example: https://www.latex-project.org/get/ (depending on your software)
+
+
+- Collaboration -
+
+In order to work collaboratively, GitHub is a tool of major importance. In the following, we will explain to you how to set this up. It is totally up to you whether to install it now or later. Please just consider, that you should install it before you start your collaborative project. Otherwise you will face a quite complicated process and limited possibilities to fully enjoy all collaborational features that GitHub provides.
+
+The software you need for this is.
+
+Git distribution - https://git-scm.com/downloads
+
+
+
+
+_____ FROM HERE FIDALGO PART
+
+This is also a free software.  
+Once you have installed Git for version control, activate it in RStudio: _Tools> Global Options> Git/SVN_ and click on _Enable version control interface for RStudio projects_.  
+Also generate a SHH RSA key. We will use it to identify at the GitHub repo.
+
+## Sign for GitHub
+
+Create an account at GitHub at [https://github.com](https://github.com/join).
+
+
+## Create your project
+
+_File> New project> Existing Directory_ and chose that book folder.  
+Now, every time you create content for your book, you must start a Rstudio session _File> Open Project..._  
+All the files of the project are the files of the folder, and vice versa.
+
+
+
+## Create GitHub repo and link your machine to it 
+
+Create a new repository (pronounced 'repo') whose name is **exactly** the same as your R project / book folder (e.g., 'myRbook').   
+On the top left menu in GitHub, go to _Settings> SHH and GPG keys_ and click on 'New SHH key'. Paste the SHH key generated by RStudio.
+
+In RStudio go to _Tools> Project Options...> Git/SVN_. Under _Version control system_, select 'Git'.    
+Still in RStudio, _Tools> Terminal> New Terminal_. This open a Terminal where you type commands. 
+
+Start by initializing Git on the terminal.
+```{r, eval=FALSE}
+git init
+```
+
+Then paste the message shown at the creation of the repo (changing the names, of course):
+
+```{r, eval=FALSE}
+git remote add origin https://github.com/YOURNAME/YOURREPO.git
+git push -u origin master
+```
+
+Your local `master` should now be connected to the `master` on GitHub.  
+If necessary, restart RStudio. At the restart, a Git thumbnail should appear in a pane. You are ready to commit and push your files.
+
+
+### Troubleshooting
+
+If the procedure above works, great! One must be aware, however, that it sometimes hits some problem unexpected and difficult to understand problem. In these cases, a classic solution is to copy and google the error message with a first term such as "RStudio".  
+In my experience, the following hack worked. Find the invisible file of the repo _.git> config_. Hidden files on Mac are turned visible by the keyboard key `CMD + SHIFT + .`. In that file, delete the following part (including the space it takes) 
+
+```{r, eval=FALSE}
+[remote "origin"]
+	url = git@github.com:USERNAME/repo.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+```
+
+Then, try again the procedure above.
+
+
+## Collaboration on GitHub
+
+There are various established ways for collaborating on a GitHub repo. As a matter of facts, collaboration on a project is the _raison d'etre_ of GitHub.  
+We illustrate here the easiest of them, namely the joint reading and writing into one repo by all the members of a team.   
+Importantly, it is assumed that all members of the group are able to push/pull code from RStudio to an experimental repo on GitHub (see above).   
+The following are the steps in the collaboration's setup.  
+
+### Owner of the organization
+
+One member of the group creates an organization on GitHub under _Settings> Organizations> New organization_.  
+Then, under that organization, this member of the team creates a new repo whose name is the same as the folder and R project that the group will work on (e.g., 'ouRbook').  
+The owner of the organization connects from RStudio to the repo and populates it with the current files of the project.  
+Still as a task of the owner, create a team. Under the organization page in GitHub, simply click on 'New team' and give it a name.  
+A team now appears in the organization page. In the page of that team, click on 'Add a member'. A window appears where the member to be added can be searched for and added.  
+Once that member is found and selected, make the double step of adding him/her to the team AND assign him/her to the repo. This second step can still be made later, but it's simpler to do it right then.   
+Importantly, make sure that the new member has reading and **writing** rights into the repo. This again, can be changed later by navigating the team's page.
+
+### Member of the team
+
+After the steps above, the newly added member receives an email to confirm the participation the organization / team.   
+Navigate now to the team's page and locate the repo that the owner has created.  
+A button-menu allows to 'Clone or download the repo'. Click to show the https address of the repo, `https://github.com/ORGANIZATION/repo.git` and copy that link.  
+Open a simple RStudio session (not a project!). Open a new Terminal (_Tools> Terminal> New Terminal_) and type `cd` (change directory) and a path to the folder where you want the repo to be saved. For instance,
+
+```{r, eval=FALSE}
+cd Dropbox/Fresenius/DS4B 
+```
+
+The terminal is writing into that folder, as indicated by the path before the `$` sign in command line of the terminal.  
+Recall that you copied the address of the team's repo. Then, in command line, now type the following commands and your copied address:
+
+```{r, eval=FALSE}
+git clone https://github.com/ORGANIZATION/repo.git 
+```
+
+The whole repo is now a new folder in your directory. If all went well, you can now pull and push into that repo in GitHub.
+
+
+
+____________
+
+
+
+
+
+
+
+<!--chapter:end:Chapter_01_R_10.Rmd-->
+

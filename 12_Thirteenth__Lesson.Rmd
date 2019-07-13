@@ -158,7 +158,6 @@ model.lmf <- function(data, index){
      subset = index)$coefficients[2]
 }
 
-
 #manual bootstrap
 samples <- 1000L
 n <- nrow(advertising)
@@ -176,4 +175,9 @@ tv.coef
 manual.ci <- c(quantile(tv.coef, 0.025),
                quantile(tv.coef, 0.975))
 
+
+
+
 ```
+
+For the exam, we will receive 

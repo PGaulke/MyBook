@@ -221,7 +221,6 @@ va[c(-2,-7)] #all but second and seventh
 
 
 
-
 ```
 
 if we want to subset a data frame, then we should take the name of the set$name of the subset
