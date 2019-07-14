@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Chapter 2 Chapter 1 - Setup | Chapter_01_R_10</title>
+  <meta name="description" content="Chapter 2 Chapter 1 - Setup | Chapter_01_R_10">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="Chapter 2 Chapter 1 - Setup | Chapter_01_R_10" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 Chapter 1 - Setup | Chapter_01_R_10" />
+  
+  
+  
+
+<meta name="author" content="PGaulke">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="introduction.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="chapter-1-setup.html"><a href="chapter-1-setup.html"><i class="fa fa-check"></i><b>2</b> Chapter 1 - Setup</a><ul>
+<li class="chapter" data-level="2.1" data-path="chapter-1-setup.html"><a href="chapter-1-setup.html#sign-for-github"><i class="fa fa-check"></i><b>2.1</b> Sign for GitHub</a></li>
+<li class="chapter" data-level="2.2" data-path="chapter-1-setup.html"><a href="chapter-1-setup.html#create-your-project"><i class="fa fa-check"></i><b>2.2</b> Create your project</a></li>
+<li class="chapter" data-level="2.3" data-path="chapter-1-setup.html"><a href="chapter-1-setup.html#create-github-repo-and-link-your-machine-to-it"><i class="fa fa-check"></i><b>2.3</b> Create GitHub repo and link your machine to it</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="chapter-1-setup.html"><a href="chapter-1-setup.html#troubleshooting"><i class="fa fa-check"></i><b>2.3.1</b> Troubleshooting</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="chapter-1-setup.html"><a href="chapter-1-setup.html#collaboration-on-github"><i class="fa fa-check"></i><b>2.4</b> Collaboration on GitHub</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="chapter-1-setup.html"><a href="chapter-1-setup.html#owner-of-the-organization"><i class="fa fa-check"></i><b>2.4.1</b> Owner of the organization</a></li>
+<li class="chapter" data-level="2.4.2" data-path="chapter-1-setup.html"><a href="chapter-1-setup.html#member-of-the-team"><i class="fa fa-check"></i><b>2.4.2</b> Member of the team</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Chapter_01_R_10</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="chapter-1---setup" class="section level1">
+<h1><span class="header-section-number">Chapter 2</span> Chapter 1 - Setup</h1>
+<p>You will need the following software:</p>
+<p>The R software itself, RStudio (so to say, the environment where you will work in) and a Latex distribution for creating output files such as pdf files with R graphics.</p>
+<p>R Software - <a href="https://cran.uni-muenster.de/" class="uri">https://cran.uni-muenster.de/</a></p>
+<p>FreeVersion of RStudio - <a href="https://www.rstudio.com/products/rstudio/download/#download" class="uri">https://www.rstudio.com/products/rstudio/download/#download</a></p>
+<p>Latex distribution - for example: <a href="https://www.latex-project.org/get/" class="uri">https://www.latex-project.org/get/</a> (depending on your software)</p>
+<ul>
+<li>Collaboration -</li>
+</ul>
+<p>In order to work collaboratively, GitHub is a tool of major importance. In the following, we will explain to you how to set this up. It is totally up to you whether to install it now or later. Please just consider, that you should install it before you start your collaborative project. Otherwise you will face a quite complicated process and limited possibilities to fully enjoy all collaborational features that GitHub provides.</p>
+<p>The software you need for this is.</p>
+<p>Git distribution - <a href="https://git-scm.com/downloads" class="uri">https://git-scm.com/downloads</a></p>
+<p>_____ FROM HERE FIDALGO PART</p>
+<p>This is also a free software.<br />
+Once you have installed Git for version control, activate it in RStudio: <em>Tools&gt; Global Options&gt; Git/SVN</em> and click on <em>Enable version control interface for RStudio projects</em>.<br />
+Also generate a SHH RSA key. We will use it to identify at the GitHub repo.</p>
+<div id="sign-for-github" class="section level2">
+<h2><span class="header-section-number">2.1</span> Sign for GitHub</h2>
+<p>Create an account at GitHub at <a href="https://github.com/join">https://github.com</a>.</p>
+</div>
+<div id="create-your-project" class="section level2">
+<h2><span class="header-section-number">2.2</span> Create your project</h2>
+<p><em>File&gt; New project&gt; Existing Directory</em> and chose that book folder.<br />
+Now, every time you create content for your book, you must start a Rstudio session <em>File&gt; Open Project…</em><br />
+All the files of the project are the files of the folder, and vice versa.</p>
+</div>
+<div id="create-github-repo-and-link-your-machine-to-it" class="section level2">
+<h2><span class="header-section-number">2.3</span> Create GitHub repo and link your machine to it</h2>
+<p>Create a new repository (pronounced ‘repo’) whose name is <strong>exactly</strong> the same as your R project / book folder (e.g., ‘myRbook’).<br />
+On the top left menu in GitHub, go to <em>Settings&gt; SHH and GPG keys</em> and click on ‘New SHH key’. Paste the SHH key generated by RStudio.</p>
+<p>In RStudio go to <em>Tools&gt; Project Options…&gt; Git/SVN</em>. Under <em>Version control system</em>, select ‘Git’.<br />
+Still in RStudio, <em>Tools&gt; Terminal&gt; New Terminal</em>. This open a Terminal where you type commands.</p>
+<p>Start by initializing Git on the terminal.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">git init</code></pre></div>
+<p>Then paste the message shown at the creation of the repo (changing the names, of course):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">git remote add origin https<span class="op">:</span><span class="er">//</span>github.com<span class="op">/</span>YOURNAME<span class="op">/</span>YOURREPO.git
+git push <span class="op">-</span>u origin master</code></pre></div>
+<p>Your local <code>master</code> should now be connected to the <code>master</code> on GitHub.<br />
+If necessary, restart RStudio. At the restart, a Git thumbnail should appear in a pane. You are ready to commit and push your files.</p>
+<div id="troubleshooting" class="section level3">
+<h3><span class="header-section-number">2.3.1</span> Troubleshooting</h3>
+<p>If the procedure above works, great! One must be aware, however, that it sometimes hits some problem unexpected and difficult to understand problem. In these cases, a classic solution is to copy and google the error message with a first term such as “RStudio”.<br />
+In my experience, the following hack worked. Find the invisible file of the repo <em>.git&gt; config</em>. Hidden files on Mac are turned visible by the keyboard key <code>CMD + SHIFT + .</code>. In that file, delete the following part (including the space it takes)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">[remote <span class="st">&quot;origin&quot;</span>]
+    url =<span class="st"> </span>git<span class="op">@</span>github.com<span class="op">:</span>USERNAME<span class="op">/</span>repo.git
+    fetch =<span class="st"> </span><span class="op">+</span>refs<span class="op">/</span>heads<span class="op">/</span><span class="er">*:</span>refs<span class="op">/</span>remotes<span class="op">/</span>origin<span class="op">/</span><span class="er">*</span></code></pre></div>
+<p>Then, try again the procedure above.</p>
+</div>
+</div>
+<div id="collaboration-on-github" class="section level2">
+<h2><span class="header-section-number">2.4</span> Collaboration on GitHub</h2>
+<p>There are various established ways for collaborating on a GitHub repo. As a matter of facts, collaboration on a project is the <em>raison d’etre</em> of GitHub.<br />
+We illustrate here the easiest of them, namely the joint reading and writing into one repo by all the members of a team.<br />
+Importantly, it is assumed that all members of the group are able to push/pull code from RStudio to an experimental repo on GitHub (see above).<br />
+The following are the steps in the collaboration’s setup.</p>
+<div id="owner-of-the-organization" class="section level3">
+<h3><span class="header-section-number">2.4.1</span> Owner of the organization</h3>
+<p>One member of the group creates an organization on GitHub under <em>Settings&gt; Organizations&gt; New organization</em>.<br />
+Then, under that organization, this member of the team creates a new repo whose name is the same as the folder and R project that the group will work on (e.g., ‘ouRbook’).<br />
+The owner of the organization connects from RStudio to the repo and populates it with the current files of the project.<br />
+Still as a task of the owner, create a team. Under the organization page in GitHub, simply click on ‘New team’ and give it a name.<br />
+A team now appears in the organization page. In the page of that team, click on ‘Add a member’. A window appears where the member to be added can be searched for and added.<br />
+Once that member is found and selected, make the double step of adding him/her to the team AND assign him/her to the repo. This second step can still be made later, but it’s simpler to do it right then.<br />
+Importantly, make sure that the new member has reading and <strong>writing</strong> rights into the repo. This again, can be changed later by navigating the team’s page.</p>
+</div>
+<div id="member-of-the-team" class="section level3">
+<h3><span class="header-section-number">2.4.2</span> Member of the team</h3>
+<p>After the steps above, the newly added member receives an email to confirm the participation the organization / team.<br />
+Navigate now to the team’s page and locate the repo that the owner has created.<br />
+A button-menu allows to ‘Clone or download the repo’. Click to show the https address of the repo, <code>https://github.com/ORGANIZATION/repo.git</code> and copy that link.<br />
+Open a simple RStudio session (not a project!). Open a new Terminal (<em>Tools&gt; Terminal&gt; New Terminal</em>) and type <code>cd</code> (change directory) and a path to the folder where you want the repo to be saved. For instance,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cd Dropbox<span class="op">/</span>Fresenius<span class="op">/</span>DS4B </code></pre></div>
+<p>The terminal is writing into that folder, as indicated by the path before the <code>$</code> sign in command line of the terminal.<br />
+Recall that you copied the address of the team’s repo. Then, in command line, now type the following commands and your copied address:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">git clone https<span class="op">:</span><span class="er">//</span>github.com<span class="op">/</span>ORGANIZATION<span class="op">/</span>repo.git </code></pre></div>
+<p>The whole repo is now a new folder in your directory. If all went well, you can now pull and push into that repo in GitHub.</p>
+<hr />
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="introduction.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/%s",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"search": false
+});
+});
+</script>
+
+</body>
+
+</html>
