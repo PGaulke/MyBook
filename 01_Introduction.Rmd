@@ -1,0 +1,27 @@
+---
+title: "01_Introduction"
+author: "PGaulke"
+date: "14 Juli 2019"
+output: html_document
+---
+
+# Introduction
+
+This book is created in order to provide programming beginners a clear and understandable overview of how to use R for statistical investigations. This includes the explanation for the set up and an introduction to the basic skills for R, as well as an overview of major statistical methods for data science.
+
+- What is R? -
+
+R is a programming language and free software environment for statistical computing created by the R Foundation for Statistical Computing. It is a common tool to create statistical software that can be used to analyze and interprete data sets. Apart from the ground infrastructure and function, R can be individualized easy and quickly by downloading additional tools and packages which are free avalaibale. These packages may include further function for calculation, data sets or even own programming features.
+
+- How do we approach it? -
+
+Learning programming is broadly declared as a herculean task. Firstly, this is simply not true especially when you consider that most of us learn a second real language in the age of 10, which is by far more difficult. Secondly, learning success is like everywhere else depending on how you approach it. Opening in the first step some R file and apply random statistical methods on a 7 terrabyte file will most probably not lead to a result that makes any sense, especially when you are not too familiar with statistics. However, in the following we will make one step after the other, so that any of you will be able to follow and understand the next step. This will include at first the software set-up, which is quite easy but highly important for further steps. After that, we will introduce you the structure of R and the basic skills. Having you then on a "I now somehow know how to import and calculate things"-level we will go over to the statistical part.
+Before you now go on and start with your R career, answer yourself some questions:
+
+- Are you able to read, write and calculate?
+
+- Have you ever worked on a computer in your life (surfing, writing a text or dowload something?)
+
+- Are you actually interested in how to understand and analyze data?
+
+If there is any "No" here, then think about it once again. As already said, this is not a herculean task but of course it will need some effort and time to get into R. If it is "yes, yes, and yes" then great! Let's get started, you will probably be able to write "Basic R skills" into your CV, before you even think about it.

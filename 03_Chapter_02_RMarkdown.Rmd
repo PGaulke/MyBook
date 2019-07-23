@@ -1,0 +1,170 @@
+---
+title: "03_Chapter_02_RMarkdown"
+author: "PGaulke"
+date: "14 Juli 2019"
+output: html_document
+---
+
+# Creating Files in R
+
+For working in R we use R Markdown documents. Click on 'File' > 'New File' and then create a new R Markdown file.
+R Markdown files include simple formatting syntax for authoring HTML, PDF and Microsoft Word documents. If you look for any specific information about R Markdown which is not included in this book, check this link http://rmarkdown.rstudio.com.
+
+Basically, there are two ways to add something to an R Markdown file.
+
+  - Written text, in which you can include some inline-code by starting with a backstick plus r and ending with a backstick e.g. `r 2*3`. However this kind of code integration will be used less often in this book.
+  - Chunks, seperate grey fields that are used to integrate code. You can create a chunk by entering three backsticks plus {r} and end it with again three backticks
+  
+Below a short example for a chunk
+
+```{r}
+
+2*3
+
+```
+
+In order to process the operation that you entered, you have to click on the green arrow in the right corner. This is what we call to run a chunk.
+While working through this book, you will create many chunks with different operations. This includes not only mathematical operations, but also the creation of graphs. There are various ways how to write code in a chunk, we will provide you in the following chapters with more insights, so that you will be able chose the most efficient and fastest ways for each purpose.
+
+In the following, both ways of adding something to a R Markdown file will be illustrated in detail.
+
+
+## Designing written text
+
+General advises of how to edit written text can you find on the following website: https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf
+
+This cheatsheet contains all inline-formatting options that you can use in base R.
+It also shows you how to understand the use of block level elements. By using a hashtag, you can create headlines. The logic is that:
+
+One # - main-headline
+Two # - sub-headline
+Three # - sub-headline of degree 2
+
+It is important to know that you can only use on main-headline per R markdown file. In order to include more main-headlines you should another R markdown file in your project. For example, in case that you create a book it is recommendable to create one R markdown file per chapter. That is not only more attractive because of the usability of main-headline, but it also provides a better overview of your work.
+
+Of course, formatting is not limited to that. The actual output can be edited in various ways by using YAML.
+You find your YAML-header in each of your R markdown files. However, if you want to adopt your files generally rather than specific for each R markdown file you can use the output.yml file. As soon as you create a project, you will find a file in your project that is called output.yml. Settings that you include here will work as a standard for your project, so that you do not need to adopt each R markdown file.
+
+Considering that you probably want to produce a book, respectively create output in form of a PDF, HTML, or other kind of file, it will be necessary to include some information in the header.
+
+For example, if you want to build a PDF file, you have to include:
+
+```
+bookdown::pdf_book:
+  includes:
+    in_header: preamble.tex
+```
+
+However, for further information on how to produce output, please check Chapter 3 - (@ref/Creation of Output)
+
+
+HIER NOCH EINE INFORMATION ZU DEN GESTALTUNGSMÖGLICHKEITEN BEI YAML
+
+
+## Coding in chunks
+
+Actually, this is the main topic of this book. The explanation of coding in R chunks will not be limited to this chapter, but at this point it is helpful to get an overview of how chunks work and what you can do with them.
+
+The sample chunk in the beginning of this chapter, already revealed the general functionality. Nevertheless, there some general notes to make.
+
+### Chunk options
+
+At first, different options can be set for a chunk, for example wheter to evaluate the code chunk, to stop processing when an error occurs, or to dispay the source code in your output file and a lot more. This can be done by editing the content of the brackets.
+
+If you add eval=TRUE/FALSE, then the whole chunk will be evaluated respectively not evaluated.
+
+
+```{r, eval=TRUE}
+42+17
+82-2
+
+```
+```{r, eval=FALSE}
+42+17
+82-2
+
+```
+
+If you add error=TRUE/FALSE, then the run-process will be stopped, respecitively not stopped, if an error occures.
+
+```{r, error=TRUE, eval=FALSE}
+100*apples
+9*3
+```
+```{r, error=FALSE, eval=FALSE}
+100*apples
+9*3
+```
+
+If you add echo=TRUE/FALSE, then the source code will be displayed respecitively not displayed in the output file.
+
+```{r, echo=TRUE}
+10+27
+8+6
+
+```
+
+```{r, echo=FALSE}
+10+27
+8+6
+
+```
+
+For a detailed explanation for most of all options, please see here https://yihui.name/knitr/options/.
+
+Looking into what you can add into the chunk, you have to be aware that any small mistake will mess up the whole chunk. Especially, for larger and more complex chunks this is a challenge. Therefore, it might be a good idea to make comments for later understanding. Comments can be made by using a hashtag when starting a new line in a chunk. Here an example:
+
+```{r}
+10*750000/17
+#Just a random calculation
+
+```
+
+### Chunk Functions
+
+As a basic, we can use the chunk as a *calculator*.
+
+We can build up easier calculations as well as more difficult calculations, as far as our keyboard allows us.
+
+```{r}
+
+8*4+12
+
+```
+
+```{r}
+
+37*4235+(19*245)/422+3-10
+
+```
+
+```{r}
+
+sin(40*9)+log(120)
+
+```
+
+Moreover, R provides built-in functions that you can easily use to exercise special operations. In the following example, a sequence will be created by using the function - seq -
+
+```{r}
+
+seq(1,5)
+
+seq(1,10,length.out = 3)
+
+
+```
+
+More built-in functions can be found under the following link: https://www.statmethods.net/management/functions.html
+
+
+Another function that is included in chunks is to *name operations*. Naming advantages can be beneficial if you want to use the operational multiple times in your chunk.
+
+
+```{r}
+
+a <-905/12*5
+
+sin(a)+sin(a^2)+sin(a^3)
+
+```

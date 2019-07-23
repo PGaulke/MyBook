@@ -1,0 +1,291 @@
+---
+title: "06_Chapter_05_Packages in R"
+author: "PGaulke"
+date: "22 Juli 2019"
+output: html_document
+---
+
+# Data Sets and Packages in R
+
+You already learned that R provides some built-in functions (such as `seq()`) that make your work more comfortable. However R provides also built-in data sets, that you can use for example calculation or data analysis.
+
+One example for this is the data set mtcars.
+
+```{r dataframe}
+mtcars
+
+data(mtcars)
+class(mtcars)
+mtcars
+head(mtcars)
+str(mtcars)
+
+names(mtcars) 
+length(mtcars)
+nrow(mtcars)
+```
+You can find all built-in data sets here: https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/00Index.html
+
+However, apart from built-in functions and built-in data sets, there is even more to explore. In the following, we will explain how to create your individual and best R environment.
+
+
+## Data Packages
+
+By installing new packages (again: Tools > Install packages) you can download additional tools for R, that gives you access to more operations, functions, and coding options. Before we introduce some major R packages that will make data science a bit easier and faster, please consider this short notice.
+
+In case that you use anything out of an additional R package that you downloaded, you always have to include the following process when reopening the respective project.
+
+```{r, eval=FALSE,error=TRUE}
+
+library(package)
+
+```
+This step is necessary to reload the package and use its functions. You do not necessarily need to reinstall the whole package, but loading it from your library will definitely be required.
+
+
+### Tidyverse
+
+Tidyverse is a large package that basically includes different packages such as `tibble`, `tidyr`,`readr`, `dplyr` and `ggplot2`. Considering all the functions and possibilties that tidyverse provides, it can be seen a subdialect of R. For a detailed overview of what tidyvere is, and what's included, see here: https://www.tidyverse.org/
+
+As a first step, please load `tidyverse`.
+
+```{r, eval=FALSE, error=TRUE}
+
+install.packages("tidyverse")
+
+```
+
+
+In a first step, we will go through the function and benefit of `tibble`. Tibble is generally a description for a data frame in tidyverse. All tibbles are data frames, but not vice versa.
+Using tibble instead of regular data frames provides us benefits in terms of pace, output, informations, and simplicity.
+
+A data set is easily created as a tibble, therefore you have to options:
+
+```{r}
+
+library(tidyverse)
+
+# creating a new data set as a tibble from scratch
+new_tib <- tibble(
+  a = 1:5, 
+  b = 5, 
+  c = 20:16,
+  d = 3:7
+)
+new_tib
+
+# converting an existing data set into a tibble
+
+
+tibmtcars <- as_tibble(mtcars)
+tibmtcars
+
+```
+
+
+In order to continue with tidyr, we are now more about how to organize a data set.
+
+
+###How to Tidy Up something: Install tidyr
+
+how to gather
+```{r}
+
+lottery <- tibble (person= c("Andre","Beth","Charles"),
+  mon= c(2,5,1),
+  tue= c(3,7,5),
+  wed= c(10,3,4),
+  thu= c(1,2,7)
+  )
+
+lottery
+
+
+
+#tidy it up
+
+tidy_lottery <- gather (lottery,
+                        key= "day",
+                        value= "gains",
+                        mon:thu
+                        )
+tidy_lottery
+
+
+
+#another example
+bisou <- tribble(
+  ~name, ~`2016`, ~`2017`, ~`2018`,
+  "gau", 23,45,12,
+  "tri", 8,14,30,
+  "han", 12,43,8
+)
+  
+bisou
+
+tidy_bisou <- gather(bisou,
+                     key="Year",
+                     value="Number",
+                     `2016`, `2017`, `2018`)
+
+tidy_bisou
+
+```
+
+
+how to spread
+```{r}
+people<- tibble (name=rep(c("Andre", "Beth", "Charles"),2),
+                 info=rep(c("eyes","age"),3),
+                 measure= c("Blue",23,"brown",31,"brown",19)
+)
+                 
+                 
+tidy_people<- spread(people, key=info, value=measure)
+tidy_people
+
+people2<- tibble (name=c(rep(c("Andre", "Beth", "Charles"),2),"David"),
+                 info=c(rep(c("eyes","age"),3),
+                 "height"),
+                 measure= c("Blue",23,"brown",31,"brown",19, 175)
+)
+                 
+                 
+tidy_people2<- spread(people2, key=info, value=measure)
+tidy_people2
+
+```
+
+
+###magrittr
+
+How to pipe= %>%
+
+```{r}
+
+#simple
+
+library(magrittr)
+mydata <- c(2:10,20,42)
+mean(mydata)
+
+mydata%>%
+  mean()
+
+#advanced
+
+round(sqrt(mean(mydata)),2)
+
+mydata %>%
+  mean() %>%
+  sqrt() %>%
+  round(2)
+
+
+##using a placeholder
+
+3 %>%
+  round(17.2342)
+
+
+```
+
+
+Transformations on a data frame
+
+df_after_f <-f(df)
+df_after_g <-g(df_after_f)
+df_after_h <-g(df_after_g)
+
+with piping it is
+
+df %>%
+  f %>%
+  g %>%
+  h
+  
+
+Own example
+```{r}
+
+library(magrittr)
+library(tidyverse)
+
+
+data (iris)
+t_iris <- as_tibble(iris)
+
+t_iris2 <- t_iris[t_iris$Sepal.Length>4.5 & t_iris$Sepal.Length<5.5,]
+t_iris2
+
+av.sw<-mean(t_iris$Sepal.Length)
+av.sw
+
+iris %>%
+  as_tibble() %>%
+  .[.$Sepal.Length==5,] %>%
+  {mean(.$Sepal.Width)}
+
+
+
+```
+
+
+<<<<<<< HEAD
+#Unite 
+#Exercises on sub-setting
+
+```{r}
+letters 
+v1 <- letters [1]
+
+v2 <- letters [c(1,2,3)]
+v2
+
+v3 <- letters[-c(2,3)]
+
+
+v4 <- letters[-c(24, 25, 26)] # bad one
+
+v4 <- letters[-c(length(letters)-2, length(letters)-1, length(letters))]
+lv <- length (letters)
+
+
+
+#v5 <- letters[seq(from=1, to=26, by 3)]
+#v5
+```
+
+```{r}
+data (iris)
+#max(Sepal.Lenght) # not found bc. it is in the data frame of iris, tell them, it should look in the data frame
+```
+
+```{r}
+data (iris)
+max(iris$Sepal.Length)
+```
+
+
+```{r}
+iris2 <- iris [, c("Sepal.Length", "Sepal.Width")]
+```
+
+=======
+how to separate
+```{r}
+clients <- ("Andre, Porto")
+
+
+```
+
+
+VERY IMPORTANT: EVERYTIME WE WANT TO USE TIBBLE OR PROCESS TIBBLE (OR ANY OTHER PART OF TIDYVERSE) WE NEED TO PUT IN THE CONSOLE: library(tidyverse) (BECAUSE TIDYVERSE IS A SUBLANGUAGE OF R/WE DIDNT DO ANY OTHER LANGUAGE SO FAR, JUST BASIC R)
+>>>>>>> b5b9a9d2087ef2869d0701f2b10cd730c6eb23f3
+
+
+
+
+Tidyverse and other R packages
+
+How to import data

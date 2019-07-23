@@ -1,0 +1,257 @@
+---
+title: "Classification"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+```
+
+# Classification 
+
+Classification is also a form of supervised learning. Here, the response variable is categorical, as opposed to numeric for regression. The goal is to find a rule, algorithm, or a function which takes as input a feature vector, and outputs a category which is the true category as often as possible. (David Dalpiaz)
+
+That is, the classifier $\hat{C}(x)$ returns the predicted category $\hat{y}(X)$.
+
+$$
+\hat{y}(x) = \hat{C}(x)
+$$
+- Qualitative variables take values in an unordered set C, such as email {spam, ham}. 
+- Given a feature vector X and a qualitative response Y taking values in the set C, the classification task is to build a function C(X) that takes as input the feature vector X and predicts value; i.e. C(X)E C. 
+- Often we are more interested in estimating the probabilities that X belongs to each category in C. 
+
+For example, it is more valuable to have an estimate of the probability that an insurance claim is fraudulent, than a classification fraudulent or not. 
+
+
+In order to build the first classifier, the Default dataset from the ISLR package is used. 
+
+```{r}
+library(ISLR)
+library(tibble)
+as_tibble(Default)
+```
+The goal is to decently classify individuals as defaulters based on student status, credit card balance, and income. 
+Note: The response default is the factor, as is the predictor student. 
+
+```{r}
+is.factor(Default$default)
+is.factor(Default$student)
+```
+As done previous chaper regression, the data is splitted into test and train. In this example, 50 % each are used. 
+
+```{r}
+set.seed(42)
+default_idx   = sample(nrow(Default), 5000)
+default_trn = Default[default_idx, ]
+default_tst = Default[-default_idx, ]
+```
+
+
+## Classification Visualization 
+
+Simple classification rules can be used for simple visualizations. In order to create effective visualizations, the function featurePlot () from the package caret () is used. 
+
+```{r, message = FALSE, warning = FALSE}
+library(caret)
+```
+Based on a numerica predictor, a density plot can often suggest a simple split. Essentially this plot graphs a density estimate
+
+$$
+\hat{f}_{X_i}(x_i \mid Y = k)
+$$
+
+for each numeric predictor $x_i$ and each category $k$ of the response $y$.
+
+```{r, fig.height = 5, fig.width = 10}
+featurePlot(x = default_trn[, c("balance", "income")], 
+            y = default_trn$default,
+            plot = "density", 
+            scales = list(x = list(relation = "free"), 
+                          y = list(relation = "free")), 
+            adjust = 1.5, 
+            pch = "|", 
+            layout = c(2, 1), 
+            auto.key = list(columns = 2))
+```
+
+Some notes about the arguments to this function according to David Dalpiaz:
+
+- `x` is a data frame containing only **numeric predictors**. It would be nonsensical to estimate a density for a categorical predictor.
+- `y` is the response variable. It needs to be a factor variable. If coded as `0` and `1`, you will need to coerce to factor for plotting.
+- `plot` specifies the type of plot, here `density`.
+- `scales` defines the scale of the axes for each plot. By default, the axis of each plot would be the same, which often is not useful, so the arguments here, a different axis for each plot, will almost always be used.
+- `adjust` specifies the amount of smoothing used for the density estimate.
+- `pch` specifies the **p**lot **ch**aracter used for the bottom of the plot.
+- `layout` places the individual plots into rows and columns. For some odd reason, it is given as (col, row).
+- `auto.key` defines the key at the top of the plot. The number of columns should be the number of categories.
+
+It can be seems that the income variable by itself is not peculiarly effective. However, there seems to be a big difference in default status at a `balance` of about 1400. This information will be used shortly.
+
+```{r, fig.height = 5, fig.width = 10, message = FALSE, warning = FALSE}
+featurePlot(x = default_trn[, c("balance", "income")], 
+            y = default_trn$student,
+            plot = "density", 
+            scales = list(x = list(relation = "free"), 
+                          y = list(relation = "free")), 
+            adjust = 1.5, 
+            pch = "|", 
+            layout = c(2, 1), 
+            auto.key = list(columns = 2))
+```
+
+A similar plot is created, except with `student` as the response. It can be seen that students often carry a slightly larger balance, and have far lower income. This will be useful to know when making more complicated classifiers.
+
+```{r, fig.height = 6, fig.width = 6, message = FALSE, warning = FALSE}
+featurePlot(x = default_trn[, c("student", "balance", "income")], 
+            y = default_trn$default, 
+            plot = "pairs",
+            auto.key = list(columns = 2))
+```
+
+`plot = "pairs"` can be used to consider multiple variables at the same time. This plot reinforces using `balance` to create a classifier, and again shows that `income` seems not that useful.
+
+```{r, fig.height = 6, fig.width = 6, message = FALSE, warning = FALSE}
+library(ellipse)
+featurePlot(x = default_trn[, c("balance", "income")], 
+            y = default_trn$default, 
+            plot = "ellipse",
+            auto.key = list(columns = 2))
+```
+
+Similar to `pairs` is a plot of type `ellipse`, which requires the `ellipse` package. Here we only use numeric predictors, as essentially we are assuming multivariate normality. The ellipses mark points of equal density. This will be useful later when discussing LDA and QDA.
+
+Example: Credit Card Default 
+
+```{r}
+show.index <- sample(1:nrow(Default), 1000)
+
+plot(Default$balance[show.index], 
+Default$income[show.index], col =
+Default$default[show.index])
+
+boxplot(Default$balance ~ Default$default)
+```
+
+## Can we use Linear Regression? 
+
+Supposing for the Default classification task that it is coded 
+
+
+$$
+{Y} = 
+\begin{cases} 
+      0 & if \ no \\
+      1 & if \ yes
+\end{cases}
+$$
+
+
+Can a simple linear regresssion of Y on X can be performed and classify as Yes if \hat{Y} > 0.5? 
+
+- In this case of a binary outcome, linear regression does a good job as a classifier, and is equivalent to linear discriminat analysis which is discussed in a later. 
+- Since in the population $$
+\mathbb{E}[Y \mid X = x] = P(Y = 1 \mid X = x).
+$$
+it might be thinking that regression is perfect for this task. 
+- However, linaer regression might produce probabilities less than zero or bigger than one. Logistic regression is more appropriate. 
+
+## Linear versus Logistic Regression 
+
+```{r}
+default_trn_lm = default_trn
+default_tst_lm = default_tst
+```
+```{r}
+default_trn_lm$default = as.numeric(default_trn_lm$default) - 1
+default_tst_lm$default = as.numeric(default_tst_lm$default) - 1
+```
+
+```{r}
+model_lm = lm(default ~ balance, data = default_trn_lm)
+```
+
+```{r, fig.height=5, fig.width=7}
+plot(default ~ balance, data = default_trn_lm, 
+     col = "darkorange", pch = "|", ylim = c(-0.2, 1),
+     main = "Using Linear Regression for Classification")
+abline(h = 0, lty = 3)
+abline(h = 1, lty = 3)
+abline(h = 0.5, lty = 2)
+abline(model_lm, lwd = 3, col = "dodgerblue")
+```
+Linear regression does not estimate $P(Y = 1 \mid X = x)$.
+The graph of linear regression shows that the predicted probabilities are below 0.5., indicating that every observation would be classified as `"No" This could be possible, but it is not what is expected. 
+
+```{r}
+all(predict(model_lm) < 0.5)
+```
+A further issue is that the predicted probabilty is less than 0. 
+```{r}
+any(predict(model_lm) < 0)
+```
+# Logistic regression 
+
+$$
+p(x) = P(Y = 1 \mid {X = x})
+$$
+
+```{r}
+model_glm = glm(default ~ balance, data = default_trn, family = "binomial")
+```
+```{r}
+coef(model_glm)
+```
+
+```{r}
+head(predict(model_glm))
+```
+```{r}
+head(predict(model_glm, type = "link"))
+```
+```{r}
+head(predict(model_glm, type = "response"))
+```
+
+```{r}
+calc_class_err = function(actual, predicted) {
+  mean(actual != predicted)
+}
+```
+
+```{r}
+calc_class_err(actual = default_trn$default, predicted = model_glm_pred)
+```
+Logistic regression is used to better estimate the propability.
+
+The model is 
+
+$$
+\log\left(\frac{p(x)}{1 - p(x)}\right) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots  + \beta_p x_p.
+$$
+```{r, fig.height=5, fig.width=7}
+plot(default ~ balance, data = default_trn_lm, 
+     col = "darkorange", pch = "|", ylim = c(-0.2, 1),
+     main = "Using Logistic Regression for Classification")
+abline(h = 0, lty = 3)
+abline(h = 1, lty = 3)
+abline(h = 0.5, lty = 2)
+curve(predict(model_glm, data.frame(balance = x), type = "response"), 
+      add = TRUE, lwd = 3, col = "dodgerblue")
+abline(v = -coef(model_glm)[1] / coef(model_glm)[2], lwd = 2)
+```
+In logistic regression it suited well to the task. 
+
+This plot contains a wealth of information.
+
+- The orange `|` characters are the data, $(x_i, y_i)$.
+- The blue "curve" is the predicted probabilities given by the fitted logistic regression. That is,
+$$
+\hat{p}(x) = \hat{P}(Y = 1 \mid { X = x})
+$$
+- The solid vertical black line represents the **[decision boundary](https://en.wikipedia.org/wiki/Decision_boundary)**, the `balance` that obtains a predicted probability of 0.5. In this case `balance` = `r -coef(model_glm)[1] / coef(model_glm)[2]`.
+
+
+Logistic regression 

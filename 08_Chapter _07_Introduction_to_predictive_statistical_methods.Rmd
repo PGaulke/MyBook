@@ -1,0 +1,397 @@
+---
+title: "CorinnasPart"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+```{r}
+#ausblenden
+library(readr)
+advertising = read_csv("data/advertising.csv")
+```
+
+# Predictive and appropriate model fitting 
+
+People want to make predictions because nothing is clearly true in this world. The answers of the predictions are based on data, and not on intuition. Therefore, people make use of predictive modeling in order to forecast future actions through using data and calculations of propability. Every predictive model has some predictive variables which can influence future actions. 
+
+Today AI is a big topic. However, AI will not tell us WHY something happened, it will not answer questions of "What if, when this..." it only presents a complicated set of correlations but not the causations. 
+
+Moreover, in preditive modeling, there is no lunch theorem. There is not only one technique. There are many techniques, some of them are better, some not. Therefore, it is the goal to find out which works best. 
+
+The model can be a simple linear equation or a complex tree-based model. 
+
+
+## Building models and predictions 
+
+In the process of predictive modeling, first data is collected for the predictive variables before the actutal model is build. 
+
+Example 
+
+The wage is correlated with the age. A variable to predict is needed. 
+
+\[Y=f(X) + \varepsilon \]
+
+y: response variable 
+f(x): set of independent (1, 2, 3), can be inifitive functions, but then you can't present it anymore
+e: shock 
+
+This example will be based on simulated data. Knowing the truth will be very helpful. But you can't know the truth unless you simulate it. 
+
+
+In this model, we need to find f, the predictions. Therefore, you take X in order to see what you can predict. 
+
+In many occasions, the independent variables are known but the response is not. Therefore, \(f()\) can be used to _predict_ these values. These predictions are noted by
+\[\hat{Y}=\hat{f}(X)\]
+where \(\hat{f}\) is the estimated function for \(f()\).
+
+
+## Regression 
+
+Regression is a type of supervised learning. In supervised learning, addresses issues whre thre are both an input and an output. These issues in regression deal with a numeric output.
+
+For describing the names of variables and methods, different terns are used in AI, statistical or machine learning. 
+
+Input e.g.: predictors, input/feature vector. These inputs can be either numberic or categorical. 
+
+Output e.g.: response, output/outcome, target. These outputs have to be numeric. 
+
+The goal of regression is to make predictions on undetected data. This can be done through controlling the complexity of the model to protect against under- and overfitting.  
+Manipulating the model complexity will accomplish this because there is a bias-variance tradeoff. The bias-variance tradeoff increases the flexibility. It is more shaky and closer to the data but it also increases the variance. The sum is always U-Shaped. 
+
+Furthermore, it will be known that the model generalizes because it is evaluating metrics on test data. Only the (train) models on the training data will fit. The analysis begings with a test-train split. In the regression tasks, the metric will be the RMSE. 
+
+
+The next step after investigating the structure of the data, is to visualize the date. Due to the fact that in regression is only numeric variables, a scatter plot can be used. 
+
+```{r}
+plot(sales ~ TV, data = advertising, col = "dodgerblue", pch = 20, cex = 1.5,
+     main = "sales vs television advertising")
+```
+The function pairs() is helpful in order to visualize a number of scatter plots quickly. 
+
+```{r}
+pairs(advertising)
+```
+
+
+
+## Linear regression 
+
+Linear regression is a simple approach to supervised learning. It assumes taht the dependence of Y on X1, X2, ... Xp is linear. 
+The linear regression model is very fast. In the following example, the relationship between different advertising methods and sales is visualized. The relationship is not causal, but the correlations can be detected. Every blue points presents an observation. There are several questions which could be asked: 
+
+- Is there a relationship between sales and the advertising budget?
+- How strong is the relationship between sales and the advertising budget 
+- Which method contributes to sales?
+- How precise is the prediction of the future sales?
+- Is the relationship linear?
+- Is there synergy among the advertising media?
+
+
+```{r}
+library(caret)
+featurePlot(x = advertising[ , c("TV", "radio", "newspaper")], y = advertising$sales)
+```
+In the graph a clear increase in sales can be seen as radio or TV are increased. The relationship between sales and newspaper is less clear. How all of the predictors work together is also unclear, as there is some obvious correlation between radio and TV. 
+
+Simple linear regression using a single predictor X. 
+
+- The assumed model is
+
+Y = ß0 + ß1X+ e, 
+
+ß0 and ß1: two unknown constants that represent the intercept and slope, also known as coefficients or parameters 
+e: error term 
+
+- Given some estimates ^ß0 and ^ß1 for the model coefficients, for predicting future sales 
+
+^y= ^ß0 + 1ß1x, 
+
+^y: indicates a prediction of Y on the basis of X=x. 
+The hat symbol denotes an estimated value. 
+
+
+###Assesing Model Accuracy
+
+There are many metrics to assess the accuracy of a regression model. Most of these measure in some way the average error that the model makes. The metric that is most interesting is the root-mean-square error.
+
+\[MSE=\frac{1}{n}\sum_i^n \big(y_i-\hat{f}(x_i)\big)^2\]
+
+
+While for the sake of comparing models, the choice between RMSE and MSE is arbitrary, there is a preference for RMSE, as it has the same units as the response variable.
+
+
+### Model Complexity
+
+Besides the fact how well a model makes precitions, it is also interesting to know the complexity/flexibility of a model. In this chapter, so make it simple, only linear models are considered. In fact, the model gets more complex when more predictors are added to the model. In order to assigning a numerical value to the complexity of the linear modl, the number of predictors $p$ wil be used. 
+
+```{r} 
+#ausblenden
+get_complexity = function(model) {
+  length(coef(model)) - 1
+}
+```
+
+
+### Test-Train Split
+
+For the case of determining how well the model predicts, issues with fitting a model to all available data then using RMSE occur. This can be seen as cheating. The RSS and hence the RMSE can never increae when a linear model becomes more complex. Th RSS and the RMSE dan only decrease or in special cases could stay the same. Hence, the believe could arise that a largest model as possible should be used in order to predict well. But this is not the case because it is very difficult to fit to a peculiar data set As soon as a new data is seen, a large model could predict unfortunate. This issue is called **overfitting**. 
+
+It is very useful to split the given data set into two halds, whereby one half is the **training** data, which is used to fit (train) the model. The other half is the **test** data which is used to assess how well the model can predict. It is important that the test data will never be used to train the model. 
+
+
+In this example, the function `sample()` will be used in order to get the random sample of the rows of the original data set. The next step is to use those rows as well as the remaining row numbers to split the data correspondingly. Moreover, the function `set.seet()` will be applied in order to replicate the same random split everytime the analysis will be performed. 
+```{r}
+set.seed(9)
+num_obs = nrow(advertising)
+
+train_index = sample(num_obs, size = trunc(0.50 * num_obs))
+train_data = advertising[train_index, ]
+test_data = advertising[-train_index, ]
+```
+
+
+In this example it is important to concentrate on the **train RMSE** and the **test RMSE**. These are two measures which assess how well the model can predict. 
+
+
+$$
+\text{RMSE}_{\text{Train}} = \text{RMSE}(\hat{f}, \text{Train Data}) = \sqrt{\frac{1}{n_{\text{Tr}}}\displaystyle\sum_{i \in \text{Train}}^{}\left(y_i - \hat{f}(\bf{x}_i)\right)^2}
+$$
+In the measure of the train RMSE, $n_{Tr}$ demonstrates the numbers of observations given in the train data set. When the complexity of the linear model increases, the train RMSE will decrease, or in a special case stay the same. Therefore, when comparing the models, the train RMSE is not useful. However, it can be a helful step to prove if the RMSE is going down. 
+
+
+$$
+\text{RMSE}_{\text{Test}} = \text{RMSE}(\hat{f}, \text{Test Data}) = \sqrt{\frac{1}{n_{\text{Te}}}\displaystyle\sum_{i \in \text{Test}}^{}\left(y_i - \hat{f}(\bf{x}_i)\right)^2}
+$$
+In the measure of the test RMSE, $n_{Tr}$ demonstrates the number of observations in the given test data set. In the training data set, the test RMSE is used to fit the model, but assess on the unused test data. This is a procedure for how wll the fitted model is predicting usually, not just how well it fits the data sed to train the modl, as it is the case for the train RMSE. 
+
+
+```{r}
+# starting with a simple linear model, with no predictors
+fit_0 = lm(sales ~ 1, data = train_data)
+get_complexity(fit_0)
+
+# train RMSE
+sqrt(mean((train_data$sales - predict(fit_0, train_data)) ^ 2))
+# test RMSE
+sqrt(mean((test_data$sales - predict(fit_0, test_data)) ^ 2)) 
+```
+Interpretation: the operations use the train and the test RMSE. 
+```{r}
+library(Metrics)
+# train RMSE
+rmse(actual = train_data$sales, predicted = predict(fit_0, train_data))
+# test RMSE
+rmse(actual = test_data$sales, predicted = predict(fit_0, test_data))
+```
+Interpretation: the function can be enhanced with inputs which are obtaining.
+It is helpful to use the train and test RMSE for the fitteed model, given a train or test dataset, and the proper response variable.
+```{r}
+get_rmse = function(model, data, response) {
+  rmse(actual = subset(data, select = response, drop = TRUE),
+       predicted = predict(model, data))
+}
+```
+Interpretation: when obtaining this function, the code is better to read and it bcoms more clear which task is being reached. 
+```{r}
+get_rmse(model = fit_0, data = train_data, response = "sales") # train RMSE
+get_rmse(model = fit_0, data = test_data, response = "sales") # test RMSE
+```
+
+
+### Adding Flexibilty to Linear Models
+
+The consecutive model which are fitted will increase flexibility when obtaining interactions and polynomial terms. In the following example, a training error will be decreasing when the model increases in flexibility. It is expected that the test error will decrease a number of times, and will may be increase, as effect of the overfitting. 
+
+```{r}
+fit_1 = lm(sales ~ ., data = train_data)
+get_complexity(fit_1)
+
+get_rmse(model = fit_1, data = train_data, response = "sales") # train RMSE
+get_rmse(model = fit_1, data = test_data, response = "sales") # test RMSE
+```
+
+```{r}
+fit_2 = lm(sales ~ radio * newspaper * TV, data = train_data)
+get_complexity(fit_2)
+
+get_rmse(model = fit_2, data = train_data, response = "sales") # train RMSE
+get_rmse(model = fit_2, data = test_data, response = "sales") # test RMSE
+```
+
+```{r}
+fit_3 = lm(sales ~ radio * newspaper * TV + I(TV ^ 2), data = train_data)
+get_complexity(fit_3)
+
+get_rmse(model = fit_3, data = train_data, response = "sales") # train RMSE
+get_rmse(model = fit_3, data = test_data, response = "sales") # test RMSE
+```
+
+```{r}
+fit_4 = lm(sales ~ radio * newspaper * TV + 
+           I(TV ^ 2) + I(radio ^ 2) + I(newspaper ^ 2), data = train_data)
+get_complexity(fit_4)
+
+get_rmse(model = fit_4, data = train_data, response = "sales") # train RMSE
+get_rmse(model = fit_4, data = test_data, response = "sales") # test RMSE
+```
+
+```{r}
+fit_5 = lm(sales ~ radio * newspaper * TV +
+           I(TV ^ 2) * I(radio ^ 2) * I(newspaper ^ 2), data = train_data)
+get_complexity(fit_5)
+
+get_rmse(model = fit_5, data = train_data, response = "sales") # train RMSE
+get_rmse(model = fit_5, data = test_data, response = "sales") # test RMSE
+```
+
+
+### Choosing a Model 
+
+In order to get a better picture of the relationship between the train RMSE, test RMSE, and model complexity, results are summarized and are cluttered. 
+
+```{r, eval = FALSE}
+fit_1 = lm(sales ~ ., data = train_data)
+fit_2 = lm(sales ~ radio * newspaper * TV, data = train_data)
+fit_3 = lm(sales ~ radio * newspaper * TV + I(TV ^ 2), data = train_data)
+fit_4 = lm(sales ~ radio * newspaper * TV + 
+           I(TV ^ 2) + I(radio ^ 2) + I(newspaper ^ 2), data = train_data)
+fit_5 = lm(sales ~ radio * newspaper * TV +
+           I(TV ^ 2) * I(radio ^ 2) * I(newspaper ^ 2), data = train_data)
+```
+Interpretation: Recalling the models that have been fitted it helpful. 
+
+```{r}
+model_list = list(fit_1, fit_2, fit_3, fit_4, fit_5)
+```
+Interpretation: A list of models is created
+
+```{r}
+train_rmse = sapply(model_list, get_rmse, data = train_data, response = "sales")
+test_rmse = sapply(model_list, get_rmse, data = test_data, response = "sales")
+model_complexity = sapply(model_list, get_complexity)
+```
+```{r, echo = FALSE, eval = FALSE}
+# the following is the same as the apply command above
+
+test_rmse = c(get_rmse(fit_1, test_data, "sales"),
+              get_rmse(fit_2, test_data, "sales"),
+              get_rmse(fit_3, test_data, "sales"),
+              get_rmse(fit_4, test_data, "sales"),
+              get_rmse(fit_5, test_data, "sales"))
+```
+Interpretation: The train RMSE, test RMSE and the model complexity are used for each. 
+
+```{r}
+plot(model_complexity, train_rmse, type = "b", 
+     ylim = c(min(c(train_rmse, test_rmse)) - 0.02, 
+              max(c(train_rmse, test_rmse)) + 0.02), 
+     col = "dodgerblue", 
+     xlab = "Model Size",
+     ylab = "RMSE")
+lines(model_complexity, test_rmse, type = "b", col = "darkorange")
+```
+Interpretation: The results are plotted. The blue line represents the train RMSE and the orange line represents the test RMSE. 
+
+
+
+| Model   | Train RMSE        | Test RMSE        | Predictors              |
+|---------|-------------------|------------------|-------------------------|
+| `fit_1` | 1.6376991         |	1.7375736        | 3                       |
+| `fit_2` | 0.7797226         | 1.1103716        | 7                       |
+| `fit_3` | 0.4960149	        | 0.7320758	       | 8                       |
+| `fit_4` | 0.488771	        | 0.7466312	       | 10                      |
+| `fit_5` | 0.4705201	        | 0.8425384	       | 14                      |
+
+Results: 
+Overfitting models: A high train RMSE and a high test RMSE can be seen in `fit_1` and `fit_2`
+
+Overfitting models: A low train RMSE and a high test RMSE can be seen in `fit_4`and `fit_5
+
+##Hypothesis testing 
+
+Standard errors can also be used to perform hypothesis tests on the coefficints. The most common hypothesis task involves testing the null hypothesis of 
+
+H0: There is no relationship between X and Y versus the alternative hypothesis 
+
+HA: There is some relationship between X and Y 
+
+Mathematically, this correspond to testing 
+
+H0 : \beta_1 = 0
+vs 
+
+HA: ß\beta_0 =/ 0,
+
+since if \beta_1=0 then the model reduces to Y = \beta_0 + em and X is not associated with Y.
+
+The function  summary() returns a large amount of useful information about a model fit using lm(). Much of it will be helpful for hypothesis testing including individual tests about each predictor, as well as the significance of the regression test.
+
+```{r}
+summary(mod_1)
+```
+
+
+##Confidence interval 
+
+```{r}
+head(predict(mod_1), n = 10)
+```
+Here it is important to understand that the function predict () is dependent on the input to the function. The first argument is supplying a model object of class lm. Because of this, predict() then runs the function predict.lm(). 
+
+For further information ?predict.lm() can be used. 
+
+
+```{r}
+new_obs = data.frame(TV = 150, radio = 40, newspaper = 1)
+```
+
+
+
+ERROR, again with X1 ??
+```{r}
+predict(mod_1, newdata = new_obs)
+
+predict(mod_1, newdata = new_obs, interval = "confidence")
+```
+
+
+## Multiple Linear Regression 
+
+The model is: 
+
+Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \ldots + \beta_p x_p \] + e 
+
+The interpretation is that ßj is the average effect on Y of a one unit increase in Xj, holding all other predictors fixed. In the advertisting example, the model becomes: 
+
+sales = \beta_0 + \beta_1 x TV + \beta_2 x radio + \beta_3 x newspaper + e 
+
+Interpreting regression coefficients 
+
+The ideal scenario is when the predictors are uncorrelated - a balanced design: 
+- each coefficient can be estimated and tested separately. 
+- interpretations such as "a unit change in Xj is associated with a ßj change in Y, while all the others variables stay fixed", are possible. 
+Correlations amongst predictors cause problems 
+- the variance of all coefficients tends to increase, sometimes dramatically
+- interpretations become hazardous - when Xj changes, everything else changes. 
+Claims of causality should be avoided for observational data. 
+
+The woes of (interpreting) regression coefficients. 
+"Data Analysis and Regression" Mosteller and Tukey 1977
+- a regression coefficient ßj estimated the expected change in Y per unit change in Xj, will all other predictors held fixed. But predictors ususally change together! 
+
+
+
+The lm() Function 
+
+In the following example, an additive linear model with sales as the response and each remaining vairbale as a predictor. 
+
+```{r}
+mod_1 = lm(sales ~ ., data = advertising)
+# mod_1 = lm(sales ~ TV + radio + newspaper, data = advertising)
+```
+
+
+
+

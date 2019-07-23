@@ -1,0 +1,424 @@
+---
+title: "05_Chapter_04_Basic_R_Skills"
+author: "PGaulke"
+date: "16 Juli 2019"
+output: html_document
+---
+# Basic R Skills
+
+Now we dive a little bit deeper into R and go trough the basics of how to handle data.
+For this, it is necessary to get an understanding of the most important data structures that do exist, what kind of data they may include and in what kind of format they are. Furthermore, we will introduce you some major rules which should be considered while handling data in R as well as how to import data and what packages might be useful in order to handle data effective and efficiently. Before closing this chapter, also a short overview on how to visualize data is given.
+
+After gathering all the informations and knowledge, it will be possible for you to work with statistics in R, which will be the topic of the second part of this book.
+
+
+
+## Data stuctures
+
+In general there are four types of data structures: atomic vectors, lists, matrix and arrays, and data frames.
+
+
+The most common type of data structure are *atomic vectors*. Vectors can be described by three attributes:
+
+1. the type `typeof()`
+
+Vectors can be either numeric, logical, or character.
+
+```{r}
+numeric_vector <- c(1,2,3,4,5) # numeric vector
+logical_vector <- c(TRUE,TRUE,TRUE,FALSE) # logical vector
+character_vector <- c("first", "apple", "child", "word") # character vector
+```
+
+Further, you can also create integer and mixed vectors
+
+```{r}
+integer_vector <- c(10L, 4L, 7L) # integer vector
+mixed_vector <- c(2, "mixed") # mixed vector
+```
+
+When you create a mixed vector and you do not determine which type of vector you create, than R decides on itself. The logic is: logical < numeric < character.
+
+
+Numeric vectors can be also created by only using 'x:y' if you want to include all numbers from x to y.
+```{r}
+another_numeric <- 1:5
+```
+
+
+2. the length `length()`
+
+The length basically describes the size of the vector.
+If you want to check the length of a vector, you have to use `length()`.
+
+```{r}
+
+whatisthelength <- c(1,4,2,1,16,124,54,6,7)
+
+length(whatisthelength)
+
+```
+
+
+3. the attributes `attributes()`
+
+Attributes define the nature of a specific vector and are relevant for what kind of function can be applied.
+The three major attributes are:
+
+  - the names, `names()`,
+  - the dimensions, `dim()`,
+  - the class, `class`.
+
+However, you can also check attributes in the summary of the vector. Therefore, you have to use `summary()`, which is (as most all other attributes) also applicable on other data structures.
+
+
+```{r}
+atry <- c(1:15)
+summary(atry)
+
+anothertry <- c(T,F,T,F)  
+summary(anothertry)
+```
+
+
+Another type of data structure are *lists*. A list can include a number of objects, but also another list. Therefore, it is useful in order to gather data into one structure.
+
+```{r}
+alist <- list(numbers=c(1:10),
+      fruits=c("Banana", "Peach"),
+      values=c(T,T,F,T,F))
+alist
+```
+
+
+If you want to illustrate a *matrix* than you can also use R for this. Therefore, you have to consider that all columns have the same mode and the same length.
+In general the formel to use is:
+
+```{r}
+
+amatrix <- matrix(c(1:12), nrow=4, ncol=3) 
+amatrix
+
+```
+
+
+Another essential data structure are *data frames*. Somehow the data frame is similar to the matrix, but you can use different modes. Apart from some build-in data sets that are provided in a data frame layout, you can create a data frame by yourself by using the function data.frame.
+
+```{r}
+
+adf <- data.frame(numbers=1:4,
+                  fruits= c("banana", "peaches", "orange", "strawberry"),
+                  value= c(T,F,F,T))
+adf
+
+```
+By the way, the length of data frame is determined by the number of columns you include. For our example, you can check the length like this:
+
+```{r}
+
+adf <- data.frame(numbers=1:4,
+                  fruits= c("banana", "peaches", "orange", "strawberry"),
+                  value= c(T,F,F,T))
+length(adf)
+
+```
+
+## Principles in R Chunks
+
+There are some major calculation principles that you have to consider while working with R. For instance, these principles can be quite helpful but being not aware of there existence might lead to errors that are difficult to detect.
+
+At first, we have to consider that *element by element evaluation* is active. In case that you want to somehow create a calculation with two or more vectors, this principle is of major importance.
+
+In case of two numeric vectors of the same length, the calculation will be applied on each element in the same position.
+
+```{r}
+
+store1revenue <- c(10000,12000,18000,9000,11000)
+store2revenue <- c(25000,29000,21000,23000,24000)
+
+length(store1revenue) == length(store2revenue)
+
+revenuesum <- store1revenue+store2revenue
+
+revenuesum
+
+```
+
+Every element of the first vector is added to the element that is in the same position in the second vector.
+
+Now, if you violate the premise that the vectors used have the same length, the second principle will be activated. *Recycling* happens and the objects included int he shortest vector will be repetivtively used for the calculation.
+
+
+```{r}
+performanceofa <- c(34,39,51,45,28,37)
+performanceofb <- c(30,29,45,42)
+performancesum <- performanceofa+performanceofb
+performancesum
+
+
+```
+
+If recycing happens, you will receive an error message which is apparently not an error message that is stopping any process, but making you aware of the recycling.
+
+
+Another important thing, which is less a principle but more a shortcut, is the *deletion of NA's*.
+Sometimes you want to take a vector for a calculation that will take all values of that vector into account. This might lead to difficulties, as missing values are often replaced with `NA` in data sets.
+However, with using 'na.rm = T, R will ignore the NA during the calculation.
+
+
+```{r}
+horsepower <- c(400,320,190,200,310,290,420,NA,230,220)
+mean(horsepower, na.rm = T)
+
+```
+
+
+## Subsetting
+
+Subsetting means to create a data set out of the existing data structure. So to say, you copy particular items out of a data collection.
+
+There are three main operators which can be used to subset:
+
+- `[]`
+- `[[]]`
+- `$`
+
+
+The first one, `[]`can be applied on all discussed data strucures - vectors, lists, matrices, and data frames.
+
+In case of a vector, you can easily use it these ways:
+
+```{r} 
+vec <- c(-7,4,12,6,-2,1,3,-3)
+
+# subsetting only one element by naming the position of the element
+vec[3]
+
+# subsetting several elements in a row
+vec[c(2:6)]
+
+# subsetting all elements but not the named ones
+vec[c(-2,-4)]
+
+# subsetting elements by logical selection
+vec[c(T,F,T,F)] # recycling eventually activated
+
+```
+
+If you have a list, than you have to be even more careful about where the data is placed.
+
+```{r}
+alist <- list(numbers=c(1:10),
+      fruits=c("Banana", "Peach"),
+      values=c(T,T,F,T,F))
+
+# subsetting a specific data set in the list
+alist[2]
+
+```
+
+Applying `[]` on a matrix requires again a different logic. To understand all dimension, you can use `str()`, which shows you the exact length of the matrix columns and rows.
+
+```{r}
+
+amatrix <- matrix(c(1:12), nrow=4, ncol=3) 
+
+# subsetting one particular row
+amatrix[2,]
+
+# subsetting one particular column
+amatrix[,2]
+
+# subsetting one specific value
+amatrix[2,2]
+
+```
+
+For data frames the use of `[]` is limited, as you can only subset the class.
+
+```{r}
+
+adf <- data.frame(numbers=1:4,
+                  fruits= c("banana", "peaches", "orange", "strawberry"),
+                  value= c(T,F,F,T))
+
+# subsetting the whole class
+
+adf[1]
+
+```
+
+The second operator, `[[]]`, is mostly used for lists. It is quite similar to `[]`, but is important to differentiate within values.
+
+```{r}
+alist <- list(numbers=c(1:10),
+      fruits=c("Banana", "Peach"),
+      values=c(T,T,F,T,F))
+
+# subsetting a specific data set in the list
+alist[[2]]
+
+# subsetting a specific element within a data set
+alist[[2]][1]
+```
+
+
+The thrid operator, `$`, is especially used for data frames. You can subset a whole variable, even if you only partially match the variable name.
+
+```{r}
+
+adf <- data.frame(numbers=1:4,
+                  fruits= c("banana", "peaches", "orange", "strawberry"),
+                  value= c(T,F,F,T))
+
+# subsetting a whole variable
+
+adf$numbers
+
+# even with partial matched naming
+
+adf$num
+```
+
+
+Of course, you can combine the subset operators to create the desired data set. However, if you want to precisely dissect numeric data, then you can use conditions.
+
+
+```{r}
+
+adf <- data.frame(numbers=1:4,
+                  fruits= c("banana", "peaches", "orange", "strawberry"),
+                  value= c(T,F,F,T))
+
+# subset a specific number
+
+adf[adf$numbers==2,]
+
+# subset a number that is higher/lower than
+
+adf[adf$numbers<=3,]
+
+```
+
+By the way, you can also assign/replace new numbers by using conditions.
+
+```{r}
+
+adf <- data.frame(numbers=1:4,
+                  fruits= c("banana", "peaches", "orange", "strawberry"),
+                  value= c(T,F,F,T))
+
+adf[adf$numbers==2,] <- 10
+adf
+
+```
+
+## Conditions
+
+With the last part of the previous chapter (REF HERE! subsetting chapter), we implicitly introduced conditions in R. However, writing conditions is not to difficult in the first place and can be used in various ways
+
+```{r}
+
+points <- c(12,4,15,7,10)
+sum(points)
+
+if (sum(points) >30) {
+  print("Passed")
+} else  {
+  print ("Failed")
+}
+# else statement for display something else in case the if condition is false
+
+```
+
+Of course, more conditions can be added.
+
+```{r}
+
+points <- c(12,4,15,7,10)
+sum(points)
+
+if (sum(points) >50) {
+  print("Grade A")
+} else if (sum(points)>40) {
+  print("Grade B")
+} else if (sum(points)>30) {
+  print("Grade C")
+} else if (sum(points)>20) {
+  print("Grade D")
+} else if (sum(points)>10) {
+  print("Grade E")  
+} else if (sum(points) >=0){
+  print("Grade F")
+}
+  
+  
+```
+
+
+## How to Write Functions
+
+To really calculate and use statistical methods, you should be able to write all functions in R chunks. This might lead to difficulties, because not all function are built-in or included in a package. In order to be able to write functions on your own, you will need to understand the following logic.#
+
+
+```{r}
+
+# designing a simple function
+
+firstfunction <- function(a){
+  a^2
+}
+
+firstfunction(4)
+
+# firstfunction is a random name for one function
+```
+
+To receive several returns on more than one expression in the function, you should create a list.
+
+```{r }
+onemorefunction<- function(a){
+  list(ff=a^2, sf=a^3, tf=a^4) 
+}
+
+onemorefunction(2:5)
+
+# In case of further calculations with the returns, you should assign it to an object
+
+furthercalc <- onemorefunction(2:5)
+
+furthercalc$ff
+```
+
+Appropriately to what you need to do, you can include more variables in your function
+
+```{r}
+superfunction <- function(x, y){
+  y*x^2
+}
+superfunction(4, 2)
+```
+
+In case that you do not want to only trust on reproducing the order, than you can also call the variable to return correctly.
+
+```{r}
+afunc <- function(c, d, g){
+  g/c*d^2
+}
+afunc(g=4, c=2, d=10)
+```
+
+In order to now combin knowledge from the previous subchapter with this one, we can create conditions dependent on functions.
+
+```{r}
+roots <- function(a, b, c){
+  
+  if (b^4- 3*a*c <0) {
+    print("No solution! (negativ root can't be squared)")
+  } else {}
+  
+  (-b + sqrt (b^2- 4*a*c)) / 2*a
+}
+roots(a=2, b=3, c=1)
+roots(a=4, b=1, c=2)
+```

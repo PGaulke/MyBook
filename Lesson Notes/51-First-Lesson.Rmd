@@ -1,12 +1,12 @@
 ---
-title: "First Mark Down"
+title: "First Markdown"
 author: "Philipp Gaulke"
 date: 'Last update: `r format(Sys.time(), "%H:%m, %B %d, %Y")`'
 output:
   pdf_document:
     highlight: "tango"
     number_sections: yes
-    toc: yes
+    toc: no
   html_document:
     toc: no
   html_notebook:
@@ -14,7 +14,7 @@ output:
     highlight: tango
     number_sections: no
     theme: cerulean
-    toc: yes
+    toc: no
     toc_depth: 2
     toc_float:
       collapsed: yes

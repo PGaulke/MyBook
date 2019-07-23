@@ -1,0 +1,43 @@
+---
+title: "04_Chapter_03_Output"
+author: "PGaulke"
+date: "14 Juli 2019"
+output: html_document
+---
+
+# Creation of output
+
+By selecting Knit you can create a file out of your .rmd's. R Studio supports various formats which you can set in the header of any .rmd file.
+
+```{r, eval=FALSE}
+output: html_document
+```
+
+Otherwise you can also select a format in the dropdown menu oft the Knit-button.
+
+Of course, there are various ways of formatting your output. Herefore, you have to use the fields below your output format in the header.
+To know which options you can choose for every output format, just check the respective help page. To open the help page, you have to type in ?rmarkdown::(here output format) into the console. 
+
+
+Another option you have, is to build a book. 
+In case you want to compile all your rmd.file to one book, you can call the render function in bookdown. In order to this, you have to download the bookdown package. This is easily done, by clicking on *Tools*, then *Install packages* and search for bookdown. There is more than only one way to download packages, also chunks provide this option by searching for the packages like this:
+
+```{r, eval=FALSE}
+
+install.packages("bookdown")
+
+```
+
+To now prepare for building a book, please go into the .yml file of your project and set the options up accordingly. For example to create a .pdf book, type in this:
+
+```{r, eval=FALSE}
+
+bookdown::pdf_book:
+
+```
+
+This should then be further set up, for options you can again use the console:
+
+```{r, eval=FALSE}
+?bookdown::pdf:book
+```
