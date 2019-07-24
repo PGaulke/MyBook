@@ -1,0 +1,165 @@
+---
+title: "12_Solution_for_task"
+author: "PGaulke"
+date: "24 Juli 2019"
+output: html_document
+---
+
+# (PART) Exercise {-}
+
+# Give it a try
+
+```{r}
+# To prepare for the fight
+require(tidyverse)
+require(ISLR)
+require(magrittr)
+
+
+load("C:/Users/admin/Dropbox/Master/2. Semester/Data Science/MyBook/project_data.Rdata")
+
+summary(train.data)
+summary(test.data)
+train.data
+
+
+
+# 11 variables for frequency of seven plants
+# task: The test.data has the same structure but does not contain the frequencies for each of the 7 plants. Your
+# goal is precisely to estimate them for the 140 observations
+
+# remember to remove/replace na's.
+
+```
+```{r, eval=FALSE}
+plot(mxPH ~ a1, data = train.data, col = "dodgerblue", pch = 20, cex = 1.5,
+     main = "mxPH vs a1")
+plot(mnO2 ~ a1, data = train.data, col = "dodgerblue", pch = 20, cex = 1.5,
+     main = "mnO2 vs a1")
+plot(Cl ~ a1, data = train.data, col = "dodgerblue", pch = 20, cex = 1.5,
+     main = "Cl vs a1")
+plot(NO3 ~ a1, data = train.data, col = "dodgerblue", pch = 20, cex = 1.5,
+     main = "NO3 vs a1")
+plot(NH4 ~ a1, data = train.data, col = "dodgerblue", pch = 20, cex = 1.5,
+     main = "NH4 vs a1")
+plot(oPO4 ~ a1, data = train.data, col = "dodgerblue", pch = 20, cex = 1.5,
+     main = "oPO4 vs a1")
+plot(PO4 ~ a1, data = train.data, col = "dodgerblue", pch = 20, cex = 1.5,
+     main = "PO4 vs a1")
+plot(Chla ~ a1, data = train.data, col = "dodgerblue", pch = 20, cex = 1.5,
+     main = "Chla vs a1")
+
+#tendenziell mehr mxPH und mnO2
+
+pairs(train.data)
+
+```
+
+## Linear Regression
+
+```{r}
+model.slr <- lm(a1 ~ NH4, data = train.data)
+model.slr
+
+model.slr$fitted.values
+```
+
+
+```{r}
+library(caret)
+featurePlot(x = train.data[ , c("mxPH", "mnO2", "Cl","NO3","NH4","oPO4","PO4","Chla")], y = train.data$a1)
+```
+
+
+
+
+```{r}
+# starting with a simple linear model, with no predictors
+fit_0 = lm(a1 ~ 1, data = train.data)
+get_complexity(fit_0)
+
+# train RMSE
+sqrt(mean((train.data$a1 - predict(fit_0, train.data)) ^ 2))
+# test RMSE (not available)
+sqrt(mean((test.data$a1 - predict(fit_0, test.data)) ^ 2)) 
+```
+
+Create a real test set
+
+```{r}
+set.seed(30)
+num_obs = nrow(train.data)
+
+train.index = sample(num_obs, size = trunc(0.50 * num_obs))
+newtrain.data = train.data[train_index, ]
+traintest.data = train.data[-train_index, ]
+
+```
+
+Now again same step
+
+```{r}
+# starting with a simple linear model, with no predictors
+fit_0 = lm(a1 ~ 1, data = newtrain.data)
+get_complexity(fit_0)
+
+# train RMSE
+sqrt(mean((newtrain.data$a1 - predict(fit_0, newtrain.data)) ^ 2))
+# test RMSE (
+sqrt(mean((traintest.data$a1 - predict(fit_0, traintest.data)) ^ 2)) 
+```
+
+```{r}
+library(Metrics)
+# train RMSE
+rmse(actual = newtrain.data$a1, predicted = predict(fit_0, newtrain.data))
+# test RMSE
+rmse(actual = traintest.data$a1, predicted = predict(fit_0, traintest.data))
+```
+
+RMSE formula
+
+```{r}
+get_rmse = function(model, data, response) {
+  rmse(actual = subset(data, select = response, drop = TRUE),
+       predicted = predict(model, data))
+}
+```
+
+```{r}
+get_rmse(model = fit_0, data = newtrain.data, response = "a1") # train RMSE
+get_rmse(model = fit_0, data = traintest.data, response = "a1") # test RMSE
+```
+
+Increase the fit.
+
+We have to remove NA`s first
+
+```{r}
+fit_1 = lm(a1 ~ ., data = newtrain.data)
+get_complexity(fit_1)
+
+get_rmse(model = fit_1, data = newtrain.data, response = "a1") # train RMSE
+get_rmse(model = fit_1, data = traintest.data, response = "a1") # test RMSE
+```
+
+```{r}
+newtrain.data
+traintest.data
+```
+
+
+```{r, eval=FALSE, error=FALSE}
+
+#newtrain.data$fitteds <- model.slr$fitted.values
+#newtrain.data
+
+#select{absolutelynewtrain.data, -1)
+#plot(newtrain.data$NH4, newtrain.data$a1)
+# now add a line
+
+lines(newtrain.data$NH4, newtrain.data$fitteds, col="blue")
+
+
+```
+

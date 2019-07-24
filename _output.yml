@@ -2,13 +2,21 @@ bookdown::gitbook:
   css: style.css
   config:
     toc:
-    download: ["pdf"]
+      download: ["pdf"]
+      scroll_highlight: yes
+    collapse: section
+  highlight: "pygments"
+  toc_depth: 2
 bookdown::pdf_book:
   includes:
-    in_header: preamble.tex
+      in_header: preamble.tex
+  toc: yes
   latex_engine: xelatex
   citation_package: natbib
   keep_tex: yes
 bookdown::tufte_html_book:
   toc: yes
   css: toc.css
+bookdown::html_book:
+  toc: yes
+  

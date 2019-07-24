@@ -4,11 +4,22 @@ author: "Corinna Trierweiler and Philipp Gaulke"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
-documentclass: book
-bibliography: [book.bib, packages.bib]
-biblio-style: apalike
-link-citations: yes
-github-repo: rstudio/bookdown-demo
+documentclass: report
 description: "This is a guide for data science with R"
 ---
 
+# Preface{-}
+
+This book has been produced for and based on the Data Science class of Hochschule Fresenius in Cologne, Germany. In context of the task, the book includes basic R skills, statistical methods for data science and a solution for the exercise given at the end of the semester.
+
+
+```{r, include=FALSE}
+
+#noch ausblenden
+
+require(magrittr)
+require(tidyverse)
+require(ISLR)
+
+
+```

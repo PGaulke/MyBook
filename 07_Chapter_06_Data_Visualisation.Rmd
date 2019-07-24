@@ -7,4 +7,10 @@ output: html_document
 
 # Data Visualisation
 
-dplyr
+to Dos:
+
+ggplot2
+
+data vizualization
+
+References

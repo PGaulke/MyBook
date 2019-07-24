@@ -1,6 +1,6 @@
 ---
 title: "Tree-Based Methods"
-output: pdf_document
+output: html_document
 ---
 # Tree-based methods 
 
@@ -20,6 +20,8 @@ Baseball salaray data: how to stratify it?
 
 
 ```{r}
+require(ggplot2)
+
 data("Hitters")
 
 Hitters  %>%
@@ -31,6 +33,8 @@ The salary level is demonstrated in the shaded from low (dark blue) to high (lig
 ## Decision tree for these data 
 
 ```{r}
+library(rpart)
+
 b.tree <- rpart(Salary ~ Years + Hits, data = Hitters)
 
 min.of.cp <- b.tree$cptable[which.min(b.tree$cptable[,"xerror"]),"CP"]
@@ -112,13 +116,15 @@ Example
 The goal is now to fit a bagged model, by using the package `randomForest`. 
 
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE, warning = FALSE, eval=FALSE, error=TRUE}
+library(randomForest)
+
 boston_bag = randomForest(medv ~ ., data = boston_trn, mtry = 13, 
                           importance = TRUE, ntrees = 500)
 boston_bag
 ```
 
-```{r}
+```{r, eval=FALSE, error=TRUE}
 boston_bag_tst_pred = predict(boston_bag, newdata = boston_tst)
 plot(boston_bag_tst_pred,boston_tst$medv,
      xlab = "Predicted", ylab = "Actual",
@@ -128,7 +134,7 @@ grid()
 abline(0, 1, col = "darkorange", lwd = 2)
 ```
 
-```{r}
+```{r, eval=FALSE, error=TRUE}
 (bag_tst_rmse = calc_rmse(boston_bag_tst_pred, boston_tst$medv))
 ```
 Interpratation: Two interesting results can be seen. 
@@ -137,7 +143,7 @@ Interpratation: Two interesting results can be seen.
 - The second interesting result is that the test error has dropped immemsely. 
 Note: the Mean of squared residuals, which is the outbut by the `randomForest`is the Oit of Bag estimate of the error. 
 
-```{r}
+```{r, eval=FALSE, error=TRUE}
 plot(boston_bag, col = "dodgerblue", lwd = 2, main = "Bagged Trees: Error vs Number of Trees")
 grid()
 ```
@@ -147,18 +153,18 @@ grid()
 Random forests provide an improvement over bagged trees by way of small tweak that decorrelates the trees. Hence, this reduces the variance when averaging the trees. Further, as already seen in bagging, here a number of decision trees are build on bootstrapping training samples. However, when decision trees are build, every time a split in a tree is considered, a random selection of m predictors is chosen as split candidates from the full set of p predictors. The split is allowed to use only one of those m predictors. 
 
 Note: Now a random forest is tried. For regression, the suggestion is to use `mtry` equal to $p/3$. 
-```{r}
+```{r, eval=FALSE, error=TRUE}
 boston_forest = randomForest(medv ~ ., data = boston_trn, mtry = 4, 
                              importance = TRUE, ntrees = 500)
 boston_forest
 ```
 
-```{r}
+```{r, eval=FALSE, error=TRUE}
 importance(boston_forest, type = 1)
 varImpPlot(boston_forest, type = 1)
 ```
 
-```{r}
+```{r, eval=FALSE, error=TRUE}
 boston_forest_tst_pred = predict(boston_forest, newdata = boston_tst)
 plot(boston_forest_tst_pred, boston_tst$medv,
      xlab = "Predicted", ylab = "Actual",
@@ -168,7 +174,7 @@ grid()
 abline(0, 1, col = "darkorange", lwd = 2)
 ```
 
-```{r}
+```{r, eval=FALSE, error=TRUE}
 (forest_tst_rmse = calc_rmse(boston_forest_tst_pred, boston_tst$medv))
 boston_forest_trn_pred = predict(boston_forest, newdata = boston_trn)
 forest_trn_rmse = calc_rmse(boston_forest_trn_pred, boston_trn$medv)
@@ -178,7 +184,7 @@ forest_oob_rmse = calc_rmse(boston_forest$predicted, boston_trn$medv)
 Interpretation: Here are three RMSEs noted. The training RMSE, which is optimistic and the OOB RMSE which is a reasonable estimate of the test erro and the test RMSE. Further, the variables importance was calculated. 
 
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, eval=FALSE, error=TRUE}
 (forst_errors = data.frame(
   Data = c("Training", "OOB", "Test"),
   Error = c(forest_trn_rmse, forest_oob_rmse, forest_tst_rmse)
@@ -200,28 +206,28 @@ In this example, it is tried to boost a model, which by default will produce a n
 library(gbm)
 ```
 
-```{r, fig.height = 6, fig.width = 8, message = FALSE, warning = FALSE}
+```{r, fig.height = 6, fig.width = 8, message = FALSE, warning = FALSE, eval=FALSE, error=TRUE}
 booston_boost = gbm(medv ~ ., data = boston_trn, distribution = "gaussian", 
                     n.trees = 5000, interaction.depth = 4, shrinkage = 0.01)
 booston_boost
 ```
-```{r, fig.height = 8, fig.width = 8, message = FALSE, warning = FALSE}
+```{r, fig.height = 8, fig.width = 8, message = FALSE, warning = FALSE, eval=FALSE, error=TRUE}
 tibble::as_tibble(summary(booston_boost))
 ```
 
-```{r, fig.height = 5, fig.width = 12, message = FALSE, warning = FALSE}
+```{r, fig.height = 5, fig.width = 12, message = FALSE, warning = FALSE, eval=FALSE, error=TRUE}
 par(mfrow = c(1, 3))
 plot(booston_boost, i = "rm", col = "dodgerblue", lwd = 2)
 plot(booston_boost, i = "lstat", col = "dodgerblue", lwd = 2)
 plot(booston_boost, i = "dis", col = "dodgerblue", lwd = 2)
 ```
 
-```{r}
+```{r, eval=FALSE, error=TRUE}
 boston_boost_tst_pred = predict(booston_boost, newdata = boston_tst, n.trees = 5000)
 (boost_tst_rmse = calc_rmse(boston_boost_tst_pred, boston_tst$medv))
 ```
 
-```{r}
+```{r, eval=FALSE, error=TRUE}
 plot(boston_boost_tst_pred, boston_tst$medv,
      xlab = "Predicted", ylab = "Actual", 
      main = "Predicted vs Actual: Boosted Model, Test Data",

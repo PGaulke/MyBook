@@ -1,9 +1,16 @@
 ---
 title: "CorinnasPart"
 output:
-  word_document: default
   pdf_document: default
+  html_document: default
 ---
+
+# (PART) Statistics for Data Science {-}
+
+
+# Predictive and appropriate model fitting 
+
+http://127.0.0.1:30892/rmd_output/1/creating-files-in-r.html
 
 ```{r}
 #ausblenden
@@ -11,7 +18,8 @@ library(readr)
 advertising = read_csv("data/advertising.csv")
 ```
 
-# Predictive and appropriate model fitting 
+
+
 
 People want to make predictions because nothing is clearly true in this world. The answers of the predictions are based on data, and not on intuition. Therefore, people make use of predictive modeling in order to forecast future actions through using data and calculations of propability. Every predictive model has some predictive variables which can influence future actions. 
 
@@ -112,7 +120,7 @@ e: error term
 The hat symbol denotes an estimated value. 
 
 
-###Assesing Model Accuracy
+###Assessing Model Accuracy
 
 There are many metrics to assess the accuracy of a regression model. Most of these measure in some way the average error that the model makes. The metric that is most interesting is the root-mean-square error.
 
@@ -227,7 +235,6 @@ get_complexity(fit_3)
 get_rmse(model = fit_3, data = train_data, response = "sales") # train RMSE
 get_rmse(model = fit_3, data = test_data, response = "sales") # test RMSE
 ```
-
 ```{r}
 fit_4 = lm(sales ~ radio * newspaper * TV + 
            I(TV ^ 2) + I(radio ^ 2) + I(newspaper ^ 2), data = train_data)
@@ -236,7 +243,6 @@ get_complexity(fit_4)
 get_rmse(model = fit_4, data = train_data, response = "sales") # train RMSE
 get_rmse(model = fit_4, data = test_data, response = "sales") # test RMSE
 ```
-
 ```{r}
 fit_5 = lm(sales ~ radio * newspaper * TV +
            I(TV ^ 2) * I(radio ^ 2) * I(newspaper ^ 2), data = train_data)
@@ -245,7 +251,6 @@ get_complexity(fit_5)
 get_rmse(model = fit_5, data = train_data, response = "sales") # train RMSE
 get_rmse(model = fit_5, data = test_data, response = "sales") # test RMSE
 ```
-
 
 ### Choosing a Model 
 
@@ -295,7 +300,6 @@ lines(model_complexity, test_rmse, type = "b", col = "darkorange")
 Interpretation: The results are plotted. The blue line represents the train RMSE and the orange line represents the test RMSE. 
 
 
-
 | Model   | Train RMSE        | Test RMSE        | Predictors              |
 |---------|-------------------|------------------|-------------------------|
 | `fit_1` | 1.6376991         |	1.7375736        | 3                       |
@@ -307,7 +311,9 @@ Interpretation: The results are plotted. The blue line represents the train RMSE
 Results: 
 Overfitting models: A high train RMSE and a high test RMSE can be seen in `fit_1` and `fit_2`
 
-Overfitting models: A low train RMSE and a high test RMSE can be seen in `fit_4`and `fit_5
+Overfitting models: A low train RMSE and a high test RMSE can be seen in `fit_4`and `fit_5`
+
+
 
 ##Hypothesis testing 
 
@@ -319,24 +325,25 @@ HA: There is some relationship between X and Y
 
 Mathematically, this correspond to testing 
 
-H0 : \beta_1 = 0
+H0 : $\beta_1$ = 0
+
 vs 
 
-HA: ß\beta_0 =/ 0,
+HA: $\beta_0$ = 0
 
-since if \beta_1=0 then the model reduces to Y = \beta_0 + em and X is not associated with Y.
+since if $\beta_1=0$ then the model reduces to $Y=\beta_0$ + em and X is not associated with Y.
 
 The function  summary() returns a large amount of useful information about a model fit using lm(). Much of it will be helpful for hypothesis testing including individual tests about each predictor, as well as the significance of the regression test.
 
 ```{r}
-summary(mod_1)
+#summary(mod_1)
 ```
 
 
 ##Confidence interval 
 
 ```{r}
-head(predict(mod_1), n = 10)
+#head(predict(mod_1), n = 10)
 ```
 Here it is important to understand that the function predict () is dependent on the input to the function. The first argument is supplying a model object of class lm. Because of this, predict() then runs the function predict.lm(). 
 
@@ -351,9 +358,9 @@ new_obs = data.frame(TV = 150, radio = 40, newspaper = 1)
 
 ERROR, again with X1 ??
 ```{r}
-predict(mod_1, newdata = new_obs)
+#predict(mod_1, newdata = new_obs)
 
-predict(mod_1, newdata = new_obs, interval = "confidence")
+#predict(mod_1, newdata = new_obs, interval = "confidence")
 ```
 
 
@@ -361,11 +368,11 @@ predict(mod_1, newdata = new_obs, interval = "confidence")
 
 The model is: 
 
-Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \ldots + \beta_p x_p \] + e 
+$$Y=\beta_0+\beta_1x_1 +\beta_2x_2+\ldots+\beta_px_p+e$$
 
 The interpretation is that ßj is the average effect on Y of a one unit increase in Xj, holding all other predictors fixed. In the advertisting example, the model becomes: 
 
-sales = \beta_0 + \beta_1 x TV + \beta_2 x radio + \beta_3 x newspaper + e 
+$$sales=\beta_0+\beta_1xTV+\beta_2xradio+\beta_3xnewspaper+e$$
 
 Interpreting regression coefficients 
 
@@ -382,16 +389,12 @@ The woes of (interpreting) regression coefficients.
 - a regression coefficient ßj estimated the expected change in Y per unit change in Xj, will all other predictors held fixed. But predictors ususally change together! 
 
 
-
 The lm() Function 
 
 In the following example, an additive linear model with sales as the response and each remaining vairbale as a predictor. 
 
 ```{r}
-mod_1 = lm(sales ~ ., data = advertising)
+#mod_1 = lm(sales ~ ., data = advertising)
 # mod_1 = lm(sales ~ TV + radio + newspaper, data = advertising)
 ```
-
-
-
 

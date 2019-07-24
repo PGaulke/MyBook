@@ -1,14 +1,14 @@
 ---
 title: "Classification"
-output: pdf_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+require(amsmath)
 ```
 
-```{r}
-```
 
 # Classification 
 
@@ -16,9 +16,8 @@ Classification is also a form of supervised learning. Here, the response variabl
 
 That is, the classifier $\hat{C}(x)$ returns the predicted category $\hat{y}(X)$.
 
-$$
-\hat{y}(x) = \hat{C}(x)
-$$
+$$\hat{y}(x) = \hat{C}(x)$$
+
 - Qualitative variables take values in an unordered set C, such as email {spam, ham}. 
 - Given a feature vector X and a qualitative response Y taking values in the set C, the classification task is to build a function C(X) that takes as input the feature vector X and predicts value; i.e. C(X)E C. 
 - Often we are more interested in estimating the probabilities that X belongs to each category in C. 
@@ -59,9 +58,7 @@ library(caret)
 ```
 Based on a numerica predictor, a density plot can often suggest a simple split. Essentially this plot graphs a density estimate
 
-$$
-\hat{f}_{X_i}(x_i \mid Y = k)
-$$
+$$\hat{f}_{X_i}(x_i \mid Y = k)$$
 
 for each numeric predictor $x_i$ and each category $k$ of the response $y$.
 
@@ -140,21 +137,18 @@ boxplot(Default$balance ~ Default$default)
 Supposing for the Default classification task that it is coded 
 
 
-$$
-{Y} = 
+$${Y} = 
 \begin{cases} 
       0 & if \ no \\
       1 & if \ yes
-\end{cases}
-$$
+\end{cases}$$
 
 
-Can a simple linear regresssion of Y on X can be performed and classify as Yes if \hat{Y} > 0.5? 
+Can a simple linear regresssion of Y on X can be performed and classify as Yes if $\hat{Y} > 0.5$? 
 
 - In this case of a binary outcome, linear regression does a good job as a classifier, and is equivalent to linear discriminat analysis which is discussed in a later. 
-- Since in the population $$
-\mathbb{E}[Y \mid X = x] = P(Y = 1 \mid X = x).
-$$
+- Since in the population 
+$$\mathbb{E}[Y \mid X = x] = P(Y = 1 \mid X = x).$$
 it might be thinking that regression is perfect for this task. 
 - However, linaer regression might produce probabilities less than zero or bigger than one. Logistic regression is more appropriate. 
 
@@ -194,9 +188,7 @@ any(predict(model_lm) < 0)
 ```
 # Logistic regression 
 
-$$
-p(x) = P(Y = 1 \mid {X = x})
-$$
+$$p(x) = P(Y = 1 \mid {X = x})$$
 
 ```{r}
 model_glm = glm(default ~ balance, data = default_trn, family = "binomial")
@@ -222,15 +214,13 @@ calc_class_err = function(actual, predicted) {
 ```
 
 ```{r}
-calc_class_err(actual = default_trn$default, predicted = model_glm_pred)
+#calc_class_err(actual = default_trn$default, predicted = model_glm_pred)
 ```
 Logistic regression is used to better estimate the propability.
 
 The model is 
 
-$$
-\log\left(\frac{p(x)}{1 - p(x)}\right) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots  + \beta_p x_p.
-$$
+$$\log\left(\frac{p(x)}{1 - p(x)}\right) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots  + \beta_p x_p.$$
 ```{r, fig.height=5, fig.width=7}
 plot(default ~ balance, data = default_trn_lm, 
      col = "darkorange", pch = "|", ylim = c(-0.2, 1),
@@ -248,9 +238,7 @@ This plot contains a wealth of information.
 
 - The orange `|` characters are the data, $(x_i, y_i)$.
 - The blue "curve" is the predicted probabilities given by the fitted logistic regression. That is,
-$$
-\hat{p}(x) = \hat{P}(Y = 1 \mid { X = x})
-$$
+$$\hat{p}(x) = \hat{P}(Y = 1 \mid { X = x})$$
 - The solid vertical black line represents the **[decision boundary](https://en.wikipedia.org/wiki/Decision_boundary)**, the `balance` that obtains a predicted probability of 0.5. In this case `balance` = `r -coef(model_glm)[1] / coef(model_glm)[2]`.
 
 

@@ -28,6 +28,22 @@ You can find all built-in data sets here: https://stat.ethz.ch/R-manual/R-devel/
 
 However, apart from built-in functions and built-in data sets, there is even more to explore. In the following, we will explain how to create your individual and best R environment.
 
+## Import Data
+
+The actual idea of this book is that we want to enable you to analyze data in R. It will be barely possible to do so without being able to import the data you want to analyze in R. Therfore, we want to put data from other files into a data frame in order to work with it in R. With Base R, this is possibly for at least some types of files, however, for others there are some special packages to use which we wil thematize in the chapter //HERE THE REF.
+
+
+Generally, there are different funtion in how to read a file. The most common one is `read.table`. With this function you can read rectangular data and convert it into a data frame. For all the arguments you should check the help section `?read.table`.
+Most importantly you have the arguement `file` which requires a path to find a data. If you have the file in the same folder, then the name of the file is enough. Also of high importance is the `sep` arguement which indicates the character that seperates the values between different columns.
+
+
+```{r, eval=FALSE}
+randomdatafile <- read.table(file="filename.txt",
+                             sep=",")
+
+``` 
+
+For other files, R follows the logic of `read.xxx`. The xxx specifies the data format (e.g. read.csv -> .csv files)
 
 ## Data Packages
 
@@ -42,10 +58,80 @@ library(package)
 ```
 This step is necessary to reload the package and use its functions. You do not necessarily need to reinstall the whole package, but loading it from your library will definitely be required.
 
+____________________________
 
+
+###MagrittR
+
+Now you will meet a complete new operator for the first time that comes with the package `magrittr`. This operator is called pipe `%>%`. It provides a different way of writing operations into chunks, by which you type in your operation from left to right, instead from the outside to the inside.
+From a mathematical point of view, this means`x %>% f` is equivalent to `f(x)`, `x %>% f(y)` is equivalent to `f(x, y)`, and `x %>% f %>% g %>% h`is equivalent to `h(g(f(x)))`
+
+
+```{r}
+require(magrittr)
+
+somenumbers <- c(200,300,700,50,400)
+sum(somenumbers)
+
+somenumbers %>%
+	sum()
+
+sqrt(sum(somenumbers))
+
+somenumbers %>%
+	sum() %>%
+	sqrt()
+
+
+```
+
+The transformation process of data frames can be processed in one operation with piping.
+
+df_after_f <-f(df)
+df_after_g <-g(df_after_f)
+df_after_h <-g(df_after_g)
+
+with piping it is
+
+df %>%
+  f %>%
+  g %>%
+  h
+  
+Furthermore, you can also use placeholders for an element that you placed before the pipe.
+
+
+```{r}
+
+#single placeholder
+round(1,66666666,2)
+
+2 %>%
+	round(1,66666666, .)
+
+#multiple placeholders
+mtcars %>%
+  subset(hp > 100) %>%
+  aggregate(. ~ mpg,.,mean)
+```
+
+
+## Multiple placeholders
+
+The placeholder can be used multiple times. Notice, however, that if the placeholder is not an argument (but simply a value of an argument), then `magrittr` still applies the _first argument rule_, unless the call on the right-to-pipe is enclosed in curly brackets.
+
+- `x %>% f(y = nrow(.), z = ncol(.))` is equivalent to `f(x, y = nrow(x), z = ncol(x))`
+
+- `x %>% {f(y = nrow(.), z = ncol(.))}` is equivalent to `f(y = nrow(x), z = ncol(x))`
+
+
+
+
+
+```{r}
 ### Tidyverse
 
-Tidyverse is a large package that basically includes different packages such as `tibble`, `tidyr`,`readr`, `dplyr` and `ggplot2`. Considering all the functions and possibilties that tidyverse provides, it can be seen a subdialect of R. For a detailed overview of what tidyvere is, and what's included, see here: https://www.tidyverse.org/
+Tidyverse is a large package that basically includes different packages such as `tibble`, `tidyr`,`readr`, `dplyr` and `ggplot2`. Considering all the functions and possibilties that tidyverse provides, it can be seen a subdialect of R. For a detailed overview of what tidyvere is, and what's included, see here: https://www.tidyverse.org/. Especially, the cheat sheets for ReadR and TidyR are recommendable: https://rawgit.com/rstudio/cheatsheets/master/data-import.pdf.
 
 As a first step, please load `tidyverse`.
 
@@ -55,6 +141,7 @@ install.packages("tidyverse")
 
 ```
 
+#### Tibble
 
 In a first step, we will go through the function and benefit of `tibble`. Tibble is generally a description for a data frame in tidyverse. All tibbles are data frames, but not vice versa.
 Using tibble instead of regular data frames provides us benefits in terms of pace, output, informations, and simplicity.
@@ -82,210 +169,308 @@ tibmtcars
 
 ```
 
+#### TidyR
 
-In order to continue with tidyr, we are now more about how to organize a data set.
+In order to continue with `tidyr`, we are now more about how to organize a data set.
+The principle of tidy data is that, that every column is a variable, every row an obersvation and every type of observation belongs in a different table. Tidyr is mainly based upon the following functions:
+
+- `gather`
+- `spread`
+- `seperate`
+- `unite`
+
+To `gather`is the function that let you create key-value pairs out of multiple pairs. A large horizontal data set can therefore be converted in a vertically larger data set. This can be beneficial in order to get a clear overview on the data set.
 
 
-###How to Tidy Up something: Install tidyr
 
-how to gather
 ```{r}
+pricing <- tibble(type= c("B2C","B2B"),
+                  productA= c(20,15),
+                  productB= c(75,70),
+                  productC= c(30,20),
+                  productD= c(60,55),
+                  productE= c(15,10)
+                    )
+pricing
 
-lottery <- tibble (person= c("Andre","Beth","Charles"),
-  mon= c(2,5,1),
-  tue= c(3,7,5),
-  wed= c(10,3,4),
-  thu= c(1,2,7)
+```
+Taking this example, we see that we actuall have the following three variables: type of business, product, and price. However, we have 6 columns, which obviously does not correspond to a tidy data set, in which every variable is a columnn.
+Therefore, we should now tidy the data set up by considering the following logic:
+- `key`, which are the messy columns (here the products)
+- `value`, which are the messy values in the messy cells (here the prices)
+
+
+```{r}
+#The empty call is:
+#gather(df, key, value, messy_col1, ..., messy_coln)
+
+require(tidyr)
+
+tidy_pricing <- gather(pricing,
+                        key= "products",
+                        value= "price",
+                        productA:productE
+                        ) 
+tidy_pricing
+
+
+```
+
+
+In contrast, the function `spread` works the opposite way. Therefore, it creates a horzontally larger data set by increasing the amounts of columns according to the given variables.
+
+```{r}
+sales<- tibble(
+  business= c(rep(c("B2B","B2C","Mixed"),2),"Philantrophy"),
+  products= c(rep(c("product", "revenue"),3), "donation"),
+  details= c("productA", 300, "productC", 240, "productB", 120, 50)
+        )
+
+sales
+
+tidy_sales<- spread(sales, key=products, value=details)
+tidy_sales
+
+```
+
+The function `seperate` does what its name implies, it seperates columns. The seperation can be done by different ways, you can let recycling do its work, or base it on numbers and characters.
+
+```{r}
+require(tidyverse)
+
+# The empty call is
+# separate(df, messy_var, into=c(tidy_var1, tidy_var2))
+
+#Example for using recycling
+
+mixedup <- tibble(info=c("Shanghai,China", "Oslo,Norway"))
+mixedup
+
+tidy_mixedup <- separate(mixedup,
+                          info,
+                          into= c("city", "country")
+                          )
+
+tidy_mixedup
+                  
+# Example for using characters
+
+tidy_mixedup2 <- separate(mixedup,
+                          info,
+                          into=c("city","country"),
+                          sep="a")
+tidy_mixedup2
+
+# Example for using numbers of characters
+
+tidy_mixedup3 <- separate(mixedup,
+                          info,
+                          into=c("city","country"),
+                          sep=5)
+tidy_mixedup3
+
+
+```  
+
+Finally, the function `unite` can be simply used for the opposite. By this function you can put two columns together.
+
+```{r}
+# The empty call is:
+# unite(df, tidy_var, messy_var1, messy_var2, sep="")
+
+
+backtotheorigin_mixedup <- unite(tidy_mixedup, info, "city", "country", sep=",")
+backtotheorigin_mixedup
+```
+
+#### ReadR
+
+The package readr provides you a fast and comfortable way of using data from other data formats.
+The follwing file formats are supported by readr
+
+- read_csv(): comma separated (CSV) files
+- read_tsv(): tab separated files
+- read_delim(): general delimited files
+- read_fwf(): fixed width files
+- read_table(): tabular files where columns are separated by white-space.
+- read_log(): web log files
+
+Readr tries automatically to convert the data from the file into a tibble data set in a way, that column specification is as appropriate as possible. These are basically the main advantages, beside that it is much faster than base R imports.
+
+For us, the most important files are .CSV files as most data sets are create in Excel-files. However, it is pretty easy to just drop the file in your project folder and then use this formula:
+
+```{r, eval=FALSE, error=FALSE}
+
+
+idea_of_a_name <- read_csv(readr_example("filename.csv"), col_types = 
+  cols(
+    firstcolumnname = col_double(),
+    secondcolumnname = col_integer(),
+    thirdcolumnname = col_character(),
+    etc = col_integer(),
+      )
+)
+
+
+```
+
+#### DployR
+
+`Dplyr`is a toolset for data manipulation. The packages includes five essential function, which are the following:
+
+- select() picks variables based on their names
+- mutate() adds new variables that are functions of existing variables 
+both of the two above applied on columns 
+
+- filter() picks cases based on their values
+- arrange() changes the ordering of the rows
+both of the two above applied on rows
+
+- summarise() creates a summary out of multiple data sets
+
+Before we start with the above mentioned functions, first things first, under the following link you will find a cheat sheet: https://github.com/rstudio/cheatsheets/blob/master/data-transformation.pdf.
+
+
+As you already met the piping operator `%>%`  in the chapter about magrittr(HIER REF), we will apply it within this chapter. Especially, when manipulating a data set, piping provides an easier and more efficient approach than base R. Furthermore, you can combine different functions of manipulation in one step.
+
+```{r}
+starwars
+```
+
+
+First we will start with the operator `select`. 
+
+
+```{r}
+# The empty call is (base R)
+# select(df, var1, ..., varn)
+# or with piping...
+# df %>%
+#   select(var1,..., varn)
+
+#here a practical example with mtcars
+
+mtcars[,c("mpg","hp")]
+
+
+mtcars %>%
+  select(mpg,hp)
+
+
+
+```
+Furthermore, you can select in the following ways:
+
+```{r}
+#by columns
+
+mtcars %>%
+  select(1:3)
+
+mtcars %>%
+  select(mpg:hp)
+
+mtcars %>%
+  select(-5)
+
+mtcars %>%
+  select(-hp)
+
+
+```
+
+The selection can be designed very individually by using helper arguments that describe for example a word that should be included in the variable. All helper arguments can be found in the help section:`?select`
+
+
+The `mutate` function provides the possibilty to create new columns based on existing ones.
+
+```{r}
+# The empty call is (base R)
+# mutate(df, new_variable = expression)
+# or with piping...
+# df %>%
+#   mutate(new_variable = expression)
+
+#Practical example:
+
+mutate(mtcars, kmpg = mpg*1.60934)
+
+
+mtcars %>%
+  mutate(kmpg= mpg*1.60934)
+
+
+```
+
+The `filter` function is somehow similar to the `select` function but for rows. The procedure is more or less the same.
+
+```{r}
+# The empty call is (base R)
+# filter(df, condition)
+# or with piping...
+# df %>%
+#   filter(condition)
+
+mtcars[mtcars$mpg >=20,]
+
+mtcars %>%
+  filter(mpg >= 20)
+
+```
+
+You find all operators for conditions in the help section: ?Comparison
+
+
+The function `arrange` enables you to create a new order by considering the value of variable.
+
+```{r}
+# The empty call is (base R)
+# arrange(df, var1)
+# or with piping...
+# df %>%
+#   arrange(var1)
+
+arrange(mtcars, desc(hp))
+
+mtcars %>%
+  arrange(desc(hp))
+
+
+
+```
+
+
+The fiveth function `summarise` provides the possibility to create a new data frame by deriving summarzing calculations from an existing data set.
+
+The expr means a function on a vector, repsectively a variable.
+
+```{r}
+# The empty call is (base R)
+# summarise(df, name = expr)
+# or with piping...
+# df %>%
+#   summarise(name = expr)
+
+summarise(mtcars, averagepower = mean(hp))
+
+mtcars %>%
+  summarise(averagepower = mean(hp))
+```  
+Again, helper function can be found in the help section `?summarise`
+
+
+For some more specialised manipulation tasks you can use the function `group_by` which allows you to choose a specific group on which to apply your manipulation operation.
+
+```{r}
+mtcars %>%
+  group_by(hp >200) %>%
+  summarise(
+    mean(mpg)
   )
-
-lottery
-
-
-
-#tidy it up
-
-tidy_lottery <- gather (lottery,
-                        key= "day",
-                        value= "gains",
-                        mon:thu
-                        )
-tidy_lottery
-
-
-
-#another example
-bisou <- tribble(
-  ~name, ~`2016`, ~`2017`, ~`2018`,
-  "gau", 23,45,12,
-  "tri", 8,14,30,
-  "han", 12,43,8
-)
-  
-bisou
-
-tidy_bisou <- gather(bisou,
-                     key="Year",
-                     value="Number",
-                     `2016`, `2017`, `2018`)
-
-tidy_bisou
+# interesting result by the way
 
 ```
+#### ggplot2
 
-
-how to spread
-```{r}
-people<- tibble (name=rep(c("Andre", "Beth", "Charles"),2),
-                 info=rep(c("eyes","age"),3),
-                 measure= c("Blue",23,"brown",31,"brown",19)
-)
-                 
-                 
-tidy_people<- spread(people, key=info, value=measure)
-tidy_people
-
-people2<- tibble (name=c(rep(c("Andre", "Beth", "Charles"),2),"David"),
-                 info=c(rep(c("eyes","age"),3),
-                 "height"),
-                 measure= c("Blue",23,"brown",31,"brown",19, 175)
-)
-                 
-                 
-tidy_people2<- spread(people2, key=info, value=measure)
-tidy_people2
-
-```
-
-
-###magrittr
-
-How to pipe= %>%
-
-```{r}
-
-#simple
-
-library(magrittr)
-mydata <- c(2:10,20,42)
-mean(mydata)
-
-mydata%>%
-  mean()
-
-#advanced
-
-round(sqrt(mean(mydata)),2)
-
-mydata %>%
-  mean() %>%
-  sqrt() %>%
-  round(2)
-
-
-##using a placeholder
-
-3 %>%
-  round(17.2342)
-
-
-```
-
-
-Transformations on a data frame
-
-df_after_f <-f(df)
-df_after_g <-g(df_after_f)
-df_after_h <-g(df_after_g)
-
-with piping it is
-
-df %>%
-  f %>%
-  g %>%
-  h
-  
-
-Own example
-```{r}
-
-library(magrittr)
-library(tidyverse)
-
-
-data (iris)
-t_iris <- as_tibble(iris)
-
-t_iris2 <- t_iris[t_iris$Sepal.Length>4.5 & t_iris$Sepal.Length<5.5,]
-t_iris2
-
-av.sw<-mean(t_iris$Sepal.Length)
-av.sw
-
-iris %>%
-  as_tibble() %>%
-  .[.$Sepal.Length==5,] %>%
-  {mean(.$Sepal.Width)}
-
-
-
-```
-
-
-<<<<<<< HEAD
-#Unite 
-#Exercises on sub-setting
-
-```{r}
-letters 
-v1 <- letters [1]
-
-v2 <- letters [c(1,2,3)]
-v2
-
-v3 <- letters[-c(2,3)]
-
-
-v4 <- letters[-c(24, 25, 26)] # bad one
-
-v4 <- letters[-c(length(letters)-2, length(letters)-1, length(letters))]
-lv <- length (letters)
-
-
-
-#v5 <- letters[seq(from=1, to=26, by 3)]
-#v5
-```
-
-```{r}
-data (iris)
-#max(Sepal.Lenght) # not found bc. it is in the data frame of iris, tell them, it should look in the data frame
-```
-
-```{r}
-data (iris)
-max(iris$Sepal.Length)
-```
-
-
-```{r}
-iris2 <- iris [, c("Sepal.Length", "Sepal.Width")]
-```
-
-=======
-how to separate
-```{r}
-clients <- ("Andre, Porto")
-
-
-```
-
-
-VERY IMPORTANT: EVERYTIME WE WANT TO USE TIBBLE OR PROCESS TIBBLE (OR ANY OTHER PART OF TIDYVERSE) WE NEED TO PUT IN THE CONSOLE: library(tidyverse) (BECAUSE TIDYVERSE IS A SUBLANGUAGE OF R/WE DIDNT DO ANY OTHER LANGUAGE SO FAR, JUST BASIC R)
->>>>>>> b5b9a9d2087ef2869d0701f2b10cd730c6eb23f3
-
-
-
-
-Tidyverse and other R packages
-
-How to import data
+SEE DATA VIZ
+## Importing Data (vielleicht in einem der vorherigen Chapter)

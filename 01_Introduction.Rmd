@@ -5,7 +5,7 @@ date: "14 Juli 2019"
 output: html_document
 ---
 
-# Introduction
+# Introduction {-}
 
 This book is created in order to provide programming beginners a clear and understandable overview of how to use R for statistical investigations. This includes the explanation for the set up and an introduction to the basic skills for R, as well as an overview of major statistical methods for data science.
 

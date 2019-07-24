@@ -1,6 +1,8 @@
 ---
-title: "Cross-validation and the Bootstrap"
-output: pdf_document
+title: "10_Ersatz"
+author: "PGaulke"
+date: "24 Juli 2019"
+output: html_document
 ---
 # Cross-validation and the Bootstrap
 
@@ -98,6 +100,7 @@ require(magrittr)
 
 set.seed(120)
 
+
 degrees <- 1:10
 
 n.splits <- 10
@@ -136,8 +139,7 @@ val_rmse = matrix(0, ncol = num_degrees, nrow = num_sims)
 ```
 
 
-```{r}
-#ausblenden
+```{r, include=FALSE}
 gen_sim_data = function(sample_size) {
   x = runif(n = sample_size, min = -1, max = 1)
   y = rnorm(n = sample_size, mean = x ^ 3, sd = 0.25)
@@ -145,23 +147,21 @@ gen_sim_data = function(sample_size) {
 }
 ```
 
-```{r}
-#ausblenden
+```{r, include=FALSE}
 calc_rmse = function(actual, predicted) {
   sqrt(mean((actual - predicted) ^ 2))
 }
 ```
-```{r}
-
-#ausblenden
+```{r, include=FALSE, eval=FALSE, error=TRUE}
+#funktioniert nicht
 fit = lm(y ~ poly(x, 10), data = sim_trn)
 
 calc_rmse(actual = sim_trn$y, predicted = predict(fit, sim_trn))
 calc_rmse(actual = sim_val$y, predicted = predict(fit, sim_val))
 ```
 
-```{r}
-#ausblenden
+```{r, include=FALSE, eval=FALSE, error=TRUE}
+#funktioniert nicht
 fit = lm(y ~ poly(x, 10), data = sim_trn)
 
 calc_rmse(actual = sim_trn$y, predicted = predict(fit, sim_trn))
