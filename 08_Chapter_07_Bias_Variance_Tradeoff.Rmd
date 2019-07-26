@@ -1,0 +1,396 @@
+---
+title: "Bias-Variance Tradeoff"
+output: pdf_document
+---
+# Bias-Variance Tradeoff 
+
+In respect to the general regression setup, where a random pair $(X, Y) \in \mathbb{R}^p \times \mathbb{R}$ is given. Here, the goal is to make a prediction of $Y$ with the funcntion of $X$, e.g. $f(X)$. 
+In order to assert what it implys to make a prediction, it is useful that $f(X)$ is near to $Y$. To explain meaning of being near to, the squared error loss of estimating of $Y$ through using $f(X)$, will be definded. 
+
+Definition of the squared error loss: 
+$$
+L(Y, f(X)) \triangleq (Y - f(X)) ^ 2
+$$
+The next step is to exlain the goal of regrssion, which is to minimize the squared error loss, on average. This can be describes as the risk if estimating $Y$ through using $f(X)$. 
+
+$$
+R(Y, f(X)) \triangleq \mathbb{E}[L(Y, f(X))] = \mathbb{E}_{X, Y}[(Y - f(X)) ^ 2]
+$$
+
+The risk is first rewrited after conditioning on $X$, before proving to minimize the risk. 
+
+$$
+\mathbb{E}_{X, Y} \left[ (Y - f(X)) ^ 2 \right] = \mathbb{E}_{X} \mathbb{E}_{Y \mid X} \left[ ( Y - f(X) ) ^ 2 \mid X = x \right]
+$$
+
+The right-hand side is easier to minimize, because it simply amounts to minimizing the inner expectation to $Y \mid X$, particularly minimizing the risk pointwise, for each $x$. 
+
+The regression function, where the risk is minimzied by the conditional mean of $Y$ given, $X$ is written as following: 
+
+$$
+f(x) = \mathbb{E}(Y \mid X = x)
+$$
+An important notice is that the choice of squared error loss is slidely arbitrary. Rather, the absolute error loss can be supposed. 
+$$
+L(Y, f(X)) \triangleq | Y - f(X) | 
+$$
+The risk can then be minimzed by the conditional median. 
+$$
+f(x) = \text{median}(Y \mid X = x)
+$$
+In spite of this facility, the goal is still the squared error loss. This is because there are historical reasons, as wll as the eas of opimization and the protection against large deviations. 
+
+The next step is, to find $\hat{f}$ that is a good estimat of the regression function $f$, given the data $\mathcal{D} = (x_i, y_i) \in \mathbb{R}^p \times \mathbb{R}$. This amounts to minimizing is called **reducible error**. 
+
+## Reducible and Irreducible Error
+
+Expecting that when preserving some $\hat{f}$, the question is how well does it estimate $f$? For this, the **expected prediction error** of predicting $Y$ using $\hat{f}(X)$ is definded. A good $\hat{f}$ will have a low expected prediction error. 
+
+$$
+\text{EPE}\left(Y, \hat{f}(X)\right) \triangleq \mathbb{E}_{X, Y, \mathcal{D}} \left[  \left( Y - \hat{f}(X) \right)^2 \right]
+$$
+
+This expectation is over $X$, $Y$, and also $\mathcal{D}$. The estimate $\hat{f}$ is actually random depending on the sampled data $\mathcal{D}$. Therefore, it could be actually written $\hat{f}(X, \mathcal{D})$ in order to make this dependence explicit, but the notation will become cumbrous enough as it is.
+
+Hence, $X$ is required. This results in the expected prediction error of predicting $Y$ using $\hat{f}(X)$ when $X = x$. 
+
+$$
+\text{EPE}\left(Y, \hat{f}(x)\right) = 
+\mathbb{E}_{Y \mid X, \mathcal{D}} \left[  \left(Y - \hat{f}(X) \right)^2 \mid X = x \right] = 
+\underbrace{\mathbb{E}_{\mathcal{D}} \left[  \left(f(x) - \hat{f}(x) \right)^2 \right]}_\textrm{reducible error} + 
+\underbrace{\mathbb{V}_{Y \mid X} \left[ Y \mid X = x \right]}_\textrm{irreducible error}
+$$
+
+Here are some important things to notice: 
+
+- The expected prediction error is for a random $Y$ given a fixed $x$ and a random $\hat{f}$. As such, the expectation is over $Y \mid X$ and $\mathcal{D}$. The estimated function $\hat{f}$ is random depending on the sampled data, $\mathcal{D}$, which is used to perform the estimation.
+- The expected prediction error of predicting $Y$ using $\hat{f}(X)$ when $X = x$ has been decomposed into two errors:
+    - The **reducible error**, which is the expected squared error loss of estimation $f(x)$ using $\hat{f}(x)$ at a fixed point $x$. The only thing that is random here is $\mathcal{D}$, the data used to obtain $\hat{f}$. (Both $f$ and $x$ are fixed.) This is often called reducible error the **mean squared error** of estimating $f(x)$ using $\hat{f}$ at a fixed point $x$. $$
+\text{MSE}\left(f(x), \hat{f}(x)\right) \triangleq 
+\mathbb{E}_{\mathcal{D}} \left[  \left(f(x) - \hat{f}(x) \right)^2 \right]$$
+    - The **irreducible error**. This is simply the variance of $Y$ given that $X = x$, essentially noise that is not important to learn. This is also called the **Bayes error**.
+
+As the name suggests, the reducible error is the error that is to have some control over. But how can this error be controlled? 
+
+## Bias-Variance Decomposition
+
+Right after the expected predition error is decomposed into the reducible and inreducible error, the reducible error can even further be decomposed. 
+
+Bearing the definiton of the variance of an estimator into the mind: 
+$$
+\text{bias}(\hat{\theta}) \triangleq \mathbb{E}\left[\hat{\theta}\right] - \theta
+$$
+the reducible error, which is the mean squared error can be further decomposen into bias squared and variance. 
+$$
+\mathbb{V}(\hat{\theta}) = \text{var}(\hat{\theta}) \triangleq \mathbb{E}\left [ ( \hat{\theta} -\mathbb{E}\left[\hat{\theta}\right] )^2 \right]
+$$
+Even if this is actually a common fact in estimation theory, it is mentiond at this place because the estimation of some regression function $f$ using $\hat{f}$ at some point $x$. 
+
+$$
+\text{MSE}\left(f(x), \hat{f}(x)\right) = \text{bias}^2 \left(\hat{f}(x) \right) + \text{var} \left(\hat{f}(x) \right)
+$$
+It can be stated that is a perfect world, it would be possible to finde some $\hat{f}$ which is unbiased, thta is bias $\text{bias}\left(\hat{f}(x) \right) = 0$ which has also a small variance. However, in the real world, this is not feasible. 
+
+Hence, it appears that there is a **bias-variance tradeoff**. This bias-variance tradeoff is that the variance is decreasing, when the bias is increasing in the estimation. At once, increasing bias in the estimation leads to decrasing the variance. Intricate models tend to be unbiased, however, these models are  highly variable. On the other side, simple models are often very biased, but have a small variance. 
+
+In terms of regression, it can be stated that models are biased when: 
+
+- Parametric: The type of the model does not incorporate all the necessary varibales, of the type of the relationship is too simple. E.g. the linear relationship is assumed, but the real relationship is quadratic. 
+
+- Non-parametric: the model present too much smoothing. 
+
+In terms of regression, it can be stated that models are variable when: 
+
+- Parametric: The type of the model incorporates many variables, or the type of the relationshio is too complex. E.g. the cubic relationship is assumed, but the real relationship is linear. 
+
+- Non-parametric: the model does not present enough smoothing. The model is very shaking. 
+
+In order to choose a model which is expected to balance the tradeoff betweeen the bias and the variance, and hence can minimize the reducible error, a model has to be choosen which provides the appropriate cimplexity for the data. 
+
+Bearing into mind, that when fitting models, on the one hand, the train RMSE turns out the get larger as the model gets more complex. On the other hand, the test RMSE gets smaller until a certain point of model complexity, and then begins to increase. 
+
+This is because the expected test RMSE is cruitally the expected prediction error, which is known as tp decompose into (squared) bias, variance and the irreducible Bayes error. This can be seen in the following thre plots, which are examples of the bias-variance tradeoff.
+
+```{r, fig.height = 4, fig.width = 12, echo = FALSE}
+x = seq(0.01, 0.99, length.out = 1000)
+
+par(mfrow = c(1, 3))
+par(mgp = c(1.5, 1.5, 0))
+```
+
+```{r}
+b = 0.05 / x
+v = 5 * x ^ 2 + 0.5
+bayes = 4
+epe = b + v + bayes
+
+plot(x, b, type = "l", ylim = c(0, 10), col = "dodgerblue", lwd = 2, lty = 3,
+     xlab = "Model Complexity", ylab = "Error", axes = FALSE,
+     main = "More Dominant Variance")
+axis(1, labels = FALSE)
+axis(2, labels = FALSE)
+grid()
+box()
+lines(x, v, col = "darkorange", lwd = 2, lty = 4)
+lines(x, epe, col = "black", lwd = 2)
+abline(h = bayes, lty = 2, lwd = 2, col = "darkgrey")
+abline(v = x[which.min(epe)], col = "grey", lty = 3, lwd = 2)
+
+```
+Interpretation: The variance influenced the expected prediction error more than the bias. 
+
+```{r}
+b = 0.05 / x
+v = 5 * x ^ 4 + 0.5
+bayes = 4
+epe = b + v + bayes
+
+plot(x, b, type = "l", ylim = c(0, 10), col = "dodgerblue", lwd = 2, lty = 3,
+     xlab = "Model Complexity", ylab = "Error", axes = FALSE,
+     main = "Decomposition of Prediction Error")
+axis(1, labels = FALSE)
+axis(2, labels = FALSE)
+grid()
+box()
+lines(x, v, col = "darkorange", lwd = 2, lty = 4)
+lines(x, epe, col = "black", lwd = 2)
+abline(h = bayes, lty = 2, lwd = 2, col = "darkgrey")
+abline(v = x[which.min(epe)], col = "grey", lty = 3, lwd = 2)
+
+```
+Interpretation: The influence is neutral.
+
+```{r}
+b = 6 - 6 * x ^ (1 / 4)
+v = 5 * x ^ 6 + 0.5
+bayes = 4
+epe = b + v + bayes
+
+plot(x, b, type = "l", ylim = c(0, 10), col = "dodgerblue", lwd = 2, lty = 3,
+     xlab = "Model Complexity", ylab = "Error", axes = FALSE,
+     main = "More Dominant Bias")
+axis(1, labels = FALSE)
+axis(2, labels = FALSE)
+grid()
+box()
+lines(x, v, col = "darkorange", lwd = 2, lty = 4)
+lines(x, epe, col = "black", lwd = 2)
+abline(h = bayes, lty = 2, lwd = 2, col = "darkgrey")
+abline(v = x[which.min(epe)], col = "grey", lty = 3, lwd = 2)
+legend("topright", c("Squared Bias", "Variance", "Bayes", "EPE"), lty = c(3, 4, 2, 1),
+       col = c("dodgerblue", "darkorange", "darkgrey", "black"), lwd = 2)
+```
+Interpreatation: The variance influenced the bias more than the expected prediction error. 
+
+
+In all three examples, the difference between the Bayer error, which is the horizontal dashed grey line, and the expected prediction, which is representet by the solid black curve, is exactly the mean squared error, which is the sum of the squared bias (blue curve) and the vairance (orange curve). The vertical line represents the complexity that minimized the prediction error. 
+
+It is suposed that the irreducible error can be written as: 
+$$
+\mathbb{V}[Y \mid X = x] = \sigma ^ 2
+$$
+Hence, it full decomposition of the expected prediction error of predicting $Y$ using $\hat{f}$ when $X = x$ can be written as: 
+
+$$
+\text{EPE}\left(Y, \hat{f}(x)\right) =  
+\underbrace{\text{bias}^2\left(\hat{f}(x)\right) + \text{var}\left(\hat{f}(x)\right)}_\textrm{reducible error} + \sigma^2.
+$$
+In summary it can be said that when the model complexity increeases, the bias decreases, while the variance increases. Therefore, understanding the tradeoff between bias and variance, the model complexity can be manipulated in order to find a model which predicts well on unseen observations. 
+
+```{r, fig.height = 6, fig.width = 10, echo = FALSE}
+x = seq(0, 100, by = 0.001)
+f = function(x) {
+  ((x - 50) / 50) ^ 2 + 2
+}
+g = function(x) {
+  1 - ((x - 50) / 50)
+}
+
+par(mgp = c(1.5, 1.5, 0)) 
+plot(x, g(x), ylim = c(0, 3), type = "l", lwd = 2,
+     ylab = "Error", xlab = "",
+     main = "Error versus Model Complexity", col = "darkorange", 
+     axes = FALSE)
+grid()
+axis(1, labels = FALSE)
+axis(2, labels = FALSE)
+box()
+ylabels = list(bquote("Low" %<-% "Complexity" %->% "High"), 
+               bquote("High" %<-% "Bias" %->% "Low"),
+               bquote("Low" %<-% "Variance" %->% "High"))
+mtext(do.call(expression, ylabels), side = 1, line = 2:4)
+curve(f, lty = 6, col = "dodgerblue", lwd = 3, add = TRUE)
+legend("bottomleft", c("(Expected) Test", "Train"), lty = c(6, 1), lwd = 3,
+       col = c("dodgerblue", "darkorange"))
+```
+
+
+## Simulation 
+
+The decompositions, as well as the bias-variance tradeoff, can be illustrated through simulation. 
+Assuming that a train model should learn the true regression function $f(x) = x^2$.
+
+```{r}
+f = function(x) {
+  x ^ 2
+}
+```
+
+In particular, an observation $Y$ should be predicted, given $X = x$ by using $\hat{f}(x)$ where
+
+$$
+\mathbb{E}[Y \mid X = x] = f(x) = x^2
+$$
+and
+
+$$
+\mathbb{V}[Y \mid X = x] = \sigma ^ 2.
+$$
+
+Alternatively, this can be written as
+
+$$
+Y = f(X) + \epsilon
+$$
+
+where $\mathbb{E}[\epsilon] = 0$ and $\mathbb{V}[\epsilon] = \sigma ^ 2$. In this formulation, $f(X)$ is called the **signal** and $\epsilon$ the **noise**.
+
+In order to extradite a specific simulation example, the data genaerating process need to be fully specfied: 
+
+```{r}
+get_sim_data = function(f, sample_size = 100) {
+  x = runif(n = sample_size, min = 0, max = 1)
+  y = rnorm(n = sample_size, mean = f(x), sd = 0.3)
+  data.frame(x, y)
+}
+```
+
+Note: If it is prefered to think if this simulation using the $Y = f(X) + \epsilon$ formulation, the following code represents the same data generating process.
+
+```{r, eval = FALSE}
+get_sim_data = function(f, sample_size = 100) {
+  x = runif(n = sample_size, min = 0, max = 1)
+  eps = rnorm(n = sample_size, mean = 0, sd = 0.75)
+  y = f(x) + eps
+  data.frame(x, y)
+}
+```
+
+
+In order to completely specify the data generating process, more model assumptions has to be made than simply $\mathbb{E}[Y \mid X = x] = x^2$ and $\mathbb{V}[Y \mid X = x] = \sigma ^ 2$. In particular,
+
+- The $x_i$ in $\mathcal{D}$ are sampled from a uniform distribution over $[0, 1]$.
+- The $x_i$ and $\epsilon$ are independent.
+- The $y_i$ in $\mathcal{D}$ are sampled from the conditional normal distribution.
+
+$$
+Y \mid X \sim N(f(x), \sigma^2)
+$$
+
+```{r, echo = FALSE}
+# TODO: colors like this...
+# \color{blue}{\texttt{predict(fit0, x)}}
+# trick is getting it to render in both html and pdf
+```
+
+For obtaining this setup, the datasets $\mathcal{D}$ will be generated with a sample size  $n = 100$ and fit four models. 
+
+$$
+\begin{aligned}
+\texttt{predict(fit0, x)} &= \hat{f}_0(x) = \hat{\beta}_0\\
+\texttt{predict(fit1, x)} &= \hat{f}_1(x) = \hat{\beta}_0 + \hat{\beta}_1 x \\
+\texttt{predict(fit2, x)} &= \hat{f}_2(x) = \hat{\beta}_0 + \hat{\beta}_1 x + \hat{\beta}_2 x^2 \\
+\texttt{predict(fit9, x)} &= \hat{f}_9(x) = \hat{\beta}_0 + \hat{\beta}_1 x + \hat{\beta}_2 x^2 + \ldots + \hat{\beta}_9 x^9
+\end{aligned}
+$$
+For making use of the data and the four models, a simulated dataset is generated, and fit the four models. 
+
+```{r}
+set.seed(1)
+sim_data = get_sim_data(f)
+```
+
+```{r}
+fit_0 = lm(y ~ 1,                   data = sim_data)
+fit_1 = lm(y ~ poly(x, degree = 1), data = sim_data)
+fit_2 = lm(y ~ poly(x, degree = 2), data = sim_data)
+fit_9 = lm(y ~ poly(x, degree = 9), data = sim_data)
+```
+
+
+
+```{r, fig.height = 6, fig.width = 9, echo = FALSE}
+set.seed(42)
+plot(y ~ x, data = sim_data, col = "grey", pch = 20,
+     main = "Four Polynomial Models fit to a Simulated Dataset")
+grid()
+grid = seq(from = 0, to = 2, by = 0.01)
+lines(grid, f(grid), col = "black", lwd = 3)
+lines(grid, predict(fit_0, newdata = data.frame(x = grid)), col = "dodgerblue",  lwd = 2, lty = 2)
+lines(grid, predict(fit_1, newdata = data.frame(x = grid)), col = "firebrick",   lwd = 2, lty = 3)
+lines(grid, predict(fit_2, newdata = data.frame(x = grid)), col = "springgreen", lwd = 2, lty = 4)
+lines(grid, predict(fit_9, newdata = data.frame(x = grid)), col = "darkorange",  lwd = 2, lty = 5)
+
+legend("topleft", 
+       c("y ~ 1", "y ~ poly(x, 1)", "y ~ poly(x, 2)",  "y ~ poly(x, 9)", "truth"), 
+       col = c("dodgerblue", "firebrick", "springgreen", "darkorange", "black"), lty = c(2, 3, 4, 5, 1), lwd = 2)
+```
+Interpretation: When plotting the four trained models, it can be seen that the zero predictor models does very bad. The first degree mdeol is reasonabale, but it can be seen that second degree model fits much better. The ninth model seem rather wild. 
+
+When staying to the three plots which are created when using three further simulated datasets. The zero predictor and nith degree ploynomial were fit to each. 
+
+```{r, fig.height = 4, fig.width = 12, echo = FALSE}
+par(mfrow = c(1, 3))
+
+# if you're reading this code
+# it's BAD! don't use it. (or clean it up)
+# also, note to self: clean up this code!!!
+
+set.seed(430)
+sim_data_1 = get_sim_data(f)
+sim_data_2 = get_sim_data(f)
+sim_data_3 = get_sim_data(f)
+fit_0_1 = lm(y ~ 1, data = sim_data_1)
+fit_0_2 = lm(y ~ 1, data = sim_data_2)
+fit_0_3 = lm(y ~ 1, data = sim_data_3)
+fit_9_1 = lm(y ~ poly(x, degree = 9), data = sim_data_1)
+fit_9_2 = lm(y ~ poly(x, degree = 9), data = sim_data_2)
+fit_9_3 = lm(y ~ poly(x, degree = 9), data = sim_data_3)
+
+```
+
+```{r}
+plot(y ~ x, data = sim_data_1, col = "grey", pch = 20, main = "Simulated Dataset 1")
+grid()
+grid = seq(from = 0, to = 2, by = 0.01)
+lines(grid, predict(fit_0_1, newdata = data.frame(x = grid)), col = "dodgerblue", lwd = 2, lty = 2)
+lines(grid, predict(fit_9_1, newdata = data.frame(x = grid)), col = "darkorange", lwd = 2, lty = 5)
+legend("topleft", c("y ~ 1", "y ~ poly(x, 9)"), col = c("dodgerblue", "darkorange"), lty = c(2, 5), lwd = 2)
+
+```
+```{r}
+plot(y ~ x, data = sim_data_2, col = "grey", pch = 20, main = "Simulated Dataset 2")
+grid()
+grid = seq(from = 0, to = 2, by = 0.01)
+lines(grid, predict(fit_0_2, newdata = data.frame(x = grid)), col = "dodgerblue", lwd = 2, lty = 2)
+lines(grid, predict(fit_9_2, newdata = data.frame(x = grid)), col = "darkorange", lwd = 2, lty = 5)
+legend("topleft", c("y ~ 1", "y ~ poly(x, 9)"), col = c("dodgerblue", "darkorange"), lty = c(2, 5), lwd = 2)
+```
+```{r}
+plot(y ~ x, data = sim_data_3, col = "grey", pch = 20, main = "Simulated Dataset 3")
+grid()
+grid = seq(from = 0, to = 2, by = 0.01)
+lines(grid, predict(fit_0_3, newdata = data.frame(x = grid)), col = "dodgerblue", lwd = 2, lty = 2)
+lines(grid, predict(fit_9_3, newdata = data.frame(x = grid)), col = "darkorange", lwd = 2, lty = 5)
+legend("topleft", c("y ~ 1", "y ~ poly(x, 9)"), col = c("dodgerblue", "darkorange"), lty = c(2, 5), lwd = 2)
+```
+
+Interpretation: The plots make straighten out the difference between the bias and variance of these two models. The zero predictor model is clearly wrong, that is, biased, but nearly the same for each of the datasets, since it has very low variance.
+
+While the ninth degree model does not appear to be correct for any of these three simulations, it can be seen that on average it is, and thus is performing unbiased estimation. These plots do however clearly illustrate that the ninth degree polynomial is extremely variable. Each dataset results in a very different fitted model. Correct on average is not the only goal that after, since in practice, only a single dataset is used. This is why also the models like to exhibit low variance.
+
+In this case, it can be seen that when $k$ = 100, it is a biased model with very low variance. When $k$ = 5, it is again a highly variable model. 
+
+These two sets of plots reinforce the intuition about the bias-variance tradeoff. Complex models (ninth degree polynomial and $k$ = 5) are highly variable, and often unbiased. Simple models (zero predictor linear model and $k = 100$) are very biased, but have extremely low variance.
+
+

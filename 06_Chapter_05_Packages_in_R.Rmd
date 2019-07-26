@@ -5,7 +5,7 @@ date: "22 Juli 2019"
 output: html_document
 ---
 
-# Data Sets and Packages in R
+# Data Sets, Visualisation, and Packages in R
 
 You already learned that R provides some built-in functions (such as `seq()`) that make your work more comfortable. However R provides also built-in data sets, that you can use for example calculation or data analysis.
 
@@ -45,6 +45,72 @@ randomdatafile <- read.table(file="filename.txt",
 
 For other files, R follows the logic of `read.xxx`. The xxx specifies the data format (e.g. read.csv -> .csv files)
 
+## Data Visualisation
+
+In the following, we will describe how you can visualize data in R. This will be limited to the base R functions, in the chapter \@ref(ggplot2) you will find a way to plot data more effectively.
+
+In order to start with this topic, at first we will look at the simplest way of plotting.
+
+The *scatter plot* is a simple line plot in which you plot one variable against an index on the x axis Both vectors need to have exactly the same length, and of course, they need to be numeric.
+
+The main function to use here is `plot`.
+
+```{r simple-plots-1, out.width="25%", fig.align="center", fig.height=10, fig.cap="Creating a simple line plot.", fig.show="hold"}
+revenue <- c(59000, 58000, 62000, 62000, 65000, 66000)
+month <- c(01, 02, 03, 04, 05, 06)
+
+plot(month,revenue, type ="l")
+```
+
+
+This looks pretty plain, so we can add some individual arguments. Show 
+We now add further customization with new functions and arguments.  
+
+- `col` adding a color (for details:(http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf)
+- `lty` setting the line type (for details: http://www.sthda.com/english/wiki/line-types-in-r-lty)
+- `lines` adding the plot of a vector to a previously opened plot.
+- `axis` changing the axis given in its first argument with 1, 2, 3, 4 (bottom, left, top, and right)
+- `at` stating for what values of the axis the labels should correspond.
+- `las` stating if lables are showed horizontal or vertical
+- `xlab` and `ylab` are the x and y axes labels, respectively.
+- `xlim` and `ylim` set a numerical limit for the x and y axes labels, respectively, notice that a vector of length 2 is necessary for each.
+
+The following arguements need to included in the chunk, but seperately from the actual function.
+- `legend`setting a legend for the plot
+- `title` setting a title for the plot
+
+```{r simple-plots-2, out.width="25%", fig.align="center", fig.height=10, fig.cap="Creating a simple line plot.", fig.show="hold"}
+revenue <- c(59000, 58000, 62000, 62000, 65000, 66000)
+month <- c(01, 02, 03, 04, 05, 06)
+
+plot(month,revenue, type ="l", col="blue",
+     axes=TRUE,
+     xlab = "Month",
+     ylab = "Revenue"
+     )
+title (main="Halfyearly Plot")
+```
+
+Alternatively, you can also create barplots, histograms, boxplots, pies and other plots. For example, for a barplot you should take the function `barplot` and consider the following arguments.
+
+
+- `col` for setting the colors
+- `horiz` for setting the direction of the plot
+- `border` setting the design of the borders of the plots
+- `beside` forces side-by-side bars instead of stacking bars
+
+```{r bar-plots, out.width="25%", fig.align="center", fig.height=7, fig.cap="Simple bar plots.", fig.show="hold"}
+
+barplot(revenue,
+        main="Monthly Revenue",
+        names.arg=c("Jan","Feb","Mar","Apr","May","June"),
+        border="black",
+        col = "blue")
+
+
+```
+
+
 ## Data Packages
 
 By installing new packages (again: Tools > Install packages) you can download additional tools for R, that gives you access to more operations, functions, and coding options. Before we introduce some major R packages that will make data science a bit easier and faster, please consider this short notice.
@@ -57,8 +123,6 @@ library(package)
 
 ```
 This step is necessary to reload the package and use its functions. You do not necessarily need to reinstall the whole package, but loading it from your library will definitely be required.
-
-____________________________
 
 
 ###MagrittR
@@ -104,10 +168,10 @@ Furthermore, you can also use placeholders for an element that you placed before
 ```{r}
 
 #single placeholder
-round(1,66666666,2)
+round(1.66666666,2)
 
 2 %>%
-	round(1,66666666, .)
+	round(1.66666666, .)
 
 #multiple placeholders
 mtcars %>%
@@ -116,20 +180,7 @@ mtcars %>%
 ```
 
 
-## Multiple placeholders
-
-The placeholder can be used multiple times. Notice, however, that if the placeholder is not an argument (but simply a value of an argument), then `magrittr` still applies the _first argument rule_, unless the call on the right-to-pipe is enclosed in curly brackets.
-
-- `x %>% f(y = nrow(.), z = ncol(.))` is equivalent to `f(x, y = nrow(x), z = ncol(x))`
-
-- `x %>% {f(y = nrow(.), z = ncol(.))}` is equivalent to `f(y = nrow(x), z = ncol(x))`
-
-
-
-
-
-```{r}
-### Tidyverse
+## Tidyverse
 
 Tidyverse is a large package that basically includes different packages such as `tibble`, `tidyr`,`readr`, `dplyr` and `ggplot2`. Considering all the functions and possibilties that tidyverse provides, it can be seen a subdialect of R. For a detailed overview of what tidyvere is, and what's included, see here: https://www.tidyverse.org/. Especially, the cheat sheets for ReadR and TidyR are recommendable: https://rawgit.com/rstudio/cheatsheets/master/data-import.pdf.
 
@@ -141,7 +192,7 @@ install.packages("tidyverse")
 
 ```
 
-#### Tibble
+#### tibble
 
 In a first step, we will go through the function and benefit of `tibble`. Tibble is generally a description for a data frame in tidyverse. All tibbles are data frames, but not vice versa.
 Using tibble instead of regular data frames provides us benefits in terms of pace, output, informations, and simplicity.
@@ -169,7 +220,7 @@ tibmtcars
 
 ```
 
-#### TidyR
+#### tidyr
 
 In order to continue with `tidyr`, we are now more about how to organize a data set.
 The principle of tidy data is that, that every column is a variable, every row an obersvation and every type of observation belongs in a different table. Tidyr is mainly based upon the following functions:
@@ -283,7 +334,7 @@ backtotheorigin_mixedup <- unite(tidy_mixedup, info, "city", "country", sep=",")
 backtotheorigin_mixedup
 ```
 
-#### ReadR
+#### readr
 
 The package readr provides you a fast and comfortable way of using data from other data formats.
 The follwing file formats are supported by readr
@@ -314,7 +365,7 @@ idea_of_a_name <- read_csv(readr_example("filename.csv"), col_types =
 
 ```
 
-#### DployR
+#### deplyr
 
 `Dplyr`is a toolset for data manipulation. The packages includes five essential function, which are the following:
 
@@ -470,7 +521,54 @@ mtcars %>%
 # interesting result by the way
 
 ```
-#### ggplot2
+#### ggplot2 {#ggplot}
 
-SEE DATA VIZ
-## Importing Data (vielleicht in einem der vorherigen Chapter)
+With the package ggplot2 you have more possiblities to visualize your data. The range in a plot will adopt automatically to new data, it will be drwan as an object instead of an image, the legend can be created automatically and the framework for plotting is unified.
+
+
+Creating a scatter plot for example, works like this:
+
+```{r, fig.show='hold', results='hide', tidy=FALSE}
+library(ggplot2)
+newggplot<- ggplot(mtcars, aes(x=cyl, y=hp)) + 
+         geom_smooth(method=lm , se=FALSE, aes(col=cyl)) +
+         geom_smooth(method=lm , se=FALSE, linetype=1, col="grey", aes(group=1)) + 
+  labs(subtitle="Car Power", 
+       y="Horsepower", 
+       x="Cylinders", 
+       title="Scatterplot", 
+       caption = "Source: mtcars")
+
+plot(newggplot)
+
+
+```
+
+The way how to write with ggplot2 might look confusing in the first moment, but there is a consistent logic behind that.
+
+
+```{r}
+# First you choose the data and set the mapping
+
+Superplot <- ggplot(data=mtcars, mapping= aes(x=hp, y= mpg))
+Superplot
+# The you tell the general form
+
+SP2 <- Superplot + 
+      geom_line()  
+SP2
+# Then you have the possibility to add a variable
+
+SP3 <- ggplot(mtcars, aes(x=hp, y= mpg, col="blue")) +
+      geom_point()
+SP3
+# Or even attributes
+
+SP3b <- ggplot(mtcars, aes(x=hp, y= mpg)) +
+      geom_point(col="blue")
+SP3b
+```
+
+By `aes` we map our data, which includes to tell x/y axis, colour, fill, size, labels, line widt, line type.
+
+By `geom` we set the shape of our object (_point,_line,_histogram,_bar,_boxplot) and set attributes.
