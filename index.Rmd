@@ -8,14 +8,16 @@ documentclass: report
 description: "This is a guide for data science with R"
 ---
 
-# Preface{-}
+# Preface {-}
 
-This book has been produced for and based on the Data Science class of Hochschule Fresenius in Cologne, Germany. In context of the task, the book includes basic R skills, statistical methods for data science and a solution for the exercise given at the end of the semester.
+"Data is the sword of the 21st century, those who wield it well, the Samurai." Jonathan Rosenberg, adviser to Larry Page and former SVP of products at Google. 
+This book has been produced for and based on the Data Science for Business class of Hochschule Fresenius in Cologne, Germany. In context of the task, the book includes basic R skills, statistical methods for data science and a own project is fulfilled. 
+The majority of information used in this book are learned in the lessons in class. Especially, lecture notes have been the basis for the book. Besides this, the online sources  tidyverse.com and the book of David Dalpiaz have been used as reference. 
+
+This book can serve as a source for all people who are interested in studying R and statistic models. 
 
 
 ```{r, include=FALSE}
-
-#noch ausblenden
 
 require(magrittr)
 require(tidyverse)

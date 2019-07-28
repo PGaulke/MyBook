@@ -10,12 +10,9 @@ output: html_document
 http://127.0.0.1:30892/rmd_output/1/creating-files-in-r.html
 
 ```{r, include=FALSE}
-#ausblenden
 library(readr)
 advertising = read_csv("data/advertising.csv")
 ```
-
-
 
 
 People want to make predictions because nothing is clearly true in this world. The answers of the predictions are based on data, and not on intuition. Therefore, people make use of predictive modeling in order to forecast future actions through using data and calculations of propability. Every predictive model has some predictive variables which can influence future actions. 
@@ -133,7 +130,7 @@ While for the sake of comparing models, the choice between RMSE and MSE is arbit
 
 Besides the fact how well a model makes precitions, it is also interesting to know the complexity/flexibility of a model. In this chapter, so make it simple, only linear models are considered. In fact, the model gets more complex when more predictors are added to the model. In order to assigning a numerical value to the complexity of the linear modl, the number of predictors $p$ wil be used. 
 
-```{r, include=FALSE} 
+```{r} 
 get_complexity = function(model) {
   length(coef(model)) - 1
 }
@@ -254,7 +251,7 @@ get_rmse(model = fit_5, data = test_data, response = "sales") # test RMSE
 
 In order to get a better picture of the relationship between the train RMSE, test RMSE, and model complexity, results are summarized and are cluttered. 
 
-```{r, eval = FALSE}
+```{r}
 fit_1 = lm(sales ~ ., data = train_data)
 fit_2 = lm(sales ~ radio * newspaper * TV, data = train_data)
 fit_3 = lm(sales ~ radio * newspaper * TV + I(TV ^ 2), data = train_data)
@@ -275,7 +272,7 @@ train_rmse = sapply(model_list, get_rmse, data = train_data, response = "sales")
 test_rmse = sapply(model_list, get_rmse, data = test_data, response = "sales")
 model_complexity = sapply(model_list, get_complexity)
 ```
-```{r, echo = FALSE, eval = FALSE}
+```{r, echo = FALSE}
 # the following is the same as the apply command above
 
 test_rmse = c(get_rmse(fit_1, test_data, "sales"),
@@ -329,19 +326,19 @@ HA: $\beta_0$ = 0
 
 since if $\beta_1=0$ then the model reduces to $Y=\beta_0$ + em and X is not associated with Y.
 
-The function  summary() returns a large amount of useful information about a model fit using lm(). Much of it will be helpful for hypothesis testing including individual tests about each predictor, as well as the significance of the regression test.
+The function  summary() returns a large amount of useful information about a model fit using lm(). Much of it will be helpful for hypothesis testing including individual tests about each predictor, as well as the significance of the regression test. In the following example, an additive linear model with sales as the response and each remaining vairbale as a predictor. 
 
 
-```{r, eval=FALSE, error=TRUE}
-#funktioniert nicht
+```{r}
+mod_1 = lm(sales ~., data = advertising)
+
 summary(mod_1)
 ```
 
 ##Confidence interval 
 
 
-```{r, eval=FALSE, error=TRUE}
-#funktioniert nicht
+```{r}
 head(predict(mod_1), n = 10)
 ```
 Here it is important to understand that the function predict () is dependent on the input to the function. The first argument is supplying a model object of class lm. Because of this, predict() then runs the function predict.lm(). 
@@ -353,15 +350,6 @@ For further information ?predict.lm() can be used.
 new_obs = data.frame(TV = 150, radio = 40, newspaper = 1)
 ```
 
-
-ERROR, again with X1 ??
-
-```{r, eval=FALSE, error=TRUE}
-#funktioniert nicht
-predict(mod_1, newdata = new_obs)
-
-predict(mod_1, newdata = new_obs, interval = "confidence")
-```
 
 ## Multiple Linear Regression 
 
@@ -386,15 +374,3 @@ Claims of causality should be avoided for observational data.
 The woes of (interpreting) regression coefficients. 
 "Data Analysis and Regression" Mosteller and Tukey 1977
 - a regression coefficient ßj estimated the expected change in Y per unit change in Xj, will all other predictors held fixed. But predictors ususally change together! 
-
-
-The lm() Function 
-
-In the following example, an additive linear model with sales as the response and each remaining vairbale as a predictor. 
-
-
-```{r, eval=FALSE, error=TRUE}
-#funktioniert nicht
-mod_1 = lm(sales ~ ., data = advertising)
-mod_1 = lm(sales ~ TV + radio + newspaper, data = advertising)
-```

@@ -30,7 +30,7 @@ However, apart from built-in functions and built-in data sets, there is even mor
 
 ## Import Data
 
-The actual idea of this book is that we want to enable you to analyze data in R. It will be barely possible to do so without being able to import the data you want to analyze in R. Therfore, we want to put data from other files into a data frame in order to work with it in R. With Base R, this is possibly for at least some types of files, however, for others there are some special packages to use which we wil thematize in the chapter //HERE THE REF.
+The actual idea of this book is that we want to enable you to analyze data in R. It will be barely possible to do so without being able to import the data you want to analyze in R. Therfore, we want to put data from other files into a data frame in order to work with it in R. With Base R, this is possibly for at least some types of files, however, for others there are some special packages to use which we wil thematize in the chapter \@ref(packages).
 
 
 Generally, there are different funtion in how to read a file. The most common one is `read.table`. With this function you can read rectangular data and convert it into a data frame. For all the arguments you should check the help section `?read.table`.
@@ -47,7 +47,7 @@ For other files, R follows the logic of `read.xxx`. The xxx specifies the data f
 
 ## Data Visualisation
 
-In the following, we will describe how you can visualize data in R. This will be limited to the base R functions, in the chapter \@ref(ggplot2) you will find a way to plot data more effectively.
+In the following, we will describe how you can visualize data in R. This will be limited to the base R functions, in the chapter \@ref(ggplot) you will find a way to plot data more effectively.
 
 In order to start with this topic, at first we will look at the simplest way of plotting.
 
@@ -93,7 +93,6 @@ title (main="Halfyearly Plot")
 
 Alternatively, you can also create barplots, histograms, boxplots, pies and other plots. For example, for a barplot you should take the function `barplot` and consider the following arguments.
 
-
 - `col` for setting the colors
 - `horiz` for setting the direction of the plot
 - `border` setting the design of the borders of the plots
@@ -111,7 +110,7 @@ barplot(revenue,
 ```
 
 
-## Data Packages
+## Data Packages {#packages}
 
 By installing new packages (again: Tools > Install packages) you can download additional tools for R, that gives you access to more operations, functions, and coding options. Before we introduce some major R packages that will make data science a bit easier and faster, please consider this short notice.
 
@@ -125,7 +124,7 @@ library(package)
 This step is necessary to reload the package and use its functions. You do not necessarily need to reinstall the whole package, but loading it from your library will definitely be required.
 
 
-###MagrittR
+###MagrittR {magrittr}
 
 Now you will meet a complete new operator for the first time that comes with the package `magrittr`. This operator is called pipe `%>%`. It provides a different way of writing operations into chunks, by which you type in your operation from left to right, instead from the outside to the inside.
 From a mathematical point of view, this means`x %>% f` is equivalent to `f(x)`, `x %>% f(y)` is equivalent to `f(x, y)`, and `x %>% f %>% g %>% h`is equivalent to `h(g(f(x)))`
@@ -180,7 +179,7 @@ mtcars %>%
 ```
 
 
-## Tidyverse
+## Tidyverse {tidyverse}
 
 Tidyverse is a large package that basically includes different packages such as `tibble`, `tidyr`,`readr`, `dplyr` and `ggplot2`. Considering all the functions and possibilties that tidyverse provides, it can be seen a subdialect of R. For a detailed overview of what tidyvere is, and what's included, see here: https://www.tidyverse.org/. Especially, the cheat sheets for ReadR and TidyR are recommendable: https://rawgit.com/rstudio/cheatsheets/master/data-import.pdf.
 
@@ -249,7 +248,6 @@ Taking this example, we see that we actuall have the following three variables: 
 Therefore, we should now tidy the data set up by considering the following logic:
 - `key`, which are the messy columns (here the products)
 - `value`, which are the messy values in the messy cells (here the prices)
-
 
 ```{r}
 #The empty call is:

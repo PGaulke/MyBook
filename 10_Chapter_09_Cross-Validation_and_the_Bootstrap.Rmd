@@ -145,6 +145,13 @@ gen_sim_data = function(sample_size) {
   y = rnorm(n = sample_size, mean = x ^ 3, sd = 0.25)
   data.frame(x, y)
 }
+
+set.seed(42)
+sim_data = gen_sim_data(sample_size=200)
+sim_idx = sample(1:nrow(sim_data),160)
+sim_trn = sim_data[sim_idx,]
+sim_val = sim_data[-sim_idx,]
+
 ```
 
 ```{r, include=FALSE}
@@ -152,16 +159,18 @@ calc_rmse = function(actual, predicted) {
   sqrt(mean((actual - predicted) ^ 2))
 }
 ```
-```{r, include=FALSE, eval=FALSE, error=TRUE}
-#funktioniert nicht
+```{r}
 fit = lm(y ~ poly(x, 10), data = sim_trn)
 
 calc_rmse(actual = sim_trn$y, predicted = predict(fit, sim_trn))
 calc_rmse(actual = sim_val$y, predicted = predict(fit, sim_val))
 ```
 
-```{r, include=FALSE, eval=FALSE, error=TRUE}
-#funktioniert nicht
+```{r, include =FALSE}
+
+library(ISLR)
+
+
 fit = lm(y ~ poly(x, 10), data = sim_trn)
 
 calc_rmse(actual = sim_trn$y, predicted = predict(fit, sim_trn))

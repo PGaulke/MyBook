@@ -45,7 +45,7 @@ It is important to know that you can only use on main-headline per R markdown fi
 Of course, formatting is not limited to that. The actual output can be edited in various ways by using YAML.
 You find your YAML-header in each of your R markdown files. However, if you want to adopt your files generally rather than specific for each R markdown file you can use the output.yml file. As soon as you create a project, you will find a file in your project that is called output.yml. Settings that you include here will work as a standard for your project, so that you do not need to adopt each R markdown file.
 
-Considering that you probably want to produce a book, respectively create output in form of a PDF, HTML, or other kind of file, it will be necessary to include some information in the header.
+Considering that you probably want to produce a book or a report, respectively create output in form of a PDF, HTML, or other kind of file, it will be necessary to include some information in the header.
 
 For example, if you want to build a PDF file, you have to include:
 
@@ -55,10 +55,7 @@ bookdown::pdf_book:
     in_header: preamble.tex
 ```
 
-However, for further information on how to produce output, please check Chapter 3 - (@ref/Creation of Output)
-
-
-HIER NOCH EINE INFORMATION ZU DEN GESTALTUNGSMÖGLICHKEITEN BEI YAML
+However, for further information on how to produce output, please check \@ref(output).
 
 
 ## Coding in chunks

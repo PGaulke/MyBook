@@ -29,7 +29,7 @@ sample(urn, 1,replace =TRUE)
 
 ```{r}
 x1 <- runif(100)*300
-bench.01 <- microbenchmark(builtin = sqrt(x1)
+bench.01 <- microbenchmark(builtin = sqrt(x1),
                            alter = x1^0,5)
 
 
@@ -53,6 +53,7 @@ matrix(sample(0:1, samples*n, replace = TRUE),nrow=samples)
 
 
 ```
+
 ```{r}
 samples <- 1e+05
 

@@ -5,7 +5,7 @@ date: "14 Juli 2019"
 output: html_document
 ---
 
-# Creation of output
+# Creation of Output {#output}
 
 By selecting Knit you can create a file out of your .rmd's. R Studio supports various formats which you can set in the header of any .rmd file.
 

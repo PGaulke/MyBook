@@ -11,8 +11,6 @@ For this, it is necessary to get an understanding of the most important data str
 
 After gathering all the informations and knowledge, it will be possible for you to work with statistics in R, which will be the topic of the second part of this book.
 
-
-
 ## Data stuctures
 
 In general there are four types of data structures: atomic vectors, lists, matrix and arrays, and data frames.
@@ -173,7 +171,7 @@ mean(horsepower, na.rm = T)
 ```
 
 
-## Subsetting
+## Subsetting {#subsetting}
 
 Subsetting means to create a data set out of the existing data structure. So to say, you copy particular items out of a data collection.
 
@@ -315,7 +313,7 @@ adf
 
 ## Conditions
 
-With the last part of the previous chapter (REF HERE! subsetting chapter), we implicitly introduced conditions in R. However, writing conditions is not to difficult in the first place and can be used in various ways
+With the last part of the previous chapter \@ref(subsetting), we implicitly introduced conditions in R. However, writing conditions is not to difficult in the first place and can be used in various ways
 
 ```{r}
 
@@ -358,7 +356,7 @@ if (sum(points) >50) {
 
 ## How to Write Functions
 
-To really calculate and use statistical methods, you should be able to write all functions in R chunks. This might lead to difficulties, because not all function are built-in or included in a package. In order to be able to write functions on your own, you will need to understand the following logic.#
+To really calculate and use statistical methods, you should be able to write all functions in R chunks. This might lead to difficulties, because not all function are built-in or included in a package. In order to be able to write functions on your own, you will need to understand the following logic.
 
 
 ```{r}

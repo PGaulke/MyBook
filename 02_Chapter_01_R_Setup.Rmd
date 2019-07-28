@@ -10,18 +10,18 @@ output: html_document
 
 You will need the following software:
 
-The R software itself, RStudio (so to say, the environment where you will work in) and a Latex distribution for creating output files such as pdf files with R graphics.
+The R software itself, RStudio (so to say, the environment where you will work in) and a Latex distribution for creating output files such as .pdf files with R graphics.
 
 R Software - https://cran.uni-muenster.de/
 
 FreeVersion of RStudio -  https://www.rstudio.com/products/rstudio/download/#download
 
-Latex distribution - for example: https://www.latex-project.org/get/ (depending on your software)
+Latex distribution - for example: https://www.latex-project.org/get/ (depending on your computer)
 
 
 ## Start Your Project
 
-In order to share your work, GitHub is a tool of major importance. In the following, we will explain to you how to set this up. It is totally up to you whether to install it now or later. Please just consider, that you should install it before you start your  project. Otherwise you will face a quite complicated process and limited possibilities to fully enjoy all collaborational features that GitHub provides.
+In order to share your work, GitHub is a tool of major importance. In the following, we will explain to you how to set this up. It is totally up to you whether to install it now or later. Please just consider, that you should install it before you start your collaborative project. Otherwise you will face a quite complicated process and limited possibilities to fully enjoy all collaborational features that GitHub provides.
 
 The software you need for this is Git Distribution.
 
@@ -47,9 +47,6 @@ git init
 
 git remote add origin https://github.com/YOURNAME/YOURREPOSITORY.git
 git push -u origin master
-
-
- 
 ```
 
 Obvisously you should adopt the origin link with your own names. 
@@ -66,7 +63,7 @@ The project owner needs to create an organization on Github. Within this organiz
 If you have done that, you should create a team in the organization and add the further participants to the team. Be aware that you should assign the repository to these members and provide the members with respective rights. 
 
 As the team member who should have received an email at this point. After you confirmed the participation, go onto the repository and click on the button 'Clone or download'. Look for the https adress, copy it and go now into a simple RStudio session (not a project). Open a new Terminal and type in cd with the path where you want to save the project.
-Now typ 'git clone' and paste the the copied link from GitHub.
+Now type 'git clone' and paste the the copied link from GitHub.
 
 ```{r, eval=FALSE}
 cd Dropbox/Master/2Sem

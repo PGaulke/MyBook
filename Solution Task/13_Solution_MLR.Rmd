@@ -1,0 +1,456 @@
+---
+title: "13_Solution_MLR"
+author: "PGaulke"
+date: "26 Juli 2019"
+output: html_document
+---
+
+# Method: Multiple Linear Regression
+
+```{r}
+# To prepare for the fight
+require(tidyverse)
+require(ISLR)
+require(magrittr)
+
+
+load("C:/Users/admin/Dropbox/Master/2. Semester/Data Science/MyBook/project_data.Rdata")
+summary(train.data)
+summary(test.data)
+
+# 11 variables for frequency of seven plants
+# task: The test.data has the same structure but does not contain the frequencies for each of the 7 plants. Your
+# goal is precisely to estimate them for the 140 observations
+
+# character to numeric
+# for train.data
+train.data$season = as.numeric(c("spring" = "1", "summer" = "2", "autumn" = "3", "winter" = "4")[train.data$season])
+
+train.data$size = as.numeric(c("small" = "1", "medium" = "2", "large" = "3")[train.data$size])
+
+train.data$speed = as.numeric(c("low" = "1", "medium" = "2", "high" = "3")[train.data$speed])
+
+
+# for test.data
+
+test.data$season = as.numeric(c("spring" = "1", "summer" = "2", "autumn" = "3", "winter" = "4")[test.data$season])
+
+test.data$size = as.numeric(c("small" = "1", "medium" = "2", "large" = "3")[test.data$size])
+
+test.data$speed = as.numeric(c("low" = "1", "medium" = "2", "high" = "3")[test.data$speed])
+
+
+# delete na
+#is.na(train.data)
+#na.omit(train.data)
+
+# try to replace missing value with the mean (and avoid a loop!)
+
+train.data$mxPH[is.na(train.data$mxPH)] <- round(mean(train.data$mxPH, na.rm = TRUE))
+train.data$mnO2[is.na(train.data$mnO2)] <- round(mean(train.data$mnO2, na.rm = TRUE))
+train.data$Cl[is.na(train.data$Cl)] <- round(mean(train.data$Cl, na.rm = TRUE))
+train.data$NO3[is.na(train.data$NO3)] <- round(mean(train.data$NO3, na.rm = TRUE))
+train.data$NH4[is.na(train.data$NH4)] <- round(mean(train.data$NH4, na.rm = TRUE))
+train.data$oPO4[is.na(train.data$oPO4)] <- round(mean(train.data$oPO4, na.rm = TRUE))
+train.data$PO4[is.na(train.data$PO4)] <- round(mean(train.data$PO4, na.rm = TRUE))
+train.data$Chla[is.na(train.data$Chla)] <- round(mean(train.data$Chla, na.rm = TRUE))
+
+
+summary(train.data)
+train.data
+
+```
+
+```{r, include = FALSE}
+#create test data
+set.seed(200)
+num_obs = nrow(train.data)
+
+train.index = sample(num_obs, size = trunc(0.50 * num_obs))
+newtrain.data = train.data[train_index, ]
+traintest.data = train.data[-train_index, ]
+
+train.data
+
+newtrain.data
+traintest.data
+
+# delete na
+is.na(newtrain.data)
+na.omit(newtrain.data)
+
+is.na(traintest.data)
+na.omit(traintest.data)
+
+
+newtrain.data
+traintest.data
+```
+
+## Develop the mlr model for a1 - linear regression
+
+Determining the signifance level wanted: <0,05
+```{r}
+
+# Linear regression on multiple linear regression
+
+mlrmod <- lm(a1 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data=train.data)
+summary(mlrmod)
+
+
+```
+
+The p-value of the F-Statistic is 7.936e-11, therefore it is highly signifcant and at least one of the variables is signifcantly related to the outcome response. Clarifying which ones are significant:
+
+
+
+```{r}
+summary(mlrmod)$coefficient
+```
+
+
+Deleting the highest P values
+season, mxPH, oPO4
+
+```{r}
+# the new one
+
+mlrmod2 <- lm(a1 ~   size + speed + mnO2 + Cl + NO3 + NH4 + PO4 + Chla, data=train.data)
+summary(mlrmod2)
+
+# delete speed, mn02, Cl, Chla, NH4
+
+mlrmod2 <- lm(a1 ~   size + NO3 + PO4, data=train.data)
+summary(mlrmod2)
+
+# predict
+a1pred <- predict(mlrmod2, test.data)
+a1pred
+
+
+test.data$a1<-a1pred
+test.data
+
+
+# all negative values to zero
+test.data$a1[test.data$a1<0] <- 0
+test.data$a1
+
+test.data
+
+summary(test.data)
+
+```
+
+__________________________________________________________________________________________________________
+
+
+##  Develop the mlr model for a1 - polynomials a2
+
+```{r}
+
+# Linear regression on multiple linear regression
+
+polymod <- glm(a2 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data=train.data)
+summary(polymod)
+
+```
+
+Deleting variables with lowest significance.
+
+mnO2, Cl, season, NO3, PO4, OPO4, NH4, size
+
+```{r}
+
+# Linear regression on multiple linear regression
+
+polymod2 <- lm(a2 ~ speed + mxPH + Chla, data=train.data)
+summary(polymod2)
+
+# use of poly
+
+polymod3 <- lm(a2 ~ poly(Chla,3)+ poly(speed,2) + poly(mxPH,2), data=train.data )
+summary(polymod3)
+
+a2pred <- predict(polymod3,test.data)
+summary(a2pred)
+
+```
+
+Try to put Chla (only) poly in a graph
+```{r}
+
+fita2 <- lm(a2 ~ poly(Chla,10), data=train.data )
+summary(fita2)
+
+fita3 <- lm(a2 ~ poly(Chla,5), data=train.data )
+summary(fita3)
+
+fita4 <- lm(a2 ~ Chla, data=train.data )
+summary(fita4)
+
+# poly just on Chla
+
+train.data <- train.data %>%
+	mutate(fit1 = predict(fita2),
+	fit2 = predict(fita3),
+	fit5 = predict(fita4))
+
+cols <- c("Deg.3", "Deg.2", "Deg.1")
+train.data %>% 
+	ggplot(aes(x=a2, y=Chla)) +
+	geom_point() +
+	geom_line(aes(y=fit1, color="Deg.3"), size =1) +
+	geom_line(aes(y=fit2, color="Deg.2"), size =1) +
+	geom_line(aes(y=fit5, color="Deg.1"), size =1) +
+	theme(legend.title = element_blank(), 
+		legend.position = "bottom", 
+		legend.direction = "horizontal")
+
+```
+
+```{r}
+a1pred <- predict(lmod, traintest.data)
+
+summary(a1pred)
+
+actuals_pred <- data.frame(cbind(actuals=newtrain.data$a1, predicteds=a1pred))
+
+RSS <- sum((traintest.data$a1 -  predict(a1pred, traintest.data))^2)
+RSS
+
+
+correlation_accuracy<- cor(actuals_pred)
+head(actuals_pred)
+
+```
+
+
+
+
+
+## Developing a model for a3 - logistic regression
+
+
+```{r}
+logmod <- as.formula("a3 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla")
+
+logit <- glm(logmod, data = train.data) # Ausgabe der Schätzergebnisse 
+summary(logit)
+
+logitMinAIC <- step(logit) 
+summary(logitMinAIC)
+
+a3pred <- predict(logitMinAIC,test.data)
+a3pred
+
+train.data$a3
+```
+
+- speed  1   8862.8 1333.8
+- NH4    1   8891.7 1334.5
+- mnO2   1   9506.9 1347.9
+
+However, this method is not suitable for this case as K>2 respectively the response is any numeric.
+
+## Developing a model for a4 - (Boosting? Bagging? RandomForest?Resampling (here bootstrapping?)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+___________________________________________________________________________________________________
+##MLR FOR ALL DATA SETS
+
+## a1
+
+```{r}
+
+# delete the N/A
+is.na(train.data)
+na.omit(train.data)
+# Calculate Coefficients
+
+modelmlr <- lm(a1 ~ mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla,data=train.data)
+summary(modelmlr)
+
+# calculate the correlation
+na.omit(train.data) %>% {cor(.[,c("mxPH", "mnO2", "Cl","NO3","NH4","oPO4","PO4","Chla")])} %>% round(2) 
+
+# plot(modelmlr)
+
+summary(modelmlr)$coefficient
+confint(modelmlr)
+
+#RSE
+sigma(modelmlr)/mean(train.data$a1)
+
+# Make a prediction (?)
+
+
+```
+
+## a2
+
+```{r}
+# Calculate Coefficients
+modelmlr2 <- lm(a2 ~ mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla,data=train.data)
+summary(modelmlr)
+
+# calculate the correlation
+na.omit(train.data) %>% {cor(.[,c("mxPH", "mnO2", "Cl","NO3","NH4","oPO4","PO4","Chla")])} %>% round(2) 
+
+
+summary(modelmlr2)$coefficient
+confint(modelmlr2)
+
+#RSE
+sigma(modelmlr2)/mean(train.data$a1)
+
+# Make a prediction (?)
+
+
+```
+
+## a3
+
+```{r}
+# Calculate Coefficients
+modelmlr3 <- lm(a3 ~ mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla,data=train.data)
+summary(modelmlr)
+
+# calculate the correlation
+na.omit(train.data) %>% {cor(.[,c("mxPH", "mnO2", "Cl","NO3","NH4","oPO4","PO4","Chla")])} %>% round(2) 
+
+
+summary(modelmlr3)$coefficient
+confint(modelmlr3)
+
+#RSE
+sigma(modelmlr3)/mean(train.data$a1)
+
+# Make a prediction (?)
+
+
+```
+
+## a4
+
+```{r}
+# Calculate Coefficients
+modelmlr4 <- lm(a4 ~ mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla,data=train.data)
+summary(modelmlr)
+
+# calculate the correlation
+na.omit(train.data) %>% {cor(.[,c("mxPH", "mnO2", "Cl","NO3","NH4","oPO4","PO4","Chla")])} %>% round(2) 
+
+
+summary(modelmlr4)$coefficient
+confint(modelmlr4)
+
+#RSE
+sigma(modelmlr4)/mean(train.data$a1)
+
+# Make a prediction (?)
+
+
+```
+
+## a5
+
+```{r}
+# Calculate Coefficients
+modelmlr5 <- lm(a5 ~ mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla,data=train.data)
+summary(modelmlr)
+
+# calculate the correlation
+na.omit(train.data) %>% {cor(.[,c("mxPH", "mnO2", "Cl","NO3","NH4","oPO4","PO4","Chla")])} %>% round(2) 
+
+
+summary(modelmlr5)$coefficient
+confint(modelmlr5)
+
+#RSE
+sigma(modelmlr5)/mean(train.data$a1)
+
+# Make a prediction (?)
+
+
+```
+
+
+## a6
+
+```{r}
+# Calculate Coefficients
+modelmlr6 <- lm(a6 ~ mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla,data=train.data)
+summary(modelmlr)
+
+# calculate the correlation
+na.omit(train.data) %>% {cor(.[,c("mxPH", "mnO2", "Cl","NO3","NH4","oPO4","PO4","Chla")])} %>% round(2) 
+
+
+summary(modelmlr6)$coefficient
+confint(modelmlr6)
+
+#RSE
+sigma(modelmlr6)/mean(train.data$a1)
+
+# Make a prediction (?)
+
+
+```
+
+## a7
+
+```{r}
+# Calculate Coefficients
+modelmlr7 <- lm(a7 ~ mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla,data=train.data)
+summary(modelmlr)
+
+# calculate the correlation
+na.omit(train.data) %>% {cor(.[,c("mxPH", "mnO2", "Cl","NO3","NH4","oPO4","PO4","Chla")])} %>% round(2) 
+
+
+summary(modelmlr7)$coefficient
+confint(modelmlr7)
+
+#RSE
+sigma(modelmlr7)/mean(train.data$a1)
+
+# Make a prediction (?)
+
+
+```

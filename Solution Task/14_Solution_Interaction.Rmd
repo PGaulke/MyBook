@@ -1,0 +1,16 @@
+---
+title: "14_Solution_Interaction"
+author: "PGaulke"
+date: "26 Juli 2019"
+output: html_document
+---
+
+# Method: Interaction
+
+```{r}
+model.int <- lm(a2 ~   mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data=train.data)
+summary(model.int)
+
+predint <- predict(model.int)
+
+```

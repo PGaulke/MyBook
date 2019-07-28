@@ -1,0 +1,172 @@
+---
+title: "18_Solution_Barplotting_for_Logics"
+author: "PGaulke"
+date: "27 Juli 2019"
+output: html_document
+---
+
+
+```{r}
+# To prepare for the fight
+require(tidyverse)
+require(ISLR)
+require(magrittr)
+
+
+load("C:/Users/admin/Dropbox/Master/2. Semester/Data Science/MyBook/project_data.Rdata")
+summary(train.data)
+summary(test.data)
+
+train.data
+# 11 variables for frequency of seven plants
+# task: The test.data has the same structure but does not contain the frequencies for each of the 7 plants. Your
+# goal is precisely to estimate them for the 140 observations
+
+
+```
+
+```{r, include = FALSE}
+
+#delete na
+is.na(train.data)
+na.omit(train.data)
+
+
+#create test data
+set.seed(200)
+num_obs = nrow(train.data)
+
+train.index = sample(num_obs, size = trunc(0.50 * num_obs))
+newtrain.data = train.data[train_index, ]
+traintest.data = train.data[-train_index, ]
+
+```
+
+
+```{r}
+
+# Season
+
+p<-ggplot(data=train.data, aes(x=season, y=a1)) +
+  geom_bar(stat="identity")
+
+p
+
+p2<-ggplot(data=train.data, aes(x=season, y=a2)) +
+  geom_bar(stat="identity")
+
+p2
+
+p3<-ggplot(data=train.data, aes(x=season, y=a3)) +
+  geom_bar(stat="identity")
+
+p3
+
+
+p4<-ggplot(data=train.data, aes(x=season, y=a4)) +
+  geom_bar(stat="identity")
+
+p4
+
+p5<-ggplot(data=train.data, aes(x=season, y=a5)) +
+  geom_bar(stat="identity")
+
+p5
+
+p6<-ggplot(data=train.data, aes(x=season, y=a6)) +
+  geom_bar(stat="identity")
+
+p6
+
+p7<-ggplot(data=train.data, aes(x=season, y=a7)) +
+  geom_bar(stat="identity")
+
+p7
+
+```
+
+
+
+```{r}
+
+# Size
+
+si<-ggplot(data=train.data, aes(x=size, y=a1)) +
+  geom_bar(stat="identity")
+
+si
+
+si2<-ggplot(data=train.data, aes(x=size, y=a2)) +
+  geom_bar(stat="identity")
+
+si2
+
+si3<-ggplot(data=train.data, aes(x=size, y=a3)) +
+  geom_bar(stat="identity")
+
+si3
+
+
+si4<-ggplot(data=train.data, aes(x=size, y=a4)) +
+  geom_bar(stat="identity")
+
+si4
+
+si5<-ggplot(data=train.data, aes(x=size, y=a5)) +
+  geom_bar(stat="identity")
+
+si5
+
+si6<-ggplot(data=train.data, aes(x=size, y=a6)) +
+  geom_bar(stat="identity")
+
+si6
+
+si7<-ggplot(data=train.data, aes(x=size, y=a7)) +
+  geom_bar(stat="identity")
+
+si7
+```
+
+
+```{r}
+
+# speed
+
+sp<-ggplot(data=train.data, aes(x=speed, y=a1)) +
+  geom_bar(stat="identity")
+
+sp
+
+sp2<-ggplot(data=train.data, aes(x=speed, y=a2)) +
+  geom_bar(stat="identity")
+
+sp2
+
+sp3<-ggplot(data=train.data, aes(x=speed, y=a3)) +
+  geom_bar(stat="identity")
+
+sp3
+
+
+sp4<-ggplot(data=train.data, aes(x=speed, y=a4)) +
+  geom_bar(stat="identity")
+
+sp4
+
+sp5<-ggplot(data=train.data, aes(x=speed, y=a5)) +
+  geom_bar(stat="identity")
+
+sp5
+
+sp6<-ggplot(data=train.data, aes(x=speed, y=a6)) +
+  geom_bar(stat="identity")
+
+sp6
+
+sp7<-ggplot(data=train.data, aes(x=speed, y=a7)) +
+  geom_bar(stat="identity")
+
+sp7
+
+```

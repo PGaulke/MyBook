@@ -1,0 +1,109 @@
+---
+title: "17_Solution_Trees"
+author: "PGaulke"
+date: "26 Juli 2019"
+output: html_document
+---
+
+# Method: Trees
+
+
+```{r}
+# To prepare for the fight
+require(tidyverse)
+require(ISLR)
+require(magrittr)
+
+#require(tree) not as package
+require(randomForest)
+require(rpart)
+require(MASS)
+require(tree)
+
+
+
+load("C:/Users/admin/Dropbox/Master/2. Semester/Data Science/MyBook/project_data.Rdata")
+
+summary(train.data)
+summary(test.data)
+
+# delete the N/A
+is.na(train.data)
+na.omit(train.data)
+# 11 variables for frequency of seven plants
+# task: The test.data has the same structure but does not contain the frequencies for each of the 7 plants. Your
+# goal is precisely to estimate them for the 140 observations
+
+
+```
+
+```{r}
+data("train.data")
+
+summary(train.data$a1)
+
+hist(train.data$a1)
+
+train.data$a1 <-log(train.data$a1)
+
+#why dow we do the log: sometimes the data is too spread (example: from 60 to 2300), therefore we take the log to comprimise the data to a smaller representable . After our calculation, we can turn around (e to the power of the outcome)
+
+train.data %>%
+  mutate(a1 = log(a1))
+
+plot(train.data$mxPH, train.data$Cl, col = train.data$a1)
+
+
+# to illustrate the x and y axis, and colour another dimension (the salary), but actually the solution above is crap
+
+#How we do it in base r
+
+train.data %>%
+  ggplot(aes(x=mxPH, y=Cl, col=a1)) +
+  geom_point()
+
+
+
+```
+
+
+```{r}
+b.tree <- rpart(a1 ~ mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data = train.data)
+
+plot(b.tree)
+text(b.tree, pretty = 0)
+
+#plotcp(b.tree)
+
+min.of.cp <- b.tree$cptable[which.min(b.tree$cptable[,"xerror"]),"CP"]
+
+pruned.b.tree <- prune(b.tree, cp = min.of.cp)
+plot(pruned.b.tree)
+text(pruned.b.tree, pretty = 0)
+
+
+
+# how we would do it with the package tree
+
+t.b.tree <- tree(a1 ~ mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data = train.data)
+plot(t.b.tree)
+text(t.b.tree, pretty = 0)
+
+
+cv.t.b.tree <- cv.tree(t.b.tree, FUN=prune.tree, K = 5)
+plot(cv.t.b.tree)
+
+pruned.t.b.tree<- prune.tree(t.b.tree, best=3)
+plot(pruned.t.b.tree)
+text(pruned.t.b.tree)
+#need to be careful in terms of overfitting, sometimes it could be too bushy
+#therefore we need to limit the internal nodes
+
+
+#the general process here is to grow the tree with a formula and then cut the tree down to the strongest internal nodes
+
+
+#why does it start with years? because the rsme for years is smaller
+```
+
+

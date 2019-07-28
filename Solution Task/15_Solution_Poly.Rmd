@@ -1,0 +1,45 @@
+---
+title: "15_Solution_Poly"
+author: "PGaulke"
+date: "26 Juli 2019"
+output: html_document
+---
+
+# Polynomials
+
+Another very useful extension of the linear model is to include powers of variables in order to capture non-linear effects. This seems to be a contradiction in terms, but a possible answer could be that the model is still linear in the coefficients.  
+
+To fix ideas, here is an example of fitting a quadratic model.
+
+\[\text{mpg} = \beta_0 + \beta_{1}\times \text{horsepower} + \beta_{2}\times \text{horsepower}^2 + \varepsilon\]
+
+This model can be estimated in the `Auto` data set of the `ISLR` package.
+
+```{r}
+require(ISLR)
+data("train.data")
+model.pd1 <- lm(a1 ~ NO3, data = train.data)
+summary(model.pd1)
+model.pd2 <- lm(a1 ~ NO3 + I(NO3^2), data = train.data)
+summary(model.pd2) 
+```
+
+```{r, out.width = "100%", message = FALSE, warning = FALSE, include=TRUE, fig.cap= "Fits of mpg for various degrees of the polynomial of horsepower."}
+train.data <- train.data %>%
+	mutate(fit1 = predict(model.pd1),
+	fit2 = predict(model.pd2),
+
+
+cols <- c("Deg1", "Deg2") +
+train.data %>% 
+	ggplot(aes(x=a1, y=NO3)) +
+	geom_point() +
+	geom_line(aes(y=fit1, color="Deg.1"), size =2) +
+	geom_line(aes(y=fit2, color="Deg.2"), size =2) +
+	theme(legend.title = element_blank(), 
+		legend.position = "bottom", 
+		legend.direction = "horizontal")
+
+```
+
+
