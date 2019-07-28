@@ -1,6 +1,6 @@
 ---
 title: "03_Chapter_02_RMarkdown"
-author: "PGaulke"
+author: "CTrierweiler,PGaulke"
 date: "14 Juli 2019"
 output: html_document
 ---

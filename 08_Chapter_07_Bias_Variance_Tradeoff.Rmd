@@ -1,5 +1,6 @@
 ---
 title: "Bias-Variance Tradeoff"
+authors:"CTrierweiler,PGaulke"
 output: pdf_document
 ---
 # Bias-Variance Tradeoff 

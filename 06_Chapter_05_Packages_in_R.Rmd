@@ -1,6 +1,6 @@
 ---
 title: "06_Chapter_05_Packages in R"
-author: "PGaulke"
+author: "CTrierweiler,PGaulke"
 date: "22 Juli 2019"
 output: html_document
 ---

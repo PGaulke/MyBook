@@ -1,6 +1,6 @@
 ---
 title: "Chapter_01_R_10"
-author: "PGaulke"
+author: "CTrierweiler,PGaulke"
 date: "13 Juli 2019"
 output: html_document
 ---

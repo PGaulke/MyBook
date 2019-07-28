@@ -1,6 +1,6 @@
 ---
 title: "05_Chapter_04_Basic_R_Skills"
-author: "PGaulke"
+author: "CTrierweiler,PGaulke"
 date: "16 Juli 2019"
 output: html_document
 ---
