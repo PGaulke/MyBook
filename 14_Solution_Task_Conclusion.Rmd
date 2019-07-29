@@ -1,0 +1,45 @@
+---
+title: "13_Solution_Task_Conclusion"
+author: "CTrierweiler,PGaulke"
+date: "29 Juli 2019"
+output: html_document
+---
+
+# Conclusion
+
+For the best prediction of responses for the given data set, we choose to test different models such as
+- Multiple Linear Regression
+- Linear regression with polynomials
+- Log Linear Regression
+- Trees
+- RandomForest
+We choose multiple linear regression as it is the most common method for data prediction. However, high manual effort was needed in order to choose the most significant varaibles for getting the best prediction model possible. In addition to that, we tested linear regression with polynomials and log linear regression, in order to understand how closer this might bring us to a better prediction. Apart from linear regression models, we also tested two tree-based methods. First, we applied the base decision tree model. However as we faced prolems with that method when pruning the tree, because the tree was then converted to only a root, we decided to add the RandomForest model. Besides that, we left out logistic regression as it is not suitable for predicting non-binary responses.
+Before we tested the models, we replaced the N/A's of the given data sets by the mean of the column. This is not the most accurated method, but it might be still more accurate than a random created model. The process was applied on both, the train.data and the test.data in order to have the same premise.
+Furthermore, we splitted the `train.data`, to have a regular train.data set and a test.data set with which we used to test the different models. After creating the prediction models with the train.data set (`newtrain.data`), we applied them on the test.data set (`traintest.data`). We checked the RMSE of each method in order to create not only the best possible model for each method, but also in order to compare the different models at the end to understand which one is the best for each response.
+
+Our solution is:
+
+a1 - `randomForest(a1 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data = train.data, na.action = na.omit, importance = TRUE, ntree=1000)`
+
+a2 - `randomForest(a2 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data = train.data, na.action = na.omit, importance = TRUE, ntree=1000)`
+
+a3 - `lm(a3 ~ poly(as.numeric(season),3) + NH4 * mnO2, data = train.data)`
+
+a4 - `lm(a4 ~  mxPH  * mnO2, data = train.data)`
+
+a5 - `randomForest(a5 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data = newtrain.data, na.action = na.omit, importance = TRUE, ntree=1000)`
+
+a6 - `lm(a6 ~  NO3 * mnO2, data=train.data)`
+
+a7 - `randomForest(a7 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data = train.data, na.action = na.omit, importance = TRUE, ntree=1000)`
+
+Although, this is the bet that we were able to determine, there are indeed ways to improve these models. Especially, for tree-based models we could apply methods such as *boosting* and *bagging*/*bootstraping*, as these models support to increase accuracy of the prediction models. Furthermore, as already mentioned, the replacement of N/A's in the data.set can be also done by a more accurate model. For example, by simulating the missing data.
+However, this is so far out of our skill-range, but it might be an option for future work on this prediction.
+
+## Making a vector out of it
+
+```{r}
+our.predictions <- c(a1=a1.pred,a2=a2.pred,a3=a3.pred,a4=a4.pred,a5=a5.pred,a6=a6.pred,a7=a7.pred)
+our.predictions
+length(our.predictions)
+```

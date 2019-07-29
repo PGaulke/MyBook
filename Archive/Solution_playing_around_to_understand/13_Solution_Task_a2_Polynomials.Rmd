@@ -1,11 +1,13 @@
 ---
-title: "13_Solution_MLR"
-date: "26 Juli 2019"
+title: "13_Solution_Task_a2_Polynomials"
+author: "PGaulke"
+date: "28 Juli 2019"
 output: html_document
 ---
 
+```{r, include=FALSE}
 
-```{r}
+# to get prepared
 require(tidyverse)
 require(ISLR)
 require(magrittr)
@@ -50,7 +52,7 @@ train.data$NO3[is.na(train.data$NO3)] <- round(mean(train.data$NO3, na.rm = TRUE
 train.data$NH4[is.na(train.data$NH4)] <- round(mean(train.data$NH4, na.rm = TRUE))
 train.data$oPO4[is.na(train.data$oPO4)] <- round(mean(train.data$oPO4, na.rm = TRUE))
 train.data$PO4[is.na(train.data$PO4)] <- round(mean(train.data$PO4, na.rm = TRUE))
-
+train.data$Chla[is.na(train.data$Chla)] <- round(mean(train.data$Chla, na.rm = TRUE))
 
 # to to the same with the test.data
 test.data$mxPH[is.na(test.data$mxPH)] <- round(mean(test.data$mxPH, na.rm = TRUE))
@@ -60,10 +62,11 @@ test.data$NO3[is.na(test.data$NO3)] <- round(mean(test.data$NO3, na.rm = TRUE))
 test.data$NH4[is.na(test.data$NH4)] <- round(mean(test.data$NH4, na.rm = TRUE))
 test.data$oPO4[is.na(test.data$oPO4)] <- round(mean(test.data$oPO4, na.rm = TRUE))
 test.data$PO4[is.na(test.data$PO4)] <- round(mean(test.data$PO4, na.rm = TRUE))
+test.data$Chla[is.na(test.data$Chla)] <- round(mean(test.data$Chla, na.rm = TRUE))
 
 ```
 
-```{r, include = FALSE}
+```{r, include=FALSE, eval= FALSE}
 #create test data
 set.seed(200)
 num_obs = nrow(train.data)
@@ -73,99 +76,83 @@ newtrain.data = train.data[train_index, ]
 traintest.data = train.data[-train_index, ]
 
 
-# delete na
-is.na(newtrain.data)
-na.omit(newtrain.data)
+# replace again missing valuesith the mean (and avoid a loop!)
 
-is.na(traintest.data)
-na.omit(traintest.data)
+newtrain.data$mxPH[is.na(newtrain.data$mxPH)] <- round(mean(newtrain.data$mxPH, na.rm = TRUE))
+newtrain.data$mnO2[is.na(newtrain.data$mnO2)] <- round(mean(newtrain.data$mnO2, na.rm = TRUE))
+newtrain.data$Cl[is.na(newtrain.data$Cl)] <- round(mean(newtrain.data$Cl, na.rm = TRUE))
+newtrain.data$NO3[is.na(newtrain.data$NO3)] <- round(mean(newtrain.data$NO3, na.rm = TRUE))
+newtrain.data$NH4[is.na(newtrain.data$NH4)] <- round(mean(newtrain.data$NH4, na.rm = TRUE))
+newtrain.data$oPO4[is.na(newtrain.data$oPO4)] <- round(mean(newtrain.data$oPO4, na.rm = TRUE))
+newtrain.data$PO4[is.na(newtrain.data$PO4)] <- round(mean(newtrain.data$PO4, na.rm = TRUE))
+newtrain.data$Chla[is.na(newtrain.data$Chla)] <- round(mean(newtrain.data$Chla, na.rm = TRUE))
 
-
-newtrain.data
-traintest.data
-```
-
-## Develop the mlr model for a1 - Linear Regression
-
-Determining the signifance level wanted: <0,05
-```{r}
-
-# Linear regression on multiple linear regression
-
-mlrmod <- lm(a1 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data=train.data)
-summary(mlrmod)
-
-
-```
-
-The p-value of the F-Statistic is 7.936e-11, therefore it is highly signifcant and at least one of the variables is signifcantly related to the outcome response. Clarifying which ones are significant:
-
-
-
-```{r}
-summary(mlrmod)$coefficient
+# to to the same with the new test.data
+traintest.data$mxPH[is.na(traintest.data$mxPH)] <- round(mean(traintest.data$mxPH, na.rm = TRUE))
+traintest.data$mnO2[is.na(traintest.data$mnO2)] <- round(mean(traintest.data$mnO2, na.rm = TRUE))
+traintest.data$Cl[is.na(traintest.data$Cl)] <- round(mean(traintest.data$Cl, na.rm = TRUE))
+traintest.data$NO3[is.na(traintest.data$NO3)] <- round(mean(traintest.data$NO3, na.rm = TRUE))
+traintest.data$NH4[is.na(traintest.data$NH4)] <- round(mean(traintest.data$NH4, na.rm = TRUE))
+traintest.data$oPO4[is.na(traintest.data$oPO4)] <- round(mean(traintest.data$oPO4, na.rm = TRUE))
+traintest.data$PO4[is.na(traintest.data$PO4)] <- round(mean(traintest.data$PO4, na.rm = TRUE))
+traintest.data$Chla[is.na(traintest.data$Chla)] <- round(mean(traintest.data$Chla, na.rm = TRUE))
+summary(newtrain.data)
+summary(traintest.data)
 ```
 
 
-Deleting the highest P values
-season, mxPH, oPO4
+
+#  Developing a Model for a2 - Polynomials
 
 ```{r}
-# the new one
 
-mlrmod2 <- lm(a1 ~   size + speed + mnO2 + Cl + NO3 + NH4 + PO4 + Chla, data=train.data)
-summary(mlrmod2)
+# test it first
 
-# delete speed, mn02, Cl, Chla, NH4
+testpolymod <- glm(a2 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data=newtrain.data)
+summary(testpolymod)
+# deleting variables with lowest significance
 
-mlrmod2 <- lm(a1 ~   size + NO3 + PO4, data=train.data)
-summary(mlrmod2)
+testpolymod2 <- lm(a2 ~ speed + mxPH + Chla, data=newtrain.data)
+summary(testpolymod2)
 
-# predict
-a1pred <- predict(mlrmod2, test.data)
-a1pred
+# use of poly
 
+testpolymod3 <- lm(a2 ~ poly(Chla,3)+ poly(speed,2) + poly(mxPH,2), data=newtrain.data)
+summary(testpolymod3)
 
-test.data$a1<-a1pred
+# adjust
 
+testpolymod4 <- lm(a2 ~ poly(Chla,2), data=newtrain.data)
+summary(testpolymod4)
 
-# all negative values to zero
-test.data$a1[test.data$a1<0] <- 0
-test.data$a1
+# looks not too good, but continue with poly to evaluate the method
 
+test.pred.polymod <- predict(testpolymod4,traintest.data) 
+ 
+RMSE.polymod <- sqrt(mean((test.pred.polymod-traintest.data$a4)^2))
+RMSE.polymod
 
-summary(test.data)
+MAE.polymod <- mean(abs(test.pred.polymod-traintest.data$a4))
+MAE.polymod
+
+# in this case it is actually not helping to use polynomials compared to regular mlr
+# this might need to be tested individually on each response 
 
 ```
 
-__________________________________________________________________________________________________________
-
-
-##  Develop the mlr model for a1 - Polynomials
 
 ```{r}
-
-# Linear regression on multiple linear regression
 
 polymod <- glm(a2 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data=train.data)
 summary(polymod)
-
-```
-
-Deleting variables with lowest significance.
-
-mnO2, Cl, season, NO3, PO4, OPO4, NH4, size
-
-```{r}
-
-# Linear regression on multiple linear regression
+# deleting variables with lowest significance
 
 polymod2 <- lm(a2 ~ speed + mxPH + Chla, data=train.data)
 summary(polymod2)
 
 # use of poly
 
-polymod3 <- lm(a2 ~ poly(Chla,3)+ poly(speed,2) + poly(mxPH,2), data=train.data )
+polymod3 <- lm(a2 ~ poly(Chla,2, data=train.data)
 summary(polymod3)
 
 a2pred <- predict(polymod3,test.data)
@@ -176,10 +163,10 @@ summary(a2pred)
 Try to put Chla (only) poly in a graph
 ```{r}
 
-fita2 <- lm(a2 ~ poly(Chla,10), data=train.data )
+fita2 <- lm(a2 ~ poly(Chla,3), data=train.data )
 summary(fita2)
 
-fita3 <- lm(a2 ~ poly(Chla,5), data=train.data )
+fita3 <- lm(a2 ~ poly(Chla,2), data=train.data )
 summary(fita3)
 
 fita4 <- lm(a2 ~ Chla, data=train.data )
@@ -205,81 +192,3 @@ train.data %>%
 
 ```
 
-```{r}
-a1pred <- predict(lmod, traintest.data)
-
-summary(a1pred)
-
-actuals_pred <- data.frame(cbind(actuals=newtrain.data$a1, predicteds=a1pred))
-
-RSS <- sum((traintest.data$a1 -  predict(a1pred, traintest.data))^2)
-RSS
-
-
-correlation_accuracy<- cor(actuals_pred)
-head(actuals_pred)
-
-```
-
-
-
-
-
-## Developing a model for a3 - Logistic regression
-
-
-```{r}
-logmod <- as.formula("a3 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla")
-
-logit <- glm(logmod, data = train.data) # Ausgabe der Schätzergebnisse 
-summary(logit)
-
-logitMinAIC <- step(logit) 
-summary(logitMinAIC)
-
-a3pred <- predict(logitMinAIC,test.data)
-a3pred
-
-train.data$a3
-```
-
-- speed  1   8862.8 1333.8
-- NH4    1   8891.7 1334.5
-- mnO2   1   9506.9 1347.9
-
-However, this method is not suitable for this case as K>2 respectively the response is any numeric.
-
-## Developing a model for a4 - Tree
-
-```{r}
-require(rpart)
-
-treemod <- rpart(a4 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data = train.data)
-
-minofcp <- treemod$cptable[which.min(treemod$cptable[,"xerror"]),"CP"]
-
-treemod2 <- prune(treemod, cp = minofcp)
-summary(treemod2)
-
-plot(treemod2)
-text(treemod2, pretty = 0)
-
-a4pred <- predict(treemod2, test.data)
-a4pred
-summary(a4pred)
-
-```
-
-## Developing a model for a5 - RandomForest (Boosting? Bagging? RandomForest?Resampling (here bootstrapping?)
-
-
-```{r}
-
-require(randomForest)
-forestmod <- randomForest(a5 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data = train.data, na.action = na.omit)
-
-forestmod
-
-
-
-```

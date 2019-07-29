@@ -1,0 +1,288 @@
+---
+title: "10_Ersatz"
+author: "CTrierweiler,PGaulke"
+date: "24 Juli 2019"
+output: html_document
+---
+# Cross-validation and the Bootstrap
+
+Cross-validation and the bootstrap are two methods of resampling. These two methods refit a model of interest to samples created from the training set, for the reason to obtain additional information about the fitted model. The methods provide estimates of test-set prediction error, and the standard deviation and bias of the parameter estimates. 
+
+## Training Error versus Test error
+
+Here it is useful to recall the distinction between the test error and the training error. 
+- Test error: average error that results from using a statistical learning method to predict the response on a new observation, one that was not used in training the method. 
+- Training error: can be easily calculated by applying the statistical learning method to the observations used in its training. 
+- Error rate: the training error rate can dramatically underestimate the test error rate. 
+
+
+## Validation-Set Approach 
+
+In the validation-set approach, the available set of samples is divided into two parts: A training set and a validation or hold-out set. 
+The model is fit on the training set, and the fitted model is used to predict the reponse for the observations in the validation set. 
+The resulting validation-set error provides an estimate of the test error. This is typically assessed using MSE in the case of a quantitative reponse and misclassification rate in the case of a qualitative (discrete) reponse. 
+
+
+Example 1. (with explanations)
+
+In the automobile data example, linear vs. higher-order polynomial terms in a linear regression are compared. The 392 observations are splited into two sets, a training set containing 196 of the data points, and a validation set containing the remaining 196 observations. 
+
+```{r}
+# a function for calculating the RMSE from two vectors
+
+c.rmse <- function(observed, predicted){
+  (observed - predicted)^2%>%
+  mean %>%
+  sqrt %>%
+  round(3)
+}
+
+c.rmse2 <- function(observed, predicted) {
+round(sqrt(mean((observed -predicted)^2)),3)
+}
+
+```
+
+```{r}
+require(ISLR)
+require(magrittr)
+#to load the required packages
+
+set.seed(43245)
+#in order to create random numbers, but to save this "seed" and not create new random numbers chunks are runned again (as done if put rnorm(41) instead of set.seed
+
+#in order to have our training data seperated, we need to half it
+
+n <- nrow(Auto) 
+# just to have an abbreviation
+
+train <- sample(1:n, ceiling(n/2))
+#1: to number of rows, ceiling is used to prevent that in case nrow(auto) is odd, you have a number such as 74,3 (also could use round)
+
+degrees<- 1:10
+#the different degrees wanted to put in
+
+v.rmse <- numeric ()
+#to create a new vector where all values are putted in from the rmse
+
+for (i in degrees){
+#basically just creating an abbreviation for putting in several polynomals into the fit1
+  
+    
+fit1 <- glm(mpg ~ poly(horsepower,i), data = Auto, subset = train)
+  v.rmse[i] <-
+# fit in into a linear model, in order to create a line that fits the model    
+v.rmse[i] <- c.rmse(Auto$mpg[-train], predict(fit1, newdata=Auto[-train,]))  
+    
+# how it was before, against what it is now with v.rmse:c.rmse(Auto$mpg[-train], predict(fit1, newdata=Auto[-train,]))
+#here function is created in order to calculate later the rmse
+
+}
+# the plot is created to see all the test error values for the different polys (the number after horsepower)
+  
+
+plot(degrees, v.rmse, type ="b", col = "red")   
+
+
+#type b just shows the type of the line ( can also be l for line or p for points instead of b for both)
+
+
+```
+As a result degree 2 is probably taken, because it is quite good from its v.rmse and it is not complex (the lower the degree, the better is it to understand)
+
+In the next step, is is done not just for one split, but multiple splits:
+
+```{r}
+
+require(ISLR)
+require(magrittr)
+#to load the required packages
+
+set.seed(120)
+
+
+degrees <- 1:10
+
+n.splits <- 10
+
+m.rmse <- matrix(NA, length(degrees), n.splits)
+#here NA is the data(numbers), length = number of rows, n.splits = number columns
+
+library(ISLR)
+
+for(s in 1:n.splits){
+  train <- sample(1:n, ceiling(n/2))
+for(i in degrees) {
+  fit1<- glm(mpg ~ poly (horsepower, i), data = Auto, subset = train)
+m.rmse[i,s] <- c.rmse(Auto$mpg[-train], predict(fit1, newdata = Auto[-train,]))
+
+}
+}
+  
+plot(degrees, m.rmse[,1], type ="l", col = "red", ylim=c(min(m.rmse), max(m.rmse)))
+for (s in 1:n.splits){
+  lines(degrees, m.rmse[,s], col =s)
+}
+
+```
+
+
+Example 2. 
+
+- Consider fitting polynomial models of degree k = 1:10 data from this data generating process
+- Consider k, the polynomial degree, as a turning parameter how well validation set approach works. 
+
+```{r}
+num_sims = 100
+num_degrees = 10
+val_rmse = matrix(0, ncol = num_degrees, nrow = num_sims)
+```
+
+
+```{r}
+gen_sim_data = function(sample_size) {
+  x = runif(n = sample_size, min = -1, max = 1)
+  y = rnorm(n = sample_size, mean = x ^ 3, sd = 0.25)
+  data.frame(x, y)
+}
+
+set.seed(42)
+sim_data = gen_sim_data(sample_size=200)
+sim_idx = sample(1:nrow(sim_data),160)
+sim_trn = sim_data[sim_idx,]
+sim_val = sim_data[-sim_idx,]
+
+```
+
+```{r}
+calc_rmse = function(actual, predicted) {
+  sqrt(mean((actual - predicted) ^ 2))
+}
+```
+```{r}
+fit = lm(y ~ poly(x, 10), data = sim_trn)
+
+calc_rmse(actual = sim_trn$y, predicted = predict(fit, sim_trn))
+calc_rmse(actual = sim_val$y, predicted = predict(fit, sim_val))
+```
+
+```{r}
+
+library(ISLR)
+
+
+fit = lm(y ~ poly(x, 10), data = sim_trn)
+
+calc_rmse(actual = sim_trn$y, predicted = predict(fit, sim_trn))
+calc_rmse(actual = sim_val$y, predicted = predict(fit, sim_val))
+```
+
+The simulations are: 
+
+```{r} 
+set.seed(42)
+for (i in 1:num_sims) {
+  # simulate data
+  sim_data = gen_sim_data(sample_size = 200)
+  # set aside validation set
+  sim_idx = sample(1:nrow(sim_data), 160)
+  sim_trn = sim_data[sim_idx, ]
+  sim_val = sim_data[-sim_idx, ]
+  # fit models and store RMSEs
+  for (j in 1:num_degrees) {
+    #fit model
+    fit = glm(y ~ poly(x, degree = j), data = sim_trn)
+    # calculate error
+    val_rmse[i, j] = calc_rmse(actual = sim_val$y, predicted = predict(fit, sim_val))
+  }
+}
+```
+```{r echo = FALSE, fig.height = 5, fig.width = 10}
+par(mfrow = c(1, 2))
+matplot(t(val_rmse)[, 1:10], pch = 20, type = "b", ylim = c(0.17, 0.35), xlab = "Polynomial Degree", ylab = "RMSE", main = "RMSE vs Degree")
+barcol = c("grey", "grey", "dodgerblue", "grey", "grey", "grey", "grey", "grey", "grey", "grey")
+barplot(table(factor(apply(val_rmse, 1, which.min), levels = 1:10)),
+        ylab = "Times Chosen", xlab = "Polynomial Degree", col = barcol, main = "Model Chosen vs Degree")
+```
+
+## Drawbacks of validation set approach 
+
+The validation estimate of the test error can be highly variable, depending on precisely which observations are included in the training set and which observations can be included in the validation set. 
+In the validation approach, only a subset of the observations - those that are included in the training set rather than in the validation set - are used to fit the model. 
+This suggestes that the validation set error may tend to overestimate the test error for the model fit on the entire data set. 
+
+## K-fold Cross validation 
+
+This is a widely used approach for estimating the test error. The estimtates can be used to select the optimal model and to give an idea of the test error and the final chosen model. The idea is to randomly divide the data into K equal-sized parts. The k part is left out, fit the model to the other predictions for the left-out kth part. This appears through in turn for ach part k = 1, 2,...K, and then the results are combined. 
+
+
+1          2     3     4     5 
+Validation Train Train Train Train
+
+## The Bootstrap 
+
+The bootstrap is another resampling method. It is a flexible and powerful statistical tool that can be used to quantify the uncertainty associated with a given estimator or statistical learning method. E.g. it is usesful for providing an estimate of the standard error of a coefficient, or a confidence interval for that coefficient. The bootstrap could be used to replace the cross-validation method, however it aligns significantly more computation. 
+
+
+Interesting side fact to know about the origin to the name "bootstrap"
+
+It is derived from the sentence "to pull oneself up by one's bootstrap" which was mainly used to be based on one of the eighteenth century "the surprising adventures of Baron Munchausen" by Rudolph Erich Raspe: 
+
+The Baron had fallen in the bottom of the deep lake. Just when it looked like all was lost, he thought to pick himself up by his own bootstrap. 
+
+Hence, it is another meaning of "bootstrap" is computer science. Here to "boot" a computer from a set of core instructions, though the deviation is similar. 
+
+
+Example 
+
+```{r}
+# Bootstrap 95% CI for R-Squared
+library(boot)
+# function to obtain R-Squared from the data 
+rsq <- function(formula, data, indices) {
+  d <- data[indices,] # allows boot to select sample 
+  fit <- lm(formula, data=d)
+  return(summary(fit)$r.square)
+} 
+# bootstrapping with 1000 replications 
+results <- boot(data=mtcars, statistic=rsq, 
+   R=1000, formula=mpg~wt+disp)
+
+# view results
+results 
+plot(results)
+
+# get 95% confidence interval 
+boot.ci(results, type="bca")
+```
+Interpretation: the function rsq returned a number and boot.ci returned a single confidence interval. The statistics function which is provided can also return a vector. 
+
+
+In the following example 95% Confidence Interval are getting for the three model regression coefficients (intercept, car weight, displacement). In this case, though adding an index parameter to plot( ) and boot.ci( ) to indicate which column in bootobject$t is to analyzed.
+
+```{r}
+# Bootstrap 95% CI for regression coefficients 
+library(boot)
+# function to obtain regression weights 
+bs <- function(formula, data, indices) {
+  d <- data[indices,] # allows boot to select sample 
+  fit <- lm(formula, data=d)
+  return(coef(fit)) 
+} 
+# bootstrapping with 1000 replications 
+results <- boot(data=mtcars, statistic=bs, 
+   R=1000, formula=mpg~wt+disp)
+
+# view results
+results
+plot(results, index=1) # intercept 
+plot(results, index=2) # wt 
+plot(results, index=3) # disp 
+
+# get 95% confidence intervals 
+boot.ci(results, type="bca", index=1) # intercept 
+boot.ci(results, type="bca", index=2) # wt 
+boot.ci(results, type="bca", index=3) # disp
+
+```
+Example from statmethods.net

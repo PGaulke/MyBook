@@ -1,0 +1,557 @@
+---
+title: "k-Nearest Neighbors"
+output: pdf_document
+---
+# k-Nearest Neighbors
+
+
+In this chapter, the first non-parametric classification method, $k$-nearest neighbors, is introduced. These methods consider locality: 
+
+$$
+\hat{f}(x) = \text{average}(\{ y_i : x_i = x \})
+$$
+
+
+The other methods for classificaiton seen so far, have been parametric. These approaches assume the type of: 
+
+$$
+f(x) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \ldots + \beta_p x_p
+$$
+
+## K-Nearest-Neighbors in Regression
+
+Examples for K-Nearest Neighbors in R 
+
+```{r}
+require(FNN)
+require(MASS)
+data(Boston)
+```
+
+```{r}
+set.seed(42)
+boston_idx = sample(1:nrow(Boston), size = 250)
+trn_boston = Boston[boston_idx, ]
+tst_boston  = Boston[-boston_idx, ]
+```
+
+```{r}
+X_trn_boston = trn_boston["lstat"]
+X_tst_boston = tst_boston["lstat"]
+y_trn_boston = trn_boston["medv"]
+y_tst_boston = tst_boston["medv"]
+```
+
+Interpretation: Creating an additional "test" set `lstat_grid`, that is a grid of `lstat` values at which will predict `medv` in order to create graphics.
+
+```{r}
+X_trn_boston_min = min(X_trn_boston)
+X_trn_boston_max = max(X_trn_boston)
+lstat_grid = data.frame(lstat = seq(X_trn_boston_min, X_trn_boston_max, 
+                                    by = 0.01))
+```
+
+In order to perform KNN for regression, `knn.reg()` from the `FNN` package is needed. 
+
+INPUT
+
+- `train`: the predictors of the training data
+- `test`: the predictor values, $x$, at which predictions should be made
+- `y`: the response for the training data
+- `k`: the number of neighbors to consider
+
+OUTPUT
+
+- the output of `knn.reg()` is exactly $\hat{f}_k(x)$
+
+```{r}
+pred_001 = knn.reg(train = X_trn_boston, test = lstat_grid, y = y_trn_boston, k = 1)
+pred_005 = knn.reg(train = X_trn_boston, test = lstat_grid, y = y_trn_boston, k = 5)
+pred_010 = knn.reg(train = X_trn_boston, test = lstat_grid, y = y_trn_boston, k = 10)
+pred_050 = knn.reg(train = X_trn_boston, test = lstat_grid, y = y_trn_boston, k = 50)
+pred_100 = knn.reg(train = X_trn_boston, test = lstat_grid, y = y_trn_boston, k = 100)
+pred_250 = knn.reg(train = X_trn_boston, test = lstat_grid, y = y_trn_boston, k = 250)
+```
+
+Predictions are made for a large number of possible values of `lstat`, for different values of `k`. 
+
+An important notice is that 250 is the total number of observations in this training dataset.
+
+```{r}
+par(mfrow = c(3, 2))
+
+plot(medv ~ lstat, data = trn_boston, cex = .8, col = "dodgerblue", main = "k = 1")
+lines(lstat_grid$lstat, pred_001$pred, col = "darkorange", lwd = 0.25)
+
+plot(medv ~ lstat, data = trn_boston, cex = .8, col = "dodgerblue", main = "k = 5")
+lines(lstat_grid$lstat, pred_005$pred, col = "darkorange", lwd = 0.75)
+
+plot(medv ~ lstat, data = trn_boston, cex = .8, col = "dodgerblue", main = "k = 10")
+lines(lstat_grid$lstat, pred_010$pred, col = "darkorange", lwd = 1)
+
+plot(medv ~ lstat, data = trn_boston, cex = .8, col = "dodgerblue", main = "k = 25")
+lines(lstat_grid$lstat, pred_050$pred, col = "darkorange", lwd = 1.5)
+
+plot(medv ~ lstat, data = trn_boston, cex = .8, col = "dodgerblue", main = "k = 50")
+lines(lstat_grid$lstat, pred_100$pred, col = "darkorange", lwd = 2)
+
+plot(medv ~ lstat, data = trn_boston, cex = .8, col = "dodgerblue", main = "k = 250")
+lines(lstat_grid$lstat, pred_250$pred, col = "darkorange", lwd = 2)
+```
+Interpretation: the orange curves are $\hat{f}_k(x)$ where $x$ are the values which have been defined in `lstat_grid`. Hence, there is a large number of predictions with interpolated lines, but this does not tell anything. 
+
+It can be see that k = 1 is clearly overfitting, as k = 1 is a very complex, highly variable model. Conversely, k = 250 is clearly underfitting the data, as k = 250 is a very simple, low variance model. In fact, here it is predicting a simple average of all the data at each point.
+
+
+An important thing to know is, how to choose k 
+
+
+It can be stated that: 
+- low `k` = very complex model. very wiggly. specifically jagged
+- high `k` = very inflexible model. very smooth
+
+- want: something in the middle which predicts well on unseen data
+- that is, want $\hat{f}_k$ to minimize
+
+$$
+\text{EPE}\left(Y, \hat{f}_k(X)\right) = 
+\mathbb{E}_{X, Y, \mathcal{D}} \left[  (Y - \hat{f}_k(X))^2 \right]
+$$
+
+Therefore, needs to test if MSE is an estimate of this. Hence finding best test RMSE will be the strategy. (Best test RMSE is same as best MSE, but with more understandable units.)
+
+```{r}
+rmse = function(actual, predicted) {
+  sqrt(mean((actual - predicted) ^ 2))
+}
+```
+
+```{r}
+# define helper function for getting knn.reg predictions
+# note: this function is highly specific to this situation and dataset
+make_knn_pred = function(k = 1, training, predicting) {
+  pred = FNN::knn.reg(train = training["lstat"], 
+                      test = predicting["lstat"], 
+                      y = training$medv, k = k)$pred
+  act  = predicting$medv
+  rmse(predicted = pred, actual = act)
+}
+```
+
+```{r}
+# define values of k to evaluate
+k = c(1, 5, 10, 25, 50, 250)
+```
+
+```{r}
+# get requested train RMSEs
+knn_trn_rmse = sapply(k, make_knn_pred, 
+                      training = trn_boston, 
+                      predicting = trn_boston)
+# get requested test RMSEs
+knn_tst_rmse = sapply(k, make_knn_pred, 
+                      training = trn_boston, 
+                      predicting = tst_boston)
+
+# determine "best" k
+best_k = k[which.min(knn_tst_rmse)]
+
+# find overfitting, underfitting, and "best"" k
+fit_status = ifelse(k < best_k, "Over", ifelse(k == best_k, "Best", "Under"))
+```
+
+```{r}
+# summarize results
+knn_results = data.frame(
+  k,
+  round(knn_trn_rmse, 2),
+  round(knn_tst_rmse, 2),
+  fit_status
+)
+colnames(knn_results) = c("k", "Train RMSE", "Test RMSE", "Fit?")
+
+# display results
+knitr::kable(knn_results, escape = FALSE, booktabs = TRUE)
+```
+
+The next step will be to find out about the ties? The question is why isn't k = 1 give 0 training error? There are some non-unique $x_i$ values in the training data. Therefore, a further question evokes: How to predict when this is the case?
+
+
+### Linear versus Non-Linear
+
+Summarize: 
+in the linear relationship example
+    - lm() works well
+    - knn "automatically" approximates
+    
+in the very non-linear example
+    - lm() fails badly
+        - could work if ...
+    - knn "automatically" approximates
+    
+```{r}
+line_reg_fun = function(x) {
+  x
+}
+
+quad_reg_fun = function(x) {
+  x ^ 2
+}
+
+sine_reg_fun = function(x) {
+  sin(x)
+}
+
+get_sim_data = function(f, sample_size = 100, sd = 1) {
+  x = runif(n = sample_size, min = -5, max = 5)
+  y = rnorm(n = sample_size, mean = f(x), sd = sd)
+  data.frame(x, y)
+}
+
+set.seed(42)
+line_data = get_sim_data(f = line_reg_fun)
+quad_data = get_sim_data(f = quad_reg_fun, sd = 2)
+sine_data = get_sim_data(f = sine_reg_fun, sd = 0.5)
+
+x_grid = data.frame(x = seq(-5, 5, by = 0.01))
+
+par(mfrow = c(1, 3))
+plot(y ~ x, data = line_data, pch = 1, col = "darkgrey")
+grid()
+knn_pred = FNN::knn.reg(train = line_data$x, test = x_grid, y = line_data$y, k = 10)$pred
+fit = lm(y ~ x, data = line_data)
+lines(x_grid$x, line_reg_fun(x_grid$x), lwd = 2)
+lines(x_grid$x, knn_pred, col = "darkorange", lwd = 2)
+abline(fit, col = "dodgerblue", lwd = 2, lty = 3)
+
+plot(y ~ x, data = quad_data, pch = 1, col = "darkgrey")
+grid()
+knn_pred = FNN::knn.reg(train = quad_data$x, test = x_grid, y = quad_data$y, k = 10)$pred
+fit = lm(y ~ x, data = quad_data)
+lines(x_grid$x, quad_reg_fun(x_grid$x), lwd = 2)
+lines(x_grid$x, knn_pred, col = "darkorange", lwd = 2)
+abline(fit, col = "dodgerblue", lwd = 2, lty = 3)
+
+plot(y ~ x, data = sine_data, pch = 1, col = "darkgrey")
+grid()
+knn_pred = FNN::knn.reg(train = sine_data$x, test = x_grid, y = sine_data$y, k = 10)$pred
+fit = lm(y ~ x, data = sine_data)
+lines(x_grid$x, sine_reg_fun(x_grid$x), lwd = 2)
+lines(x_grid$x, knn_pred, col = "darkorange", lwd = 2)
+abline(fit, col = "dodgerblue", lwd = 2, lty = 3)
+
+
+
+# k was reasonably well chosen
+# this is a reasonable amount of data
+# this is a rather low dimensional problem
+
+# could fix with: y ~ poly(x, degree = 2)
+# could fix with: y ~ sin(x)
+# both would have better edge behavior
+```
+
+    
+
+### Scaling Data
+
+The next step would scale the data. This is helpful becaus sometimes be "scale" differentiates between center and scale. `R` function `scale()` does both by default. Outputs variables with mean = 0, var = 1.
+
+```{r}
+sim_knn_data = function(n_obs = 50) {
+  x1 = seq(0, 10, length.out = n_obs)
+  x2 = runif(n = n_obs, min = 0, max = 2)
+  x3 = runif(n = n_obs, min = 0, max = 1)
+  x4 = runif(n = n_obs, min = 0, max = 5)
+  x5 = runif(n = n_obs, min = 0, max = 5)
+  y = x1 ^ 2 + rnorm(n = n_obs)
+  data.frame(y, x1, x2, x3,x4, x5)
+}
+```
+
+```{r}
+set.seed(42)
+knn_data = sim_knn_data()
+```
+
+```{r}
+par(mfrow = c(1, 2))
+orange_blue = c(rep("grey", 45), rep("darkorange", 5))
+plot(x1 ~ x2, data = knn_data, xlim = c(-2, 2), ylim = c(-2, 10), pch = 20, col = orange_blue)
+points(1.7, 10)
+plot(scale(x1) ~ scale(x2), data = knn_data, xlim = c(-2, 2), ylim = c(-2, 10), pch = 20, col = orange_blue)
+points((1.7 - 1.197685) / 0.6072974, (10 - 5) / 2.974975)
+```
+
+
+## K-Nearest Neighbors in Classification
+
+First, taking a few things into mind again:
+
+For example, logistic regression had the form
+
+$$
+\log\left(\frac{p(x)}{1 - p(x)}\right) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots  + \beta_p x_p.
+$$
+
+In this case, the $\beta_j$ are the parameters of the model, which have been learned (estimated) by training (fitting) the model. Those estimates were then used to obtain estimates of the probability $p(x) = P(Y = 1 \mid X = x)$,
+
+$$
+\hat{p}(x) = \frac{e^{\hat{\beta}_0 + \hat{\beta}_1 x_1 + \hat{\beta}_2 x_2 + \cdots  + \hat{\beta}_p x_p}}{1 + e^{\hat{\beta}_0 + \hat{\beta}_1 x_1 + \hat{\beta}_2 x_2 + \cdots  + \hat{\beta}_p x_p}}
+$$
+
+As already seen in the chapter of regression, $k$-nearest neighbors has no such model parameters. 
+Instead, it has a so called tuning parameter, $k$. This is a parameter which determines how the model is trained, instead of a parameter that is learned through training. 
+An important notice is that tuning parameters are not used exclusively with non-parametric methods. There are also cases where there are tuning parameters for parametric methods.
+
+Often when discussing $k$-nearest neighbors for classification, it is framed as a black-box method that directly returns classifications. Instead, here it is framed as a non-parametric model for the probabilites $p_g(x) = P(Y = g \mid X = x)$. That is a $k$-nearest neighbors model using $k$ neighbors estimates this probability as
+
+$$
+\hat{p}_{kg}(x) = \hat{P}_k(Y = g \mid X = x) = \frac{1}{k} \sum_{i \in \mathcal{N}_k(x, \mathcal{D})} I(y_i = g)
+$$
+
+Essentially, the probability of each class $g$ is the proportion of the $k$ neighbors of $x$ with that class, $g$.
+
+In next step is to create a classifier becuase it is important to simply classify the class with the highest estimated probability.
+
+$$
+\hat{C}_k(x) =  \underset{g}{\mathrm{argmax}} \ \ \hat{p}_{kg}(x)
+$$
+
+This is similar to classifying to the class with the most observations in the $k$ nearest neighbors. If more than one class is tied for the highest estimated probablity, simply assigning a class at random to one of the classes tied for highest.
+
+In the binary case this becomes
+
+$$
+\hat{C}_k(x) = 
+\begin{cases} 
+      1 & \hat{p}_{k0}(x) > 0.5 \\
+      0 & \hat{p}_{k1}(x) < 0.5
+\end{cases}
+$$
+
+Again, if the probability for class `0` and `1` are equal, simply assign at random.
+
+```{r, echo = FALSE}
+set.seed(42)
+knn_ex = tibble::tibble(
+  x1 = 1:10,
+  x2 = sample(1:10, size = 10, replace = TRUE),
+  class = sample(c("darkorange", "dodgerblue"), size = 10, replace = TRUE))
+plot(x2 ~ x1, col = class, data = knn_ex,
+     ylim = c(0, 10), xlim = c(0, 10), pch = 20, cex = 1.5)
+points(8, 6, col = "darkgrey", pch = "x")
+plotrix::draw.circle(8, 6, 2.6, nv = 1000, lty = 1, lwd = 2, border = "darkgrey")
+legend("bottomleft", c("O", "B"), pch = c(20, 20), col = c("darkorange", "dodgerblue"))
+```
+
+In the case above, when predicting at $x = (x_1, x_2) = (8, 6)$,
+
+$$
+\hat{p}_{5B}(x_1 = 8, x_2 = 6) = \hat{P}_5(Y = \text{Blue} \mid X_1 = 8, X_2 = 6) = \frac{3}{5}
+$$
+
+$$
+\hat{p}_{5O}(x_1 = 8, x_2 = 6) = \hat{P}_5(Y = \text{Orange} \mid X_1 = 8, X_2 = 6) = \frac{2}{5}
+$$
+
+Thus
+
+$$
+\hat{C}_5(x_1 = 8, x_2 = 6) = \text{Blue}
+$$
+
+
+## Binary Data Example
+
+```{r}
+library(ISLR)
+library(class)
+```
+
+Here it is necessary to load some libraries. 
+
+The first step will be discussing $k$-nearest neighbors for classification by returning to the `Default` data from the `ISLR` package. To perform $k$-nearest neighbors for classification, the `knn()` function from the `class` package is used.
+
+In contrast, for example to the logistic regression, the function `knn()` requires that all predictors be numeric, so we coerce `student` to be a `0` and `1` dummy variable instead of a factor. 
+
+Important thing to consider is also, the response should be left as a factor. Numeric predictors are required because of the distance calculations taking place.
+
+```{r}
+set.seed(42)
+Default$student = as.numeric(Default$student) - 1
+default_idx = sample(nrow(Default), 5000)
+default_trn = Default[default_idx, ]
+default_tst = Default[-default_idx, ]
+```
+
+As already seen in the `knn.reg` form the `FNN` package for regression, `knn()` from `class` does not utilize the formula syntax, rather, requires the predictors be their own data frame or matrix, and the class labels be a separate factor variable. 
+
+An important notice is that the `y` data should be a factor vector, not a data frame including a factor vector. 
+
+Furthermore, it is useful that the `FNN` package also contains a `knn()` function for classification.  
+Choose `knn()` from `class` as it seems to be much more popular. However, being aware of which packages needs to be loaded and thus which functions will be used. They are very similar, but have some differences.
+
+```{r}
+# training data
+X_default_trn = default_trn[, -1]
+y_default_trn = default_trn$default
+
+# testing data
+X_default_tst = default_tst[, -1]
+y_default_tst = default_tst$default
+```
+
+Consistently, there is very small "training" with $k$-nearest neighbors. Essentially the only training is to simply remember the inputs. Because of this, it can be said that $k$-nearest neighbors is fast at training time. However, at test time, $k$-nearest neighbors is very slow. For each test observation, the method must find the $k$-nearest neighbors, which is not computationally cheap. An important point to notice is that by deafult, `knn()` uses Euclidean distance to determine neighbors.
+
+```{r}
+head(knn(train = X_default_trn, 
+         test  = X_default_tst, 
+         cl    = y_default_trn, 
+         k     = 3))
+```
+
+Because of the lack of any need for training, the `knn()` function immediately returns classifications. With logistic regression, we needed to use `glm()` to fit the model, then `predict()` to obtain probabilities that could use to make a classifier. Here, the `knn()` function directly returns classifications. That is `knn()` is essentially $\hat{C}_k(x)$.
+
+Here, `knn()` takes four arguments:
+
+- `train`, the predictors for the train set.
+- `test`, the predictors for the test set. `knn()` will output results (classifications) for these cases.
+- `cl`, the true class labels for the train set.
+- `k`, the number of neighbors to consider.
+
+```{r}
+calc_class_err = function(actual, predicted) {
+  mean(actual != predicted)
+}
+```
+
+In this case, the `calc_class_err()` function is used to asses how well `knn()` works with this data. 
+
+The test data is used to evaluate.
+
+```{r}
+calc_class_err(actual    = y_default_tst,
+               predicted = knn(train = X_default_trn,
+                               test  = X_default_tst,
+                               cl    = y_default_trn,
+                               k     = 5))
+```
+
+Often with `knn()` the scale of the predictors variables need to be considered. If one variable is contains much higher numbers because of the units or range of the variable, it will dominate other variables in the distance measurements. But this does not essentially mean that it should be such an important variable. It is common practice to scale the predictors to have a mean of zero and unit variance. Be sure to apply the scaling to both the train and test data.
+
+```{r}
+calc_class_err(actual    = y_default_tst,
+               predicted = knn(train = scale(X_default_trn), 
+                               test  = scale(X_default_tst), 
+                               cl    = y_default_trn, 
+                               k     = 5))
+```
+Interpretation: the scaling slightly improves the classification accuracy. This may not always be the case, and often, it is normal to attempt classification with and without scaling.
+
+How can $k$ be choosen? One way is to try different values and see which works best.
+
+```{r}
+set.seed(42)
+k_to_try = 1:100
+err_k = rep(x = 0, times = length(k_to_try))
+
+for (i in seq_along(k_to_try)) {
+  pred = knn(train = scale(X_default_trn), 
+             test  = scale(X_default_tst), 
+             cl    = y_default_trn, 
+             k     = k_to_try[i])
+  err_k[i] = calc_class_err(y_default_tst, pred)
+}
+```
+
+The `seq_along()` function can be very helpful for looping over a vector that stores non-consecutive numbers. It often removes the need for an additional counter variable. Actually it is not need it in the above `knn()` example, but it is still a good habit. For example in some cases trying out every value of $k$ is not wanted, but only odd integers, which would prevent ties. Or maybe, just checking multiples of 5 to further cut down on computation time would be a good way.
+
+A further notice to make is that a set seed before running this loops is needed. Because when considering even values of $k$, thus, there are ties which are randomly broken.
+
+Therefore, plotting the $k$-nearest neighbor results.
+
+```{r, fig.height = 6, fig.width = 8}
+# plot error vs choice of k
+plot(err_k, type = "b", col = "dodgerblue", cex = 1, pch = 20, 
+     xlab = "k, number of neighbors", ylab = "classification error",
+     main = "(Test) Error Rate vs Neighbors")
+# add line for min error seen
+abline(h = min(err_k), col = "darkorange", lty = 3)
+# add line for minority prevalence in test set
+abline(h = mean(y_default_tst == "Yes"), col = "grey", lty = 2)
+```
+Interpretation: the dotted line represents the smallest observed test classification error rate.
+
+```{r}
+min(err_k)
+```
+
+```{r}
+which(err_k == min(err_k))
+```
+Interpretation: it can be seen that five different values of $k$ are tied for the lowest error rate. 
+
+Given a choice of these five values of $k$, the largest will be selected, as it is the least variable, and has the least chance of overfitting.
+
+```{r}
+max(which(err_k == min(err_k)))
+```
+
+Recalling that defaulters are the minority class. That is, the majority of observations are non-defaulters.
+
+```{r}
+table(y_default_tst)
+```
+
+Notice: As $k$ gets larger, eventually the error approaches the test prevalence of the minority class.
+
+```{r}
+mean(y_default_tst == "Yes")
+```
+
+
+## Categorical Data
+
+As already seen in LDA and QDA, KNN, they can be used for both binary and multi-class problems. As an example of a multi-class problems, returning to the `iris` data.
+
+```{r}
+set.seed(430)
+iris_obs = nrow(iris)
+iris_idx = sample(iris_obs, size = trunc(0.50 * iris_obs))
+iris_trn = iris[iris_idx, ]
+iris_tst = iris[-iris_idx, ]
+```
+
+All the predictors here are numeric, therefore it will be proceed to splitting the data into predictors and classes.
+
+```{r}
+# training data
+X_iris_trn = iris_trn[, -5]
+y_iris_trn = iris_trn$Species
+
+# testing data
+X_iris_tst = iris_tst[, -5]
+y_iris_tst = iris_tst$Species
+```
+
+As already seen in previous methods, predicted probabilities given test predictors can be obtained. 
+In order to do so, the argument, `prob = TRUE` is added.
+
+```{r}
+iris_pred = knn(train = scale(X_iris_trn), 
+                test  = scale(X_iris_tst),
+                cl    = y_iris_trn,
+                k     = 10,
+                prob  = TRUE)
+```
+
+```{r}
+head(iris_pred, n = 50)
+```
+
+Unfortunately, this only returns the predicted probability of the most common class. In the binary case, this would be sufficient to recover all probabilities, however, for multi-class problems, it can not recover each of the probabilities of interest. This will simply be a minor annoyance for now, which will be fixed when introducing the `caret` package for model training.
+
+```{r}
+head(attributes(iris_pred)$prob, n = 50)
+```

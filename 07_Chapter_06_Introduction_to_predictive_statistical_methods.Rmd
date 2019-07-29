@@ -1,6 +1,6 @@
 ---
 title: "08_Ersatzfile"
-author: "CTrierweiler,PGaulke"
+author: "CTrierweiler, PGaulke"
 date: "24 Juli 2019"
 output: html_document
 ---
@@ -14,7 +14,6 @@ library(readr)
 advertising = read_csv("data/advertising.csv")
 ```
 
-
 People want to make predictions because nothing is clearly true in this world. The answers of the predictions are based on data, and not on intuition. Therefore, people make use of predictive modeling in order to forecast future actions through using data and calculations of propability. Every predictive model has some predictive variables which can influence future actions. 
 
 Today AI is a big topic. However, AI will not tell us WHY something happened, it will not answer questions of "What if, when this..." it only presents a complicated set of correlations but not the causations. 
@@ -22,6 +21,8 @@ Today AI is a big topic. However, AI will not tell us WHY something happened, it
 Moreover, in preditive modeling, there is no lunch theorem. There is not only one technique. There are many techniques, some of them are better, some not. Therefore, it is the goal to find out which works best. 
 
 The model can be a simple linear equation or a complex tree-based model. 
+
+In this part of the book, statistical models are presented. Starting from simple model building over  regression, classification, unsupervised learning methods, practical examples and new methods like trees, random forests, bagging and boosting. 
 
 
 ## Building models and predictions 
@@ -34,24 +35,43 @@ The wage is correlated with the age. A variable to predict is needed.
 
 \[Y=f(X) + \varepsilon \]
 
-y: response variable 
-f(x): set of independent (1, 2, 3), can be inifitive functions, but then you can't present it anymore
-e: shock 
+Y: response variable 
+f(X): set of independent (1, 2, 3), can be inifitive functions, but then it can't be presentanymore
+$\varepsilon\:$ shock 
 
-This example will be based on simulated data. Knowing the truth will be very helpful. But you can't know the truth unless you simulate it. 
+This example will be based on simulated data. Knowing the truth will be very helpful. But truth can not be known unless it will be simulated. 
 
+In this model, f needs to be find, the predictions. Therefore, X is taken in order to see what can be predict. 
 
-In this model, we need to find f, the predictions. Therefore, you take X in order to see what you can predict. 
-
-In many occasions, the independent variables are known but the response is not. Therefore, \(f()\) can be used to _predict_ these values. These predictions are noted by
+In many occasions, the independent variables are known but the response is not. Therefore, \(f()\) can be used to predict these values. These predictions are noted by
 \[\hat{Y}=\hat{f}(X)\]
 where \(\hat{f}\) is the estimated function for \(f()\).
 
+Besides making predictions, inference is a second major reason why estimating \(f()\) is useful. 
+
+The estimated \(\hat{f}()\) is also used to answer questions about the relationship between the independent variables and the response variables, such as:
+
+  - which predictors contributes the response,
+  - how much each predictor contributes to the response,
+  - what is the form of the relationship.
+  
+  
+The first step will always be that the given data set will be inspected. The goal is to understand the basic structure of the data set. Therefore, the data set will be just printed in order to read the structure easily. 
+
+```{r}
+advertising
+```
+Interpretation: The data set "advertising" includes 200 observations and 4 variables, each of which is numeric. In this data set, Sales will be the response variable. The response variable is the variable which will be used to understand the relationship with the predictor variables, which are in this data set: TV, Radio and Newspaper. 
+
+The next step after identifying the structure of the data set will be that the data set should be brought to visalization. This could be perfectly done with a scatter plot, because of in this example, numeric variables are used. 
+
+However, to understand the data, it is essential that a deeper understanding of regression will be provided. In the next chapter, regression will be explained.  
 
 
 ## Regression 
 
 Regression is a type of supervised learning. In supervised learning, addresses issues whre thre are both an input and an output. These issues in regression deal with a numeric output.
+
 
 For describing the names of variables and methods, different terns are used in AI, statistical or machine learning. 
 
@@ -71,17 +91,116 @@ The next step after investigating the structure of the data, is to visualize the
 plot(sales ~ TV, data = advertising, col = "dodgerblue", pch = 20, cex = 1.5,
      main = "sales vs television advertising")
 ```
-The function pairs() is helpful in order to visualize a number of scatter plots quickly. 
 
+The function pairs() is helpful in order to visualize a number of scatter plots quickly. 
 ```{r}
 pairs(advertising)
 ```
 
+In many cases, the most interesting thing to know will be the raltionship between ach predictor and the reponse. Therefore, the function featurePlot() from the package caret is very useful. 
 
+```{r, fig.height = 4, fig.width = 10, message = FALSE, warning = FALSE}
+library(caret)
+featurePlot(x = advertising[ , c("TV", "radio", "newspaper")], y = advertising$sales)
+```
+Interpretation: In the graph, a clear increase in sales can be seen as radio or TV are increased. The relationship between sales and newspaper is less clear. How all of the predictors work together is also unclear, as there is some obvious correlation between radio and TV. 
+
+## The lm() Function 
+
+In order to illustrate how the response "sales" will fit every residual variable as predictor. This code includes an additive linear model. The linear model will be later explained in detail in this book. But at this stage, it is only important to notice that with using the attach() function, instead of using the argument data= the model will be specified withing using each variable name directly. 
+
+```{r}
+mod_1 = lm(sales ~ ., data = advertising)
+# mod_1 = lm(Sales ~ TV + radio + newspaper, data = advertising)
+```
+
+
+## Hypothesis testing 
+
+Standard errors can also be used to perform hypothesis tests on the coefficints. The most common hypothesis task involves testing the null hypothesis of 
+
+H0: There is no relationship between X and Y versus the alternative hypothesis 
+
+HA: There is some relationship between X and Y 
+
+Mathematically, this correspond to testing 
+
+H0 : $\beta_1$ = 0
+
+vs 
+
+HA: $\beta_0$ = 0
+
+since if $\beta_1=0$ then the model reduces to $Y=\beta_0$ + em and X is not associated with Y.
+
+The function  summary() returns a large amount of useful information about a model fit using lm(). Much of it will be helpful for hypothesis testing including individual tests about each predictor, as well as the significance of the regression test. In the following example, an additive linear model with sales as the response and each remaining vairbale as a predictor. 
+
+```{r}
+summary(mod_1)
+```
+
+```{r}
+mod_0 = lm(sales ~ TV + radio, data = advertising)
+```
+
+```{r}
+mod_1 = lm(sales ~., data = advertising)
+
+summary(mod_1)
+```
+
+## Predictions 
+
+In order to make predictions, the function predict() is very heplful. An important fact to be aware of is, that when the function is used on the result of a model fit using, by default it will retun the predictions for each of the data points used to fit the model. 
+
+```{r}
+head(predict(mod_1), n = 10)
+```
+Interpretation: Because the example should be easily to real, the result is limited by n= 10. 
+
+A further essential point to notice is that the effect of the function predict() will always be depending on the input to the function. In this case, the model object of the class lm is supplying as the first argument. Therefore, the function predict() runs the predict.lm() function. Hence, the function ?predict() can serce as a source for more details. 
+
+The next step should be that the new data needs to be specified. Therefore, the new data should be a data frame or a tibble with the same column names a predictors. 
+
+```{r}
+new_obs = data.frame(TV = 150, radio = 40, newspaper = 1)
+```
+
+After this step, the function predict() can be used to point the estimates, the confidence intervals as well as the prediction intervals. 
+
+It is helpful the use only the first two arguments, because R will easily retun a point estimate which will be the predicted value, $\hat{y}$. 
+
+
+## Unusual Observations
+
+The software R supply numerous functions for obtaining metric related unusual observations. 
+
+- The function resid() can supply the remaining for each observation
+```{r}
+head(resid(mod_1), n = 10)
+```
+
+- The function hatvalues() gives the leverage of each observation
+```{r}
+head(hatvalues(mod_1), n = 10)
+```
+
+- The function rstudent() gives the studentized remaining for each observation
+```{r}
+head(rstudent(mod_1), n = 10)
+```
+
+- The function cooks.distance() estimates the influence of each observation
+```{r}
+head(cooks.distance(mod_1), n = 10)
+```
 
 ## Linear regression 
 
-Linear regression is a simple approach to supervised learning. It assumes taht the dependence of Y on X1, X2, ... Xp is linear. 
+Linear regression is a simple approach to supervised learning. It assumes that the dependence of Y on X1, X2, ... Xp is linear. 
+Various important reasons explain why it is often the first tool in any analyst's toolbox.
+On the one hand the model can straightforwardly be extended and produce reasonably good estimates in many applications. On the other hand, despite its simplicity, it allows to clearly illustrate advanced concepts. In particular, it lays the ground for the need of more complicated techniques.
+
 The linear regression model is very fast. In the following example, the relationship between different advertising methods and sales is visualized. The relationship is not causal, but the correlations can be detected. Every blue points presents an observation. There are several questions which could be asked: 
 
 - Is there a relationship between sales and the advertising budget?
@@ -92,27 +211,196 @@ The linear regression model is very fast. In the following example, the relation
 - Is there synergy among the advertising media?
 
 
-```{r}
-library(caret)
-featurePlot(x = advertising[ , c("TV", "radio", "newspaper")], y = advertising$sales)
-```
-In the graph a clear increase in sales can be seen as radio or TV are increased. The relationship between sales and newspaper is less clear. How all of the predictors work together is also unclear, as there is some obvious correlation between radio and TV. 
-
 Simple linear regression using a single predictor X. 
 
 - The assumed model is
 
-Y = ß0 + ß1X+ e, 
+\[Y=\beta_0 + \beta_1X_1 + \beta_2X_2 + \dots + \beta_pX_p + \varepsilon\]
 
-ß0 and ß1: two unknown constants that represent the intercept and slope, also known as coefficients or parameters 
-e: error term 
+$\beta_0$ and $\beta_1$: two unknown constants that represent the intercept and slope, also known as coefficients or parameters 
+$\varepsilon$: error term 
 
-- Given some estimates ^ß0 and ^ß1 for the model coefficients, for predicting future sales 
 
-^y= ^ß0 + 1ß1x, 
+This type assumes linearity in the coefficients, \(\beta\)'s, with \(p\) predictors, \(X\)'s,  for \(n\) observations. The response \(Y\) is also assumed to be influenced by shocks or errors record by \(\varepsilon\). The standard deviation of these errors is assumed to be \(\sigma\). 
 
-^y: indicates a prediction of Y on the basis of X=x. 
-The hat symbol denotes an estimated value. 
+Hence, even if the estimated model would correctly fit the data, the predictions would still be off because of this irreducible error.  
+
+An important notice is that the linear function is almost never believed to fit the true data generating process but, instead, to more or less appropriately approximate it.       
+
+
+This part builds around the example of the simple linear regression of sales on the amount of TV advertising in the advertising data set.  
+To fix ideas, the linear model estimated here is
+
+\[\text{sales} = \beta_0 + \beta_1\times \text{TV}  + \varepsilon\]
+
+
+First step is to load the data and manipulate it to make it usable.
+
+```{r, warning = FALSE, message = FALSE}
+require(tidyverse)
+require(ISLR)
+advertising <- read_csv("data/advertising.csv")
+advertising
+advertising <- read_csv("data/advertising.csv") %>%
+	select(-X1) 
+advertising
+```
+
+
+The estimation of the model is carried with the function `lm` from the built-in `stats` package. The result of the estimation is an object to assigned to a name.
+
+```{r}
+model.slr <- lm(sales ~ TV, data = advertising)
+```
+
+The content of this linear regression object is better described with the function `summary`.
+
+```{r}
+summary(model.slr)
+names(model.slr)
+model.slr$fitted.values
+names(summary(model.slr))
+summary(model.slr)$r.squared
+summary(model.slr)$df
+```
+There is also an alternative with tidyverse
+```{r}
+advertising %>%
+  mutate(y.hat1 = model.slr$fitted.values,
+         y.hat2 <- predict(model.slr),
+         y.hat3 <- model.slr$coefficients[1] + model.slr$coefficients[2]*TV)
+advertising
+advertising$TV
+advertising$y.hat1 <- model.slr$fitted.values
+advertising$y.hat2 <- predict(model.slr)
+advertising$y.hat3 <- model.slr$coefficients[1] + model.slr$coefficients[2]*advertising$TV
+advertising
+plot(advertising$TV, advertising$sales)
+lines(advertising$TV, advertising$y.hat2, col="blue")
+lines(advertising$TV, advertising$y.hat1, col="red")
+```
+
+Interesting to see are also the errors/residuals of the prediction.
+```{r}
+advertising$residuals <- advertising$sales - advertising$y.hat2
+sum(advertising$residuals)
+```
+
+The model can be used to predict for data not in the training data.
+
+```{r}
+# predict sales for TV=400, 500, 600...
+# brute force way, very tedious in general
+sales_tv_400 <- model.slr$coefficients[1] + model.slr$coefficients[2]*400
+sales_tv_400
+# 'predict' way
+# step 1: create a data.frame for the new X data
+# step 2: predict with newdata= newdata
+my.boss.question <- data.frame(TV=c(400, 500, 600))
+my.boss.question
+sales_tv_boss <- predict(model.slr, newdata = my.boss.question ) 
+sales_tv_boss
+```
+
+ 
+An important notice is that parts of this regression object can be accessed through sub-setting of the object and used, once know under what name they are stored, which can obtain by the next call 
+
+Recall that `?lm` can serve as a good source for more details for the value of the function, i.e., what the function can return. 
+
+```{r}
+names(model.slr)
+# model.slr %>% names
+```
+Alternatively, and somehow more surprising, all the numbers given by the `summary` function can also be accessed in the same fashion.
+
+```{r}
+model.slr %>% summary %>% names
+```
+
+| Quantity | Value |
+|:--|:--|
+| Residual Standard Error | `r summary(model.slr)$sigma %>% round(2)` |
+| \(R^2\) | `r summary(model.slr)$r.squared %>% round(3)` |
+| \(F\)-statistic | `r summary(model.slr)$fstatistic[1] %>% round(1)` |
+
+Table: Results for simple linear regression (Advertising)
+
+
+As for the confidence interval of \(\beta_1\)  i.e., the random interval in which, under repeated sampling, the true parameter would fall \(95\%\) of the time, we type the code below.
+
+```{r}
+c.i.beta1 <- c(summary(model.slr)$coefficients[2,1] -
+                 2 * summary(model.slr)$coefficients[2,2],
+               summary(model.slr)$coefficients[2,1] +
+                 2 * summary(model.slr)$coefficients[2,2])
+c.i.beta1 %>% round(3)
+```
+
+One of the main reasons the simple linear regression is exposed is its graphical appeal. In particular, the ordinary least squares criterion can be visualized with a graph of the residuals with respect to the fit.  
+This visualization builds on the regression fit which we obtain first below in two alternative ways.  
+
+1. The fitted line can be obtained with the fitted values of the model given by the `lm` function, i.e., `.$fitted.values`.
+
+```{r}
+tibble(advertising$TV, advertising$sales, model.slr$fitted.values)
+```
+
+When going deeper into the details, it becomes clear that these fitted values  are simply obtained. This is because of estimated parameters using the \(X\) values which is TV, in this case. 
+```{r}
+manually.fitted <- model.slr$coefficients[1] + model.slr$coefficients[2] * advertising$TV
+all.equal(as.vector(model.slr$fitted.values), manually.fitted)
+```
+
+
+2. The second approach uses the function `predict` from the built-in `stats` package. The function is a bit versatile as its behavior depends on which type of objects it is fed with.  
+Applied to a `lm` object, it will, by default, return predictions for each of the \(X\) values used to fit the model. 
+
+```{r}
+all.equal(as.vector(model.slr$fitted.values), manually.fitted, predict(model.slr))
+```
+
+Through the use of fitted/predicted values, the values can be estimated above about the quality of the fit. Below are a few lines of code to manually calculate these statistics.
+
+```{r}
+## R2
+TSS <- sum((advertising$sales - mean(advertising$sales))^2)
+TSS
+RSS <- sum((advertising$sales -  predict(model.slr))^2)
+RSS
+R2 <- 1 - RSS/TSS
+R2 %>% round(3)
+## RSE
+n <- length(advertising$sales)
+p <- length(model.slr$coefficients) - 1
+RSE <- sqrt(RSS /(n - p - 1))
+RSE %>% round(2)
+# notice that this is more or less the sd of the errors
+sd(advertising$sales -  predict(model.slr)) %>% round(2)
+## F-statistic
+F <- (TSS - RSS)/p * (RSS/(n-p-1))^(-1)
+F %>% round(1)
+```
+
+A further step is to turn the graph of the fit.  
+As much as possible,  `ggplot` should be used for our graphs. In this case, first, the predicted/fitted values to the data frame needs to be added. There are various, though similar ways to achieve that first step, including one with `geom_smooth`.
+
+
+```{r, out.width = "100%", message = FALSE, warning = FALSE, include=TRUE}
+advertising <- advertising %>%
+	mutate(fit_TV= model.slr$fitted.values)
+	# mutate(fit_TV= predict(model.slr))
+	# mutate(fit_TV = predict(lm(sales ~ TV), interval = "confidence")[,"fit"])
+         
+p1 <- advertising %>% ggplot(
+	mapping= aes(x=TV, y= sales)
+	) +
+	geom_point(size=1, shape=21) +
+	#geom_smooth(method='lm', se = TRUE) + # another alternative for the fit
+	geom_line(aes(y=fit_TV), color ="blue", size =1) +
+	geom_segment(aes(x = TV, y = sales, xend = TV, yend = fit_TV, colour = "red")) +
+	theme(legend.position = "none")
+p1
+```
 
 
 
@@ -126,6 +414,13 @@ There are many metrics to assess the accuracy of a regression model. Most of the
 While for the sake of comparing models, the choice between RMSE and MSE is arbitrary, there is a preference for RMSE, as it has the same units as the response variable.
 
 
+Here it is also important to establish the essential feature of the statistical learning philosophy.  
+Any chosen method/technique is given data to learn, the **train data**. However, the crucial attribute of the method should be measure on data not previously seen, the **test data**.  
+In other words, the important measure is the _test MSE_. It is computed as
+\[\text{Ave}\big(y_0-\hat{f}(x_0)\big)^2 \]
+where \((y_0, x_0)\) are the test observations.  
+
+
 ### Model Complexity
 
 Besides the fact how well a model makes precitions, it is also interesting to know the complexity/flexibility of a model. In this chapter, so make it simple, only linear models are considered. In fact, the model gets more complex when more predictors are added to the model. In order to assigning a numerical value to the complexity of the linear modl, the number of predictors $p$ wil be used. 
@@ -135,6 +430,8 @@ get_complexity = function(model) {
   length(coef(model)) - 1
 }
 ```
+
+In order to add more complexity, interactions, polynominals and transformations can be used. These will be explained at a later state of this chapter.  
 
 
 ### Test-Train Split
@@ -181,6 +478,8 @@ sqrt(mean((train_data$sales - predict(fit_0, train_data)) ^ 2))
 sqrt(mean((test_data$sales - predict(fit_0, test_data)) ^ 2)) 
 ```
 Interpretation: the operations use the train and the test RMSE. 
+
+
 ```{r}
 library(Metrics)
 # train RMSE
@@ -190,6 +489,8 @@ rmse(actual = test_data$sales, predicted = predict(fit_0, test_data))
 ```
 Interpretation: the function can be enhanced with inputs which are obtaining.
 It is helpful to use the train and test RMSE for the fitteed model, given a train or test dataset, and the proper response variable.
+
+
 ```{r}
 get_rmse = function(model, data, response) {
   rmse(actual = subset(data, select = response, drop = TRUE),
@@ -197,6 +498,8 @@ get_rmse = function(model, data, response) {
 }
 ```
 Interpretation: when obtaining this function, the code is better to read and it bcoms more clear which task is being reached. 
+
+
 ```{r}
 get_rmse(model = fit_0, data = train_data, response = "sales") # train RMSE
 get_rmse(model = fit_0, data = test_data, response = "sales") # test RMSE
@@ -308,57 +611,45 @@ Overfitting models: A high train RMSE and a high test RMSE can be seen in `fit_1
 
 Overfitting models: A low train RMSE and a high test RMSE can be seen in `fit_4`and `fit_5`
 
-##Hypothesis testing 
-
-Standard errors can also be used to perform hypothesis tests on the coefficints. The most common hypothesis task involves testing the null hypothesis of 
-
-H0: There is no relationship between X and Y versus the alternative hypothesis 
-
-HA: There is some relationship between X and Y 
-
-Mathematically, this correspond to testing 
-
-H0 : $\beta_1$ = 0
-
-vs 
-
-HA: $\beta_0$ = 0
-
-since if $\beta_1=0$ then the model reduces to $Y=\beta_0$ + em and X is not associated with Y.
-
-The function  summary() returns a large amount of useful information about a model fit using lm(). Much of it will be helpful for hypothesis testing including individual tests about each predictor, as well as the significance of the regression test. In the following example, an additive linear model with sales as the response and each remaining vairbale as a predictor. 
-
-
-```{r}
-mod_1 = lm(sales ~., data = advertising)
-
-summary(mod_1)
-```
-
-##Confidence interval 
-
-
-```{r}
-head(predict(mod_1), n = 10)
-```
-Here it is important to understand that the function predict () is dependent on the input to the function. The first argument is supplying a model object of class lm. Because of this, predict() then runs the function predict.lm(). 
-
-For further information ?predict.lm() can be used. 
-
-
-```{r}
-new_obs = data.frame(TV = 150, radio = 40, newspaper = 1)
-```
-
 
 ## Multiple Linear Regression 
+
+
+The procedure of the multiple linear regression is similar to the linear regression. However, some differences exists:
+
+- The command for the `lm` function;
+- No graphical representation;
+- The often tedious interpretation of the coefficients.
 
 The model is: 
 
 $$Y=\beta_0+\beta_1x_1 +\beta_2x_2+\ldots+\beta_px_p+e$$
 
+
 The interpretation is that ßj is the average effect on Y of a one unit increase in Xj, holding all other predictors fixed. In the advertisting example, the model becomes: 
 
+
+We proceed by estimating 
+
+\[\text{sales} = \beta_0 + \beta_1\times \text{TV} + \beta_2\times \text{radio} + \beta_3\times \text{newspaper}  + \varepsilon\]
+
+
+```{r}
+model.mlr <- lm(sales ~ TV + radio + newspaper, data = advertising)
+```
+
+Importantly, the `+` sign does not mean that the regression is on the sum of the variables. Instead, the expression should be read "regression of sales on TV _plus on_ radio _plus on_ newspaper".
+
+```{r}
+summary(model.mlr)
+```
+
+For the interpretation of the coefficients, the correlations between the predictors is often useful.
+
+```{r}
+require(magrittr)
+advertising %>% {cor(.[,c("TV", "radio", "newspaper")])} %>% round(4)
+```
 $$sales=\beta_0+\beta_1xTV+\beta_2xradio+\beta_3xnewspaper+e$$
 
 Interpreting regression coefficients 
@@ -374,3 +665,224 @@ Claims of causality should be avoided for observational data.
 The woes of (interpreting) regression coefficients. 
 "Data Analysis and Regression" Mosteller and Tukey 1977
 - a regression coefficient ßj estimated the expected change in Y per unit change in Xj, will all other predictors held fixed. But predictors ususally change together! 
+
+## Categorical regressors
+
+The predictors of the model need not be numeric variables. They can also be factors.
+
+```{r}
+require(ISLR)
+data("Credit")
+str(Credit)
+```
+
+In order to understand the model better, scatter plots help to visualize each pair of variables. 
+
+```{r, out.width = "100%", message = FALSE, warning = FALSE, include=TRUE}
+require(GGally)
+require(tidyverse)
+require(ggplot2)
+require(ggpairs)
+ggpairs(Credit[,c("Balance", "Age", "Cards", "Education",
+                  "Income", "Limit", "Rating")])
+```
+
+In this example it can be seen that the qualitatitive / categorical predictors, also called factor variables play a major role.   
+Besides that, in the `Credit` data set, variables such `gender` or `student` are factors.  
+
+In the following, it is visualized how these variables can be used in a linear regression.
+
+```{r}
+model.cr1 <- lm(Balance ~ Gender, data = Credit)
+summary(model.cr1)
+```
+
+The expression can be evoked, that it is a smoothly process. However, a indeept analysis needs to be undrtaken regarding on fact.  
+`R` has automatically created a dummy variable. This may or may not be the intended choice.  
+Hence, this needs to be examined. The following call is helpful in order to do so. 
+
+```{r}
+contrasts(Credit$Gender)
+```
+Interpretation: the variable `GenderFemale` (read in the upper part of the table) shown in the summary of the model takes the value \(0\) if the individual is Male and \(1\) if the individual is Female.   
+With multiple factors in the variable, the reading of the table must be well understood.
+
+```{r}
+contrasts(Credit$Ethnicity)
+```
+
+These values are used in the next model.
+
+```{r}
+model.cr2 <- lm(Balance ~ Ethnicity, data = Credit)
+summary(model.cr2)
+```
+
+Notice that these dummy values are created in alphabetical order. Hence, the first will always server as reference.  
+This behavior can be changed thanks to the `relevel` function.
+
+```{r}
+Credit$Ethnicity <- relevel(Credit$Ethnicity, ref = "Caucasian")
+contrasts(Credit$Ethnicity)
+```
+
+
+## Interactions terms
+
+Notice that the \(\beta\)'s represent the average effect of a one unit change in the predictor on the response.  
+The assumption of a constant effect on the response, i.e., constant \(\beta_i\), is often difficult to sustain. For instance, in case of synergies of the advertising media, the effect of one particular media depends on how much of the other media are already been run.  
+Interactions terms constitute a variation of the linear regression whose aim is precisely to allow for non-constant effects of variables on the response.  
+The interaction between variables are built with the `:` symbol. For instance, the result in @isln, Chap. 3, slide 37 is obtained through the following call.
+
+```{r}
+model.it1 <- lm(sales ~ TV + radio + TV:radio, data = advertising)
+summary(model.it1) 
+## alternatively, use the cross *
+lm(sales ~ TV*radio, data = advertising)
+```
+
+Interactions can be done between quantitative and categorical variables. This case is actually the very easy to interpret and even visualize, despite the multiple variables.
+
+
+```{r}
+model.it2 <- lm(Balance ~  Income + Student, data = Credit)
+summary(model.it2) 
+model.it3 <- lm(Balance ~  Income + Student + Income:Student, data = Credit)
+summary(model.it3) 
+y.hat4 <- predict(model.it2)
+plot(Credit$Income, Credit$Balance)
+lines(Credit$Income, y.hat4, col="red")
+s.data <- Credit
+s.data$Student <- "Yes"
+n.data <- Credit
+n.data$Student <- "No"
+y.hat5 <- predict(model.it2, newdata = s.data)
+y.hat6 <- predict(model.it2, newdata = n.data)
+plot(Credit$Income, Credit$Balance)
+lines(Credit$Income, y.hat5, col="red")
+lines(Credit$Income, y.hat6, col="black")
+Credit
+```
+
+These different models can be plotted.
+
+```{r, out.width = "100%", message = FALSE, warning = FALSE, include=TRUE, fig.cap= "Fits of models without (left) and with (right) interactions terms of Income and Student for Students (red) and not Students (black)."}
+require(gridExtra)
+s.data <- Credit
+s.data$Student <- "Yes"
+ns.data <- Credit
+ns.data$Student <- "No"
+cols <- c("Student"="red", "Yes" ="red", "Not student"="black", "No"="black")
+p1 <- Credit %>%
+	mutate(fit.student = predict(model.it2, newdata = s.data),
+		fit.not.student = predict(model.it2, newdata = ns.data)) %>%
+	ggplot(aes(x=Income, y=Balance)) +
+  geom_point(aes(x=Income, y=Balance, color=Student)) +
+  geom_line(aes(y=fit.student, color="Student")) +
+  geom_line(aes(y=fit.not.student, color="Not student")) +
+  scale_colour_manual(values=cols) +
+  theme(legend.position = "none")
+p2 <- Credit %>%
+	mutate(fit.student = predict(model.it3, newdata = s.data),
+	       fit.not.student = predict(model.it3, newdata = ns.data)) %>%
+  ggplot(aes(x=Income, y=Balance)) +
+  geom_point(aes(x=Income, y=Balance, color=Student)) +
+  geom_line(aes(y=fit.student, color="Student")) +
+  geom_line(aes(y=fit.not.student, color="Not student")) +
+  scale_colour_manual(values=cols) +
+  theme(legend.position = c(50, 1000),
+          legend.direction = "horizontal")
+grid.arrange(p1, p2, ncol=2)
+```
+
+
+
+
+
+## Polynomials of degree n
+
+Another very useful extension of the linear model is to include powers of variables in order to capture non-linear effects. This seems to be a contradiction in terms, but a possible answer could be that the model is still linear in the coefficients.  
+
+To fix ideas, here is an example of fitting a quadratic model.
+
+\[\text{mpg} = \beta_0 + \beta_{1}\times \text{horsepower} + \beta_{2}\times \text{horsepower}^2 + \varepsilon\]
+
+This model can be estimated in the `Auto` data set of the `ISLR` package.
+
+```{r}
+require(ISLR)
+data("Auto")
+model.pd1 <- lm(mpg ~ horsepower, data = Auto)
+summary(model.pd1)
+model.pd2 <- lm(mpg ~ horsepower + I(horsepower^2), data = Auto)
+summary(model.pd2) 
+```
+Notice the use of the `I` function which, in a formula, inhibits the interpretation of operators such as `+` and `^` as formula operators but, instead, makes them be used as arithmetical operators.  
+
+For higher degrees of polynomial, it can become cumbersome to write all the degrees. That is where the function `poly` is handy.
+
+```{r}
+require(ISLR)
+data("Auto")
+model.pd5 <- lm(mpg ~ poly(horsepower, 5), data = Auto)
+model.pd9 <- lm(mpg ~ poly(horsepower, 9), data = Auto)
+```
+
+Again, the advantage of the linear regression with a single predictor is the visualization of its fits, as illustrated below.
+
+```{r, out.width = "100%", message = FALSE, warning = FALSE, include=TRUE, fig.cap= "Fits of mpg for various degrees of the polynomial of horsepower."}
+Auto <- Auto %>%
+	mutate(fit1 = predict(model.pd1),
+	fit2 = predict(model.pd2),
+	fit5 = predict(model.pd5),
+	fit9 = predict(model.pd9))
+cols <- c("Deg.1", "Deg.2", "Deg.5", "Deg.9")
+Auto %>% 
+	ggplot(aes(x=horsepower, y=mpg)) +
+	geom_point() +
+	geom_line(aes(y=fit1, color="Deg.1"), size =2) +
+	geom_line(aes(y=fit2, color="Deg.2"), size =2) +
+	geom_line(aes(y=fit5, color="Deg.5"), size =2) +
+  geom_line(aes(y=fit9, color="Deg.9"), size =2) +
+	theme(legend.title = element_blank(), 
+		legend.position = "bottom", 
+		legend.direction = "horizontal")
+```
+
+
+
+
+```{r}
+fita1 <- lm(sales ~ TV + radio + newspaper, data=advertising )
+summary(fita1)
+fita2 <- lm(sales ~ poly(TV,5) + radio + newspaper , data=advertising )
+summary(fita2)
+fita3 <- lm(sales ~ poly(TV,5) + poly(radio,3) + poly(newspaper,6) , data=advertising )
+summary(fita3)
+fita4 <- lm(sales ~ TV + radio + newspaper + TV:radio, data=advertising )
+summary(fita4)
+fita5 <- lm(sales ~ TV*radio*newspaper, data=advertising )
+summary(fita5)
+fita6 <- lm(sales ~ poly(TV,2)*poly(radio,2)*poly(newspaper,2), data=advertising )
+summary(fita6)
+length(fita6$coefficients)
+```
+
+## Transformations 
+
+This is a helpful tool when more complex models are created. This models are permit for non-linearity, using transformations. An inportant fact to take into account is that when using the transformations to the response variable, this will be affecting the units of said variable. Hence, in order to do the comparision to the non-transformed models, a un-transformation is helpful. 
+
+
+```{r}
+# define first mod_7
+mod_7 = lm(sales ~ . ^ 2 + poly(TV, degree = 3), data = advertising)
+# mod_7 = lm(Sales ~ . ^ 2 + I(TV ^ 2) + I(TV ^ 3), data = Advertising)
+coef(mod_7)
+```
+```{r}
+mod_8 = lm(log(sales) ~ ., data = advertising)
+sqrt(mean(resid(mod_8) ^ 2)) # incorrect RMSE for Model 8
+sqrt(mean(resid(mod_7) ^ 2)) # RMSE for Model 7
+sqrt(mean(exp(resid(mod_8)) ^ 2)) # correct RMSE for Model 8
+```
+

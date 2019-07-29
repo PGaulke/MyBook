@@ -22,6 +22,22 @@ This book can serve as a source for all people who are interested in studying R 
 require(magrittr)
 require(tidyverse)
 require(ISLR)
-
+require(gbm)
+require(MASS)
+require(caret)
+require(FNN)
+require(rpart)
+require(boot)
+require(forcats)
+require(lattice)
+require(stringr)
+require(tibble)
+require(ellipse)
+require(metrics)
+require(GGally)
+require(tidyr)
+require(ggplot2)
+require(dplyr)
+require(readr)
 
 ```

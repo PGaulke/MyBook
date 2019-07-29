@@ -1,0 +1,358 @@
+---
+title: "12a_Solution_a1"
+author: "CTrierweiler,PGaulke"
+date: "28 Juli 2019"
+output: html_document
+---
+
+# Develop the Model for a1  
+
+Methods that will be tested:
+
+- Multiple Linear Regression
+- Linear regression with polynomials
+- Log Linear Regression
+- Trees
+- RandomForest
+
+Logistic regression is not applicable on this data set as the response is not binary.
+
+## Multiple Linear Regression
+
+Determining the signifance level wanted: <0,05
+```{r}
+# Test it
+
+a1.testmlrmod <- lm(a1 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data=newtrain.data)
+summary(a1.testmlrmod)
+
+# NO3 with highest significance
+
+a1.testmlrmod$coefficients["NO3"]
+
+a1.test.pred.mlr <- (predict(a1.testmlrmod,traintest.data))
+ 
+a1.RMSE.testmlr <- sqrt(mean((a1.test.pred.mlr-traintest.data$a1)^2))
+a1.RMSE.testmlr
+
+a1.MAE.testmlr <- mean(abs(a1.test.pred.mlr-traintest.data$a1))
+a1.MAE.testmlr
+
+# Reducing the variables
+a1.testmlrmod2 <- lm(a1 ~ size + NO3 + PO4, data=newtrain.data)
+
+summary(a1.testmlrmod2)
+a1.testmlrmod2$coefficients["PO4"]
+
+a1.test.pred.mlr2 <- (predict(a1.testmlrmod2,traintest.data))
+ 
+a1.RMSE.testmlr2 <- sqrt(mean((a1.test.pred.mlr2-traintest.data$a1)^2))
+a1.RMSE.testmlr2
+
+a1.MAE.testmlr2 <- mean(abs(a1.test.pred.mlr2-traintest.data$a1))
+a1.MAE.testmlr2
+
+# Reducing the variables to only one variable (SLR)
+
+a1.testmlrmod3 <- lm(a1 ~ PO4, data=newtrain.data)
+
+summary(a1.testmlrmod3)
+
+a1.test.pred.mlr3 <- (predict(a1.testmlrmod3,traintest.data))
+ 
+a1.RMSE.testmlr3 <- sqrt(mean((a1.test.pred.mlr3-traintest.data$a1)^2))
+a1.RMSE.testmlr3
+
+a1.MAE.testmlr3 <- mean(abs(a1.test.pred.mlr3-traintest.data$a1))
+a1.MAE.testmlr3
+
+# MLR better, trying to reduce to two
+a1.testmlrmod4 <- lm(a1 ~ size + PO4, data=newtrain.data)
+
+a1.test.pred.mlr4 <- (predict(a1.testmlrmod4,traintest.data))
+ 
+a1.RMSE.testmlr4 <- sqrt(mean((a1.test.pred.mlr4-traintest.data$a1)^2))
+a1.RMSE.testmlr4
+
+a1.MAE.testmlr4 <- mean(abs(a1.test.pred.mlr4-traintest.data$a1))
+a1.MAE.testmlr4
+
+# a1-testmlrmod4 as best choice
+
+```
+
+Trying k-fold cross validation
+
+```{r, error=TRUE}
+require(caret)
+set.seed(200) 
+train.control <- trainControl(method = "cv", number = 10)
+# Train the model
+a1.crossmodelmlr <- train(a1 ~ size + PO4, data = train.data, method = "lm",
+               trControl = train.control)
+# Summarize the results
+print(a1.crossmodelmlr)
+```
+
+
+```{r, eval=FALSE}
+# playing around for understanding the process
+a1pred <- predict(mlrmod2, traintest.data)
+
+actuals_pred <- data.frame(cbind(actuals=newtrain.data$a1, predicteds=a1pred))
+
+correlation_accuracy<- cor(actuals_pred)
+
+head(actuals_pred)
+```
+
+
+## Polynomials
+
+Adding polynomials
+
+```{r}
+
+# test it from mlr4
+
+a1.testpoly <- glm(a1 ~ size + PO4, data=newtrain.data)
+summary(a1.testpoly)
+# use of poly
+
+a1.testpolymod1 <- glm(a1 ~ poly(as.numeric(size),2) + poly(PO4,2), data=newtrain.data)
+summary(a1.testpolymod1)
+
+a1.test.pred.poly <- predict(a1.testpolymod1,traintest.data) 
+ 
+a1.RMSE.polymod <- sqrt(mean((a1.test.pred.poly-traintest.data$a1)^2))
+a1.RMSE.polymod
+
+a1.MAE.polymod <- mean(abs(a1.test.pred.poly-traintest.data$a1))
+a1.MAE.polymod
+
+# checking for higher polyys
+
+a1.testpolymod2 <- glm(a1 ~ poly(as.numeric(size),2) + poly(PO4,3), data=newtrain.data)
+summary(a1.testpolymod2)
+
+a1.test.pred.poly2 <- predict(a1.testpolymod2,traintest.data) 
+ 
+a1.RMSE.polymod2 <- sqrt(mean((a1.test.pred.poly2-traintest.data$a1)^2))
+a1.RMSE.polymod2
+
+a1.MAE.polymod2 <- mean(abs(a1.test.pred.poly2-traintest.data$a1))
+a1.MAE.polymod2
+
+# Worse, a1.testpolymod1 best choice, less polys?
+
+a1.testpolymod3 <- glm(a1 ~ poly(PO4,3), data=newtrain.data)
+summary(a1.testpolymod3)
+
+a1.test.pred.poly3 <- predict(a1.testpolymod3,traintest.data) 
+ 
+a1.RMSE.polymod3 <- sqrt(mean((a1.test.pred.poly3-traintest.data$a1)^2))
+a1.RMSE.polymod3
+
+a1.MAE.polymod3 <- mean(abs(a1.test.pred.poly3-traintest.data$a1))
+a1.MAE.polymod3
+
+# worse
+
+```
+
+
+```{r}
+## plot the rmse
+models.rmse <- tibble(
+            model = paste0("model.pd",c(1,2,3)),
+						RMSE= c(
+							c.rmse(traintest.data$a1,predict(a1.testpolymod1,traintest.data)),
+              c.rmse(traintest.data$a1,predict(a1.testpolymod2,traintest.data)),
+							c.rmse(traintest.data$a1,predict(a1.testpolymod3,traintest.data))
+							)
+					)
+models.rmse
+a1.ncoef <- function(model){
+	model %>%
+    coefficients %>%
+    length %>%
+    {. - 1}
+}
+
+
+models.rmse$a1.ncoef <- c(a1.ncoef(a1.testpolymod1),
+                        a1.ncoef(a1.testpolymod2),
+                        a1.ncoef(a1.testpolymod3))
+
+models.rmse %>%
+  ggplot(aes(x=a1.ncoef, y= RMSE)) +
+  geom_line(color = "dodgerblue") + 
+  geom_point(color = "dodgerblue") +
+  scale_x_continuous(breaks = c(0,1,2,3,4,5,6,7,8,9,10) )
+
+
+# plot the fit
+
+a1.fitp1 <- lm(a1 ~ poly(as.numeric(size),2) + poly(PO4,2), data=train.data )
+summary(a1.fitp1)
+
+a1.fitp2 <- lm(a1 ~ poly(as.numeric(size),2) + poly(PO4,3), data=train.data )
+summary(a1.fitp2)
+
+a1.fitp3<- lm(a1 ~ poly(PO4,3), data=train.data )
+summary(a1.fitp3)
+
+
+train.data <- train.data %>%
+	mutate(fit1 = predict(a1.fitp1),
+	fit2 = predict(a1.fitp2),
+	fit3 = predict(a1.fitp3))
+
+#  visualization: doesnt make so much sense, but at least having it visualized / too many variables
+
+cols <- c( "Deg.2", "Deg.1")
+train.data %>% 
+	ggplot(aes(x=a1, y=PO4)) +
+	geom_point() +
+	geom_line(aes(y=fit1, color="deg 4"), size =1) +
+	geom_line(aes(y=fit2, color="deg 5"), size =1) +
+  geom_line(aes(y=fit3, color="deg 3"), size =1) +
+	theme(legend.title = element_blank(), 
+		legend.position = "bottom", 
+		legend.direction = "horizontal")
+
+```
+
+
+## Log Linear Model
+
+```{r}
+
+a1.testlogmod <- lm(log(a1+1) ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data=newtrain.data)
+summary(a1.testlogmod)
+
+exp(a1.testlogmod$coefficients["NO3"])
+
+a1.test.pred.log <- (predict(a1.testlogmod,traintest.data))
+ 
+a1.RMSE.testlog <- sqrt(mean((a1.test.pred.log-traintest.data$a1)^2))
+a1.RMSE.testlog
+
+a1.MAE.testlog <- mean(abs(a1.test.pred.log-traintest.data$a1))
+a1.MAE.testlog
+
+# deleting the totally unsignificant
+
+a1.testlogmod1 <- lm(log(a1+1) ~ season + size + speed + NO3 + PO4 , data=newtrain.data)
+summary(a1.testlogmod1)
+a1.testlogmod1$coefficients
+
+exp(a1.testlogmod1$coefficients)
+
+a1.test.pred.log2 <- (predict(a1.testlogmod1,traintest.data))
+ 
+a1.RMSE.testlog2 <- sqrt(mean((a1.test.pred.log2-traintest.data$a1)^2))
+a1.RMSE.testlog2
+
+a1.MAE.testlog2 <- mean(abs(a1.test.pred.log2-traintest.data$a1))
+a1.MAE.testlog2
+
+# not increasing, a1.testlogmod better
+
+```
+
+
+
+## Trees
+
+```{r}
+require(rpart)
+require(rattle)
+# prepare the testing
+
+a1.testtreemod <- rpart(a1 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data = newtrain.data,method="anova")
+
+a1.test.pred.treemod <- predict(a1.testtreemod,traintest.data) 
+ 
+a1.RMSE.treemod <- sqrt(mean((a1.test.pred.treemod-traintest.data$a1)^2))
+a1.RMSE.treemod
+
+a1.MAE.treemod <- mean(abs(a1.test.pred.treemod-traintest.data$a1))
+a1.MAE.treemod
+
+# pruning it
+
+printcp(a1.testtreemod)
+
+min.xerror <- a1.testtreemod$cptable[which.min(a1.testtreemod$cptable[,"xerror"]),"CP"]
+
+a1.treemod <- prune(a1.testtreemod, cp = min.xerror)
+summary(a1.treemod)
+
+a1.test.pred.treemod2 <- predict(a1.treemod,traintest.data) 
+ 
+a1.RMSE.treemod2 <- sqrt(mean((a1.test.pred.treemod2-traintest.data$a1)^2))
+a1.RMSE.treemod2
+
+a1.MAE.treemod2 <- mean(abs(a1.test.pred.treemod2-traintest.data$a1))
+a1.MAE.treemod2
+
+plot(a1.treemod)
+text(a1.treemod, pretty = 0)
+
+```
+
+## RandomForest
+
+```{r}
+# test it
+require(randomForest)
+require(rattle)
+set.seed(200)
+a1.forestmod <- randomForest(a1 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data = newtrain.data, na.action = na.omit, importance = TRUE, ntree=1000)
+
+which.min(a1.forestmod$mse)
+
+
+print(a1.forestmod)
+plot(a1.forestmod)
+
+# understanding the importance of each variable
+# a1.forestmodimp <- as.data.frame(sort(importance(a1.forestmod)[,1],decreasing = TRUE),optional = T)
+# names(a1.forestmodimp) <- "% Inc MSE"
+# a1.forestmodimp
+a1.forestmod$importance
+
+a1.testforest <- predict(a1.forestmod,traintest.data)
+a1.RMSE.forestmod <- sqrt(mean((a1.testforest-traintest.data$a1)^2))
+a1.RMSE.forestmod
+ 
+a1.MAE.forestmod <- mean(abs(a1.testforest-traintest.data$a1))
+a1.MAE.forestmod
+```
+
+```{r}
+a1.accuracy <- data.frame(Method = c("MLR","Poly LR","Log LR","Pruned Tree","RandomForest"),
+                         a1.RMSE   = c(a1.RMSE.testmlr4,a1.RMSE.polymod,a1.RMSE.testlog,a1.RMSE.treemod2
+,a1.RMSE.forestmod),
+                         a1.MAE    = c(a1.MAE.testmlr4,a1.MAE.polymod,a1.MAE.testlog,a1.MAE.treemod2,a1.MAE.forestmod)) 
+
+a1.accuracy
+
+```
+
+The table shows that Random Forest is the best method for a1.
+
+Now we make the prediction:
+
+```{r}
+a1.to.pred <-randomForest(a1 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data = train.data, na.action = na.omit, importance = TRUE, ntree=1000)
+
+a1.pred <- predict(a1.to.pred, test.data)
+a1.pred
+# all negative values to zero
+a1.pred[a1.pred<0] <- 0
+summary(a1.pred)
+# just to have a comparison
+summary(train.data$a1)
+```

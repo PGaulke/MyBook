@@ -1,6 +1,6 @@
 ---
 title: "09_Ersatz"
-author: "CTrierweiler, PGaulke"
+author: "CTrierweiler,PGaulke"
 date: "24 Juli 2019"
 output: html_document
 ---
@@ -77,12 +77,12 @@ featurePlot(x = default_trn[, c("balance", "income")],
 
 Some notes about the arguments to this function according to David Dalpiaz:
 
-- `x` is a data frame containing only numeric predictors. It would be nonsensical to estimate a density for a categorical predictor.
+- `x` is a data frame containing only **numeric predictors**. It would be nonsensical to estimate a density for a categorical predictor.
 - `y` is the response variable. It needs to be a factor variable. If coded as `0` and `1`, you will need to coerce to factor for plotting.
 - `plot` specifies the type of plot, here `density`.
 - `scales` defines the scale of the axes for each plot. By default, the axis of each plot would be the same, which often is not useful, so the arguments here, a different axis for each plot, will almost always be used.
 - `adjust` specifies the amount of smoothing used for the density estimate.
-- `pch` specifies the plot character used for the bottom of the plot.
+- `pch` specifies the **p**lot **ch**aracter used for the bottom of the plot.
 - `layout` places the individual plots into rows and columns. For some odd reason, it is given as (col, row).
 - `auto.key` defines the key at the top of the plot. The number of columns should be the number of categories.
 
@@ -119,7 +119,7 @@ featurePlot(x = default_trn[, c("balance", "income")],
             auto.key = list(columns = 2))
 ```
 
-Similar to `pairs` is a plot of type `ellipse`, which requires the `ellipse` package. Here, only numeric predictors are used, as essentially,  multivariate normality is assumed. The ellipses mark points of equal density. 
+Similar to `pairs` is a plot of type `ellipse`, which requires the `ellipse` package. Here we only use numeric predictors, as essentially we are assuming multivariate normality. The ellipses mark points of equal density. This will be useful later when discussing LDA and QDA.
 
 Example: Credit Card Default 
 
@@ -187,7 +187,7 @@ A further issue is that the predicted probabilty is less than 0.
 ```{r}
 any(predict(model_lm) < 0)
 ```
-## Logistic regression 
+# Logistic regression 
 
 $$p(x) = P(Y = 1 \mid {X = x})$$
 
@@ -240,97 +240,4 @@ This plot contains a wealth of information.
 - The orange `|` characters are the data, $(x_i, y_i)$.
 - The blue "curve" is the predicted probabilities given by the fitted logistic regression. That is,
 $$\hat{p}(x) = \hat{P}(Y = 1 \mid { X = x})$$
-- The solid vertical black line represents the decision boundary the `balance` that obtains a predicted probability of 0.5. In this case `balance` = `r -coef(model_glm)[1] / coef(model_glm)[2]`.
-
-
-## Receiver Operating Characteristics Curve
-
-In data science for business, performance management is a fundamental task. In a classification problem, the AUC (Area Under The Curve) and ROC (Receiver Operating Characteristics) can be counted. The AUC-ROC curve can be used when it is helpful to check or visualize the performance of classification problems. This method is one of the most useful evaluation metrics for checking any classification model's performance. 
-
-
-In order to introduce this method, the simple model with only blance as a predictor is used. 
-
-```{r}
-model_glm = glm(default ~ balance, data = default_trn, family = "binomial")
-```
-
-
-The first step is to write the function in such a way that it is possible to make predictions beased on different cutoffs. 
-
-```{r}
-get_logistic_pred = function(mod, data, res = "y", pos = 1, neg = 0, cut = 0.5) {
-  probs = predict(mod, newdata = data, type = "response")
-  ifelse(probs > cut, pos, neg)
-}
-```
-
-
-$$
-\hat{C}(x) = 
-\begin{cases} 
-      1 & \hat{p}(x) > c \\
-      0 & \hat{p}(x) \leq c 
-\end{cases}
-$$
-
-The second step will be to receive predictions using a low (0.1), medium (0.5) and high(0.9) cutoff. 
-
-```{r}
-test_pred_10 = get_logistic_pred(model_glm, data = default_tst, res = "default", 
-                                 pos = "Yes", neg = "No", cut = 0.1)
-test_pred_50 = get_logistic_pred(model_glm, data = default_tst, res = "default", 
-                                 pos = "Yes", neg = "No", cut = 0.5)
-test_pred_90 = get_logistic_pred(model_glm, data = default_tst, res = "default", 
-                                 pos = "Yes", neg = "No", cut = 0.9)
-```
-
-The thrid step will be that the accurarcy, sensitivity and specificity for these classifiers are evaluated. 
-
-
-
-```{r}
-test_tab_10 = table(predicted = test_pred_10, actual = default_tst$default)
-test_tab_50 = table(predicted = test_pred_50, actual = default_tst$default)
-test_tab_90 = table(predicted = test_pred_90, actual = default_tst$default)
-
-test_con_mat_10 = confusionMatrix(test_tab_10, positive = "Yes")
-test_con_mat_50 = confusionMatrix(test_tab_50, positive = "Yes")
-test_con_mat_90 = confusionMatrix(test_tab_90, positive = "Yes")
-```
-
-```{r}
-metrics = rbind(
-  
-  c(test_con_mat_10$overall["Accuracy"], 
-    test_con_mat_10$byClass["Sensitivity"], 
-    test_con_mat_10$byClass["Specificity"]),
-  
-  c(test_con_mat_50$overall["Accuracy"], 
-    test_con_mat_50$byClass["Sensitivity"], 
-    test_con_mat_50$byClass["Specificity"]),
-  
-  c(test_con_mat_90$overall["Accuracy"], 
-    test_con_mat_90$byClass["Sensitivity"], 
-    test_con_mat_90$byClass["Specificity"])
-
-)
-
-rownames(metrics) = c("c = 0.10", "c = 0.50", "c = 0.90")
-metrics
-```
-Interpretation: It can be seen that the sensitivity gets lower as the cutoff gets higher. Reversely the specificity gets higher as the cutoff gets higher. This is a very helpful fact to know when it would be interesting to get information in a particular error, instead of giving them equal weight. 
-
-An important notice is that usually the best accurary will be near c = 0.5
-
-However, creating the receiver operating characteristics cure which will sweep through all possible cutoffs and plots the sensitivity and specificity will be more effective than manually checking the cutoffs. 
-
-```{r}
-library(pROC)
-test_prob = predict(model_glm, newdata = default_tst, type = "response")
-test_roc = roc(default_tst$default ~ test_prob, plot = TRUE, print.auc = TRUE)
-```
-
-```{r}
-as.numeric(test_roc$auc)
-```
-Interpretation: A good model will have a high AUC, that is as often as possible a high sensitivity and specificity.
+- The solid vertical black line represents the **[decision boundary](https://en.wikipedia.org/wiki/Decision_boundary)**, the `balance` that obtains a predicted probability of 0.5. In this case `balance` = `r -coef(model_glm)[1] / coef(model_glm)[2]`.

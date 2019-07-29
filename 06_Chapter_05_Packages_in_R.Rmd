@@ -493,7 +493,7 @@ The fiveth function `summarise` provides the possibility to create a new data fr
 
 The expr means a function on a vector, repsectively a variable.
 
-```{r}
+```{r, eval = FALSE}
 # The empty call is (base R)
 # summarise(df, name = expr)
 # or with piping...
@@ -505,6 +505,7 @@ summarise(mtcars, averagepower = mean(hp))
 mtcars %>%
   summarise(averagepower = mean(hp))
 ```  
+
 Again, helper function can be found in the help section `?summarise`
 
 

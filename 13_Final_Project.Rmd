@@ -1,0 +1,124 @@
+---
+title: "13_Solution"
+date: "26 Juli 2019"
+output: html_document
+---
+
+# (PART) Final Project - Task {-}
+
+# Preparing for a Prediction on test.data
+
+To get prepared (this is repetitively down for every applied method in order to avoid messing up the data):
+
+```{r}
+require(tidyverse)
+require(ISLR)
+require(magrittr)
+require(caret)
+require(tree)
+require(randomForest)
+
+
+load("C:/Users/admin/Dropbox/Master/2. Semester/Data Science/MyBook/project_data.Rdata")
+summary(train.data)
+summary(test.data)
+
+# train.data %>% is.na %>% rowSums %>% table
+
+# 11 variables for frequency of seven plants
+# task: The test.data has the same structure but does not contain the frequencies for each of the 7 plants. Your
+# goal is precisely to estimate them for the 140 observations
+```
+
+```{r, eval=FALSE}
+# variables:character to numeric / this might not be needed, but could be
+# for train.data
+train.data$season = as.numeric(c("spring" = "1", "summer" = "2", "autumn" = "3", "winter" = "4")[train.data$season])
+
+train.data$size = as.numeric(c("small" = "1", "medium" = "2", "large" = "3")[train.data$size])
+
+train.data$speed = as.numeric(c("low" = "1", "medium" = "2", "high" = "3")[train.data$speed])
+# the higher, the later. the higher, the larger. the higher, faster.
+
+# for test.data
+
+test.data$season = as.numeric(c("spring" = "1", "summer" = "2", "autumn" = "3", "winter" = "4")[test.data$season])
+
+test.data$size = as.numeric(c("small" = "1", "medium" = "2", "large" = "3")[test.data$size])
+
+test.data$speed = as.numeric(c("low" = "1", "medium" = "2", "high" = "3")[test.data$speed])
+
+
+```
+
+```{r}
+# need to take care of na's
+
+# options: delete na or replace with the mean
+
+# delete na (worse choice)
+#is.na(train.data)
+#na.omit(train.data)
+
+# replace missing value with the mean (and avoid a loop!)
+
+train.data$mxPH[is.na(train.data$mxPH)] <- round(mean(train.data$mxPH, na.rm = TRUE))
+train.data$mnO2[is.na(train.data$mnO2)] <- round(mean(train.data$mnO2, na.rm = TRUE))
+train.data$Cl[is.na(train.data$Cl)] <- round(mean(train.data$Cl, na.rm = TRUE))
+train.data$NO3[is.na(train.data$NO3)] <- round(mean(train.data$NO3, na.rm = TRUE))
+train.data$NH4[is.na(train.data$NH4)] <- round(mean(train.data$NH4, na.rm = TRUE))
+train.data$oPO4[is.na(train.data$oPO4)] <- round(mean(train.data$oPO4, na.rm = TRUE))
+train.data$PO4[is.na(train.data$PO4)] <- round(mean(train.data$PO4, na.rm = TRUE))
+train.data$Chla[is.na(train.data$Chla)] <- round(mean(train.data$Chla, na.rm = TRUE))
+
+# the same with the test.data
+test.data$mxPH[is.na(test.data$mxPH)] <- round(mean(test.data$mxPH, na.rm = TRUE))
+test.data$mnO2[is.na(test.data$mnO2)] <- round(mean(test.data$mnO2, na.rm = TRUE))
+test.data$Cl[is.na(test.data$Cl)] <- round(mean(test.data$Cl, na.rm = TRUE))
+test.data$NO3[is.na(test.data$NO3)] <- round(mean(test.data$NO3, na.rm = TRUE))
+test.data$NH4[is.na(test.data$NH4)] <- round(mean(test.data$NH4, na.rm = TRUE))
+test.data$oPO4[is.na(test.data$oPO4)] <- round(mean(test.data$oPO4, na.rm = TRUE))
+test.data$PO4[is.na(test.data$PO4)] <- round(mean(test.data$PO4, na.rm = TRUE))
+test.data$Chla[is.na(test.data$Chla)] <- round(mean(test.data$Chla, na.rm = TRUE))
+
+```
+
+This is however also repetitively down which is actually not necessary, or even misleading. However, this is only repetivey as long as the document is WIP. When finished, the other chunks for the creation of testing data will `eval=FALSE`
+
+```{r}
+#create test data
+set.seed(200)
+num_obs = nrow(train.data)
+
+train.index = sample(num_obs, size = trunc(0.50 * num_obs))
+newtrain.data = train.data[train_index, ]
+traintest.data = train.data[-train_index, ]
+
+
+# replace again missing valuesith the mean (and avoid a loop!)
+
+newtrain.data$mxPH[is.na(newtrain.data$mxPH)] <- round(mean(newtrain.data$mxPH, na.rm = TRUE))
+newtrain.data$mnO2[is.na(newtrain.data$mnO2)] <- round(mean(newtrain.data$mnO2, na.rm = TRUE))
+newtrain.data$Cl[is.na(newtrain.data$Cl)] <- round(mean(newtrain.data$Cl, na.rm = TRUE))
+newtrain.data$NO3[is.na(newtrain.data$NO3)] <- round(mean(newtrain.data$NO3, na.rm = TRUE))
+newtrain.data$NH4[is.na(newtrain.data$NH4)] <- round(mean(newtrain.data$NH4, na.rm = TRUE))
+newtrain.data$oPO4[is.na(newtrain.data$oPO4)] <- round(mean(newtrain.data$oPO4, na.rm = TRUE))
+newtrain.data$PO4[is.na(newtrain.data$PO4)] <- round(mean(newtrain.data$PO4, na.rm = TRUE))
+newtrain.data$Chla[is.na(newtrain.data$Chla)] <- round(mean(newtrain.data$Chla, na.rm = TRUE))
+
+# to to the same with the new test.data
+traintest.data$mxPH[is.na(traintest.data$mxPH)] <- round(mean(traintest.data$mxPH, na.rm = TRUE))
+traintest.data$mnO2[is.na(traintest.data$mnO2)] <- round(mean(traintest.data$mnO2, na.rm = TRUE))
+traintest.data$Cl[is.na(traintest.data$Cl)] <- round(mean(traintest.data$Cl, na.rm = TRUE))
+traintest.data$NO3[is.na(traintest.data$NO3)] <- round(mean(traintest.data$NO3, na.rm = TRUE))
+traintest.data$NH4[is.na(traintest.data$NH4)] <- round(mean(traintest.data$NH4, na.rm = TRUE))
+traintest.data$oPO4[is.na(traintest.data$oPO4)] <- round(mean(traintest.data$oPO4, na.rm = TRUE))
+traintest.data$PO4[is.na(traintest.data$PO4)] <- round(mean(traintest.data$PO4, na.rm = TRUE))
+traintest.data$Chla[is.na(traintest.data$Chla)] <- round(mean(traintest.data$Chla, na.rm = TRUE))
+summary(newtrain.data)
+summary(traintest.data)
+```
+
+
+
+

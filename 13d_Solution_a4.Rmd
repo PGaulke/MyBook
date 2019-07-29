@@ -1,0 +1,325 @@
+---
+title: "12d_Solution_a4"
+author: "CTrierweiler,PGaulke"
+date: "29 Juli 2019"
+output: html_document
+---
+
+# Develop the Model for a4 
+
+Methods that will be tested:
+
+- Multiple Linear Regression
+- Linear regression with polynomials
+- Log Linear Regression
+- Trees
+- RandomForest
+
+Logistic regression is not applicable on this data set as the response is not binary.
+
+## Multiple Linear Regression
+
+```{r}
+
+a4.testmlrmod <- lm(a4 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data=newtrain.data)
+summary(a4.testmlrmod)
+
+a4.test.pred.mlr <- (predict(a4.testmlrmod,traintest.data))
+ 
+a4.RMSE.testmlr <- sqrt(mean((a4.test.pred.mlr-traintest.data$a4)^2))
+a4.RMSE.testmlr
+
+a4.MAE.testmlr <- mean(abs(a4.test.pred.mlr-traintest.data$a4))
+a4.MAE.testmlr
+
+# Reducing the variables
+a4.testmlrmod2 <- lm(a4 ~ mxPH + NH4 + mnO2 , data=newtrain.data)
+summary(a4.testmlrmod2)
+
+a4.test.pred.mlr2 <- (predict(a4.testmlrmod2,traintest.data))
+ 
+a4.RMSE.testmlr2 <- sqrt(mean((a4.test.pred.mlr2-traintest.data$a4)^2))
+a4.RMSE.testmlr2
+
+a4.MAE.testmlr2 <- mean(abs(a4.test.pred.mlr2-traintest.data$a4))
+a4.MAE.testmlr2
+
+# Figure the best out compared to mlr2 
+
+a4.testmlrmod3 <- lm(a4 ~  mxPH  * mnO2 , data=newtrain.data)
+
+summary(a4.testmlrmod3)
+
+a4.test.pred.mlr3 <- (predict(a4.testmlrmod3,traintest.data))
+ 
+a4.RMSE.testmlr3 <- sqrt(mean((a4.test.pred.mlr3-traintest.data$a4)^2))
+a4.RMSE.testmlr3
+
+a4.MAE.testmlr3 <- mean(abs(a4.test.pred.mlr3-traintest.data$a4))
+a4.MAE.testmlr3
+
+# a4-testmlrmod3 as best choice
+
+```
+
+Trying k-fold cross validation
+
+```{r}
+require(caret)
+set.seed(200) 
+train.control <- trainControl(method = "cv", number = 10)
+# Train the model
+a4.crossmodelmlr <- train(a4 ~ mxPH + NH4 + mnO2, data = train.data, method = "lm",
+               trControl = train.control)
+# Summarize the results
+print(a4.crossmodelmlr)
+```
+
+
+## Polynomials
+
+Adding polynomials
+
+```{r}
+
+# test it from mlr2
+
+a4.testpoly <- glm(a4 ~ mxPH + NH4 + mnO2, data=newtrain.data)
+summary(a4.testpoly)
+
+# use of poly
+
+a4.testpolymod1 <- glm(a4 ~ poly(mxPH,2) * poly(mnO2,2), data=newtrain.data)
+summary(a4.testpolymod1)
+
+a4.test.pred.poly <- predict(a4.testpolymod1,traintest.data) 
+ 
+a4.RMSE.polymod <- sqrt(mean((a4.test.pred.poly-traintest.data$a4)^2))
+a4.RMSE.polymod
+
+a4.MAE.polymod <- mean(abs(a4.test.pred.poly-traintest.data$a4))
+a4.MAE.polymod
+
+# checking for adjusted polys
+
+a4.testpolymod2 <- glm(a4 ~ poly(mxPH,2) * poly(mnO2,1), data=newtrain.data)
+summary(a4.testpolymod2)
+
+a4.test.pred.poly2 <- predict(a4.testpolymod2,traintest.data) 
+ 
+a4.RMSE.polymod2 <- sqrt(mean((a4.test.pred.poly2-traintest.data$a4)^2))
+a4.RMSE.polymod2
+
+a4.MAE.polymod2 <- mean(abs(a4.test.pred.poly2-traintest.data$a4))
+a4.MAE.polymod2
+
+# Best poly is a4.testpolymod2, adjust?
+
+a4.testpolymod3 <- glm(a4 ~ poly(NH4,2), data=newtrain.data)
+summary(a4.testpolymod3)
+
+a4.test.pred.poly3 <- predict(a4.testpolymod3,traintest.data) 
+ 
+a4.RMSE.polymod3 <- sqrt(mean((a4.test.pred.poly3-traintest.data$a4)^2))
+a4.RMSE.polymod3
+
+a4.MAE.polymod3 <- mean(abs(a4.test.pred.poly3-traintest.data$a4))
+a4.MAE.polymod3
+
+# worse
+
+```
+
+
+```{r}
+## plot the rmse
+a4.models.rmse <- tibble(
+            a4.model = paste0("model.pd",c(1,2,3)),
+						RMSE= c(
+							c.rmse(traintest.data$a4,predict(a4.testpolymod1,traintest.data)),
+              c.rmse(traintest.data$a4,predict(a4.testpolymod2,traintest.data)),
+							c.rmse(traintest.data$a4,predict(a4.testpolymod3,traintest.data))
+							)
+					)
+a4.models.rmse
+a4.ncoef <- function(a4.model){
+	a4.model %>%
+    coefficients %>%
+    length %>%
+    {. - 1}
+}
+
+
+a4.models.rmse$a4.ncoef <- c(a4.ncoef(a4.testpolymod1),
+                        a4.ncoef(a4.testpolymod2),
+                        a4.ncoef(a4.testpolymod3))
+
+a4.models.rmse %>%
+  ggplot(aes(x=a4.ncoef, y= RMSE)) +
+  geom_line(color = "dodgerblue") + 
+  geom_point(color = "dodgerblue") +
+  scale_x_continuous(breaks = c(0,1,2,3,4,5,6,7,8,9,10) )
+
+# plot the fit
+
+a4.fitp1 <- lm(a4 ~ poly(mxPH,2) * poly(mnO2,1), data=train.data )
+summary(a4.fitp1)
+
+a4.fitp2 <- lm(a4 ~ poly(mxPH,2) * poly(mnO2,2), data=train.data )
+summary(a4.fitp2)
+
+a4.fitp3 <- lm(a4 ~ poly(NH4,2), data=train.data )
+summary(a4.fitp3)
+
+
+train.data <- train.data %>%
+	mutate(fit1 = predict(a4.fitp1),
+	fit2 = predict(a4.fitp2),
+	fit3 = predict(a4.fitp3))
+
+#  visualization: doesnt make so much sense, but at least having it visualized / too many variables
+
+cols <- c( "Deg.2", "Deg.1")
+train.data %>% 
+	ggplot(aes(x=a4, y=mxPH)) +
+	geom_point() +
+	geom_line(aes(y=fit1, color="deg 4"), size =1) +
+	geom_line(aes(y=fit2, color="deg 3"), size =1) +
+	geom_line(aes(y=fit3, color="deg 2"), size =1) +
+	theme(legend.title = element_blank(), 
+		legend.position = "bottom", 
+		legend.direction = "horizontal")
+
+```
+
+
+## Log Linear Model
+
+```{r}
+
+a4.testlogmod <- lm(log(a4+1) ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data=newtrain.data)
+summary(a4.testlogmod)
+
+exp(a4.testlogmod$coefficients)
+
+a4.test.pred.log <- (predict(a4.testlogmod,traintest.data))
+ 
+a4.RMSE.testlog <- sqrt(mean((a4.test.pred.log-traintest.data$a4)^2))
+a4.RMSE.testlog
+
+a4.MAE.testlog <- mean(abs(a4.test.pred.log-traintest.data$a4))
+a4.MAE.testlog
+
+# deleting the totally unsignificant
+
+a4.testlogmod1 <- lm(log(a4+1) ~ mxPH  * mnO2 , data=newtrain.data)
+summary(a4.testlogmod1)
+a4.testlogmod1$coefficients
+
+exp(a4.testlogmod1$coefficients)
+
+a4.test.pred.log2 <- (predict(a4.testlogmod1,traintest.data))
+ 
+a4.RMSE.testlog2 <- sqrt(mean((a4.test.pred.log2-traintest.data$a4)^2))
+a4.RMSE.testlog2
+
+a4.MAE.testlog2 <- mean(abs(a4.test.pred.log2-traintest.data$a4))
+a4.MAE.testlog2
+
+# not increasing, a4.testlogmod1 better
+
+```
+
+## Trees
+
+```{r, error=TRUE}
+require(rpart)
+require(rattle)
+# prepare the testing
+
+a4.testtreemod <- rpart(a4 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data = newtrain.data,method="anova")
+
+a4.test.pred.treemod <- predict(a4.testtreemod,traintest.data) 
+ 
+a4.RMSE.treemod <- sqrt(mean((a4.test.pred.treemod-traintest.data$a4)^2))
+a4.RMSE.treemod
+
+a4.MAE.treemod <- mean(abs(a4.test.pred.treemod-traintest.data$a4))
+a4.MAE.treemod
+
+# pruning it
+
+printcp(a4.testtreemod)
+
+min.xerror <- a4.testtreemod$cptable[which.min(a4.testtreemod$cptable[,"xerror"]),"CP"]
+
+a4.treemod <- prune(a4.testtreemod, cp = min.xerror)
+summary(a4.treemod)
+
+a4.test.pred.treemod2 <- predict(a4.treemod,traintest.data) 
+ 
+a4.RMSE.treemod2 <- sqrt(mean((a4.test.pred.treemod2-traintest.data$a4)^2))
+a4.RMSE.treemod2
+
+a4.MAE.treemod2 <- mean(abs(a4.test.pred.treemod2-traintest.data$a4))
+a4.MAE.treemod2
+
+plot(a4.treemod)
+text(a4.treemod, pretty = 0)
+
+```
+
+## RandomForest
+
+```{r}
+# test it
+require(randomForest)
+require(rattle)
+set.seed(200)
+a4.forestmod <- randomForest(a4 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla, data = newtrain.data, na.action = na.omit, importance = TRUE, ntree=1000)
+
+which.min(a4.forestmod$mse)
+
+
+print(a4.forestmod)
+plot(a4.forestmod)
+
+# understanding the importance of each variable
+# a4.forestmodimp <- as.data.frame(sort(importance(a4.forestmod)[,1],decreasing = TRUE),optional = T)
+# names(a4.forestmodimp) <- "% Inc MSE"
+# a4.forestmodimp
+a4.forestmod$importance
+
+a4.testforest <- predict(a4.forestmod,traintest.data)
+a4.RMSE.forestmod <- sqrt(mean((a4.testforest-traintest.data$a4)^2))
+a4.RMSE.forestmod
+ 
+a4.MAE.forestmod <- mean(abs(a4.testforest-traintest.data$a4))
+a4.MAE.forestmod
+```
+
+```{r}
+a4.accuracy <- data.frame(Method = c("MLR","Poly LR","Log LR","Pruned Tree","RandomForest"),
+                         a4.RMSE   = c(a4.RMSE.testmlr3,a4.RMSE.polymod2,a4.RMSE.testlog2,a4.RMSE.treemod2
+,a4.RMSE.forestmod),
+                         a4.MAE    = c(a4.MAE.testmlr3,a4.MAE.polymod2,a4.MAE.testlog2,a4.MAE.treemod2,a4.MAE.forestmod)) 
+
+a4.accuracy
+
+```
+
+The table shows that MLR is the best method for a4.
+
+Now we make the prediction:
+
+```{r}
+a4.to.pred <-lm(a4 ~  mxPH  * mnO2, data = train.data)
+
+a4.pred <- predict(a4.to.pred, test.data)
+a4.pred
+# all negative values to zero
+a4.pred[a4.pred<0] <- 0
+summary(a4.pred)
+# just to have a comparison
+summary(train.data$a4)
+```

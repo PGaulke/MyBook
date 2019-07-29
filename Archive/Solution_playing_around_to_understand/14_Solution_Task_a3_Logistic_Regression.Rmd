@@ -1,0 +1,151 @@
+---
+title: "14_Solution_Task_Logistic_Regression"
+author: "CTrierweiler, PGaulke"
+date: "28 Juli 2019"
+output: html_document
+---
+
+```{r, include=FALSE}
+
+# to get prepared
+require(tidyverse)
+require(ISLR)
+require(magrittr)
+
+
+load("C:/Users/admin/Dropbox/Master/2. Semester/Data Science/MyBook/project_data.Rdata")
+summary(train.data)
+summary(test.data)
+
+# 11 variables for frequency of seven plants
+# task: The test.data has the same structure but does not contain the frequencies for each of the 7 plants. Your
+# goal is precisely to estimate them for the 140 observations
+
+# variables:character to numeric
+# for train.data
+train.data$season = as.numeric(c("spring" = "1", "summer" = "2", "autumn" = "3", "winter" = "4")[train.data$season])
+
+train.data$size = as.numeric(c("small" = "1", "medium" = "2", "large" = "3")[train.data$size])
+
+train.data$speed = as.numeric(c("low" = "1", "medium" = "2", "high" = "3")[train.data$speed])
+
+
+# for test.data
+
+test.data$season = as.numeric(c("spring" = "1", "summer" = "2", "autumn" = "3", "winter" = "4")[test.data$season])
+
+test.data$size = as.numeric(c("small" = "1", "medium" = "2", "large" = "3")[test.data$size])
+
+test.data$speed = as.numeric(c("low" = "1", "medium" = "2", "high" = "3")[test.data$speed])
+
+
+# delete na
+#is.na(train.data)
+#na.omit(train.data)
+
+# replace missing value with the mean (and avoid a loop!)
+
+train.data$mxPH[is.na(train.data$mxPH)] <- round(mean(train.data$mxPH, na.rm = TRUE))
+train.data$mnO2[is.na(train.data$mnO2)] <- round(mean(train.data$mnO2, na.rm = TRUE))
+train.data$Cl[is.na(train.data$Cl)] <- round(mean(train.data$Cl, na.rm = TRUE))
+train.data$NO3[is.na(train.data$NO3)] <- round(mean(train.data$NO3, na.rm = TRUE))
+train.data$NH4[is.na(train.data$NH4)] <- round(mean(train.data$NH4, na.rm = TRUE))
+train.data$oPO4[is.na(train.data$oPO4)] <- round(mean(train.data$oPO4, na.rm = TRUE))
+train.data$PO4[is.na(train.data$PO4)] <- round(mean(train.data$PO4, na.rm = TRUE))
+train.data$Chla[is.na(train.data$Chla)] <- round(mean(train.data$Chla, na.rm = TRUE))
+
+# to to the same with the test.data
+test.data$mxPH[is.na(test.data$mxPH)] <- round(mean(test.data$mxPH, na.rm = TRUE))
+test.data$mnO2[is.na(test.data$mnO2)] <- round(mean(test.data$mnO2, na.rm = TRUE))
+test.data$Cl[is.na(test.data$Cl)] <- round(mean(test.data$Cl, na.rm = TRUE))
+test.data$NO3[is.na(test.data$NO3)] <- round(mean(test.data$NO3, na.rm = TRUE))
+test.data$NH4[is.na(test.data$NH4)] <- round(mean(test.data$NH4, na.rm = TRUE))
+test.data$oPO4[is.na(test.data$oPO4)] <- round(mean(test.data$oPO4, na.rm = TRUE))
+test.data$PO4[is.na(test.data$PO4)] <- round(mean(test.data$PO4, na.rm = TRUE))
+test.data$Chla[is.na(test.data$Chla)] <- round(mean(test.data$Chla, na.rm = TRUE))
+
+```
+
+```{r, include=FALSE}
+#create test data
+set.seed(200)
+num_obs = nrow(train.data)
+
+train.index = sample(num_obs, size = trunc(0.50 * num_obs))
+newtrain.data = train.data[train_index, ]
+traintest.data = train.data[-train_index, ]
+
+
+# replace again missing valuesith the mean (and avoid a loop!)
+
+newtrain.data$mxPH[is.na(newtrain.data$mxPH)] <- round(mean(newtrain.data$mxPH, na.rm = TRUE))
+newtrain.data$mnO2[is.na(newtrain.data$mnO2)] <- round(mean(newtrain.data$mnO2, na.rm = TRUE))
+newtrain.data$Cl[is.na(newtrain.data$Cl)] <- round(mean(newtrain.data$Cl, na.rm = TRUE))
+newtrain.data$NO3[is.na(newtrain.data$NO3)] <- round(mean(newtrain.data$NO3, na.rm = TRUE))
+newtrain.data$NH4[is.na(newtrain.data$NH4)] <- round(mean(newtrain.data$NH4, na.rm = TRUE))
+newtrain.data$oPO4[is.na(newtrain.data$oPO4)] <- round(mean(newtrain.data$oPO4, na.rm = TRUE))
+newtrain.data$PO4[is.na(newtrain.data$PO4)] <- round(mean(newtrain.data$PO4, na.rm = TRUE))
+newtrain.data$Chla[is.na(newtrain.data$Chla)] <- round(mean(newtrain.data$Chla, na.rm = TRUE))
+
+# to to the same with the new test.data
+traintest.data$mxPH[is.na(traintest.data$mxPH)] <- round(mean(traintest.data$mxPH, na.rm = TRUE))
+traintest.data$mnO2[is.na(traintest.data$mnO2)] <- round(mean(traintest.data$mnO2, na.rm = TRUE))
+traintest.data$Cl[is.na(traintest.data$Cl)] <- round(mean(traintest.data$Cl, na.rm = TRUE))
+traintest.data$NO3[is.na(traintest.data$NO3)] <- round(mean(traintest.data$NO3, na.rm = TRUE))
+traintest.data$NH4[is.na(traintest.data$NH4)] <- round(mean(traintest.data$NH4, na.rm = TRUE))
+traintest.data$oPO4[is.na(traintest.data$oPO4)] <- round(mean(traintest.data$oPO4, na.rm = TRUE))
+traintest.data$PO4[is.na(traintest.data$PO4)] <- round(mean(traintest.data$PO4, na.rm = TRUE))
+traintest.data$Chla[is.na(traintest.data$Chla)] <- round(mean(traintest.data$Chla, na.rm = TRUE))
+summary(newtrain.data)
+summary(traintest.data)
+```
+
+
+# Developing a Model for a3 - Logistic Regression
+
+
+```{r, eval = FALSE}
+# test it
+testlogmod <- as.formula("a3 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla")
+
+testlogit <- glm(logmod, data = newtrain.data)
+summary(testlogit)
+
+testlogitMinAIC <- step(testlogit) 
+summary(testlogitMinAIC)
+
+test.pred.logmod <- predict(testlogit,traintest.data) 
+ 
+RMSE.logmod <- sqrt(mean((testlogit-traintest.data$a3)^2))
+RMSE.logmod
+
+MAE.logmod <- mean(abs(testlogit-traintest.data$a3))
+MAE.logmod
+
+# This is simply to working due to the binary nature of a logistic regression. It is not suitable for this kind of calculation
+
+```
+
+
+
+
+```{r}
+# making the prediction
+logmod <- as.formula("a3 ~ season + size + speed + mxPH + mnO2 + Cl + NO3 + NH4 + oPO4 + PO4 + Chla")
+
+logit <- glm(logmod, data = train.data) # Ausgabe der Schätzergebnisse 
+summary(logit)
+
+logitMinAIC <- step(logit) 
+summary(logitMinAIC)
+
+a3pred <- predict(logitMinAIC,test.data)
+a3pred
+
+```
+
+- speed  1   8862.8 1333.8
+- NH4    1   8891.7 1334.5
+- mnO2   1   9506.9 1347.9
+
+However, this method is not suitable for this case as K>2 respectively the response is any numeric.

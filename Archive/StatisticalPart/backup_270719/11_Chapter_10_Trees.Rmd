@@ -1,0 +1,250 @@
+---
+title: "11_Ersatz"
+author: "CTrierweiler,PGaulke"
+date: "24 Juli 2019"
+output: html_document
+---
+# Tree-based methods 
+
+In this chapter, tree-based methods for regression and classification are discussed. These include stratifying or segmenting the predictor space into a number of single regions. Since the set of splitting ruls used to segment the predictor space can be summarized in a tree, these type pf approaches are known as decision tree methods. 
+
+## Pro and Cons of Trees
+
+One the one hand, tree-based methods are simple and useful for interpretation. On the other hand, they are typically not competitive with the best supervised learning approaches in terms of prediction accuracy. Further methods are bagging, random forest, and boosting, which grow multiple trees which are then combined to yield a single consensus prediction. Combining a large number of trees can often result in dramatic improvements in prediction accuracy, at the expense of some loss interpretation. 
+
+## The Basics of Decision Trees 
+
+Decision trees can be used to regression and classification problems. In this chaper, the regression problems are considered first and second the classification problems 
+
+## Example
+
+Baseball salaray data: how to stratify it?
+
+
+```{r}
+require(ggplot2)
+
+data("Hitters")
+
+Hitters  %>%
+  ggplot(aes(x=Years, y=Hits, col=Salary)) +
+  geom_point()
+```
+The salary level is demonstrated in the shaded from low (dark blue) to high (light blue)
+
+## Decision tree for these data 
+
+```{r}
+library(rpart)
+
+b.tree <- rpart(Salary ~ Years + Hits, data = Hitters)
+
+min.of.cp <- b.tree$cptable[which.min(b.tree$cptable[,"xerror"]),"CP"]
+
+pruned.b.tree <- prune(b.tree, cp = min.of.cp)
+plot(pruned.b.tree)
+text(pruned.b.tree, pretty = 0)
+
+```
+Details of the previous figure (Decision tree)
+For the hitters data, a regression tree for predicting the log salary of a baseball player, based on the number of years that he has played in the major leagues and the number of hits that he made in the previous year. At a given internal node, the label (of the form Xj < tk) indicating that the left-hand branch emanating from that split, and the right-hand branch corresponds to Xj >- tk=. For example, the left-hand branc corresponse to years < 4.5, and the right-hand branch corresponds to years >= 4.5 
+The tree has two internal nodes and three terminal nodes, or leaved. The number in each leaf is the mean of the response for the observations that fall there. 
+
+## Terminology for Trees 
+
+- In keeping with the tree analogy, the region R1, R2, R3 are known as terminal nodes. 
+- Decision treers are typically drawn upside down, in the sense that the leaves are at the bottom of the tree.
+- The points along the tree where the predictor space is split are referred to as internal nodes. 
+- In the hitters tree, the two internal nodes are indicated by the text Years < 4.5 and Hits < 117.5. 
+
+## Interpretation of Results 
+
+- Years is the less important factor in determining Salary, and players with less experience earn lower salaries than more experienced players. 
+- Given that a player is less experienced, the number of Hits that he made in the previous year seems to play little role in his Salary. 
+- But among players who have been in the major leagues for five or more years, the number of Hits made in the previous year does affect Salary, and players who made more Hits last year tend to have higher salaries. 
+- Surely an over-simplification, but compared to a regression model, it is easy to display, interpret and explain. 
+
+## Pruning a tree 
+
+A small tree with fewer sploits (that is, fewer regions R1,...Rj) might lead to lower variance and better interpretations at the cost of a little bias. A possible alternative is to grow a tree only so long as the decreas in the RSS due to each split exceeds some (high) threshold. This will in smaller trees, but is too short-sighted: a seemingly worthless split early on in the tree might be followed by a very good split - that is, a split that leads to a large reduction in RSS later on. 
+A better startegy is to grow a very large tree T0, and then prune is back in order to obtain a subtree. Cost complexity pruning - also known as weakest link pruneing - is used to do this. 
+
+
+## Choosing the best subtree
+
+A trade-off betwen the subtree's complexity and its fit to the training data is controlled by the tuning parameter alpha. The optimal alpha is selecting by using the cross-validation. After that, there is a return to the full data set and obtaining the subtree corresponding to alpha.  
+
+## Summary: tree algorithm 
+
+1. Using recursive binary splitting to grow a large tree on the training data, stopping only when each terminal node has fewer than some minimum number of observations. 
+2. Applying cost complexity pruning to the large tree in order to obtain a sequence of besr subtrees, as a function of alpha. 
+3. Using K-fold cross-validation to choose alpha. For each k = 1, ..., K: 
+3.1 Repeating step 1 and 2 on the K-1/Kth fraction of the training data, excluding the kth fold.
+3.2 Evaluating the mean squared prediction error on the data in the left-out kth fold, as a function of alpha.
+Averaging the results, and picking alpha tp minimize the average error. 
+4. Returning the subtree from Step 2 that correspond to the chosen value of alpha. 
+
+
+## Classification Trees
+
+The classification trees are similar to the regression trees. The difference is that the classification trees are used to predict that every observation belongs to the most commonly occuring class of training obervations in the region to which it belongs. 
+
+## Details of classification Trees
+
+As already used in the regression setting, recursive binary splitting are used to grow a classification tree. In the classification setting, RSS cannnot be used as a criterion for making the binary splits. A natural alternative to the RSS is the classification error rate. This is simply the fraction of the training observation in that region that do not belong to the most common class. 
+
+E = 1 - max(^pmk)/k 
+
+Note: ^pmk represents the proportion of training observations in the mth region that are from the kth class. However, classification errror is not sufficiently sensitive for tree-growing, and in practive two other measures are preferable (Gini Index and Deviance)
+
+## Advantages and Disadvantages of Trees
+
+There are four advanatages and one disadvantage of trees. 
+
+The first advantage is that trees are perfect to explain people. 
+The second advantage is that decision trees can be seen as more closely mirror human decision-making than do the regression and classification approaches. 
+The third advantage is that trees can be displayed graphically and can be easily interpretated, even by a non-expert. 
+The forth advanatge is that tree can easily handle qualitative predictors without the need to create dummy variabls. 
+One disadvantage is that trees have not the same level of predictive accurarcy in general, as some of the other regression and classification approaches. 
+
+
+
+## Bagging 
+
+Bagging is one way to fix the over-fitting of trees. It is a general-purpose procedure for the reduction of variance of statistical learning method. Bagging is a useful and frequently method used in the context to decision trees. Bagging is a special form of random forest where `mtry` which is equal to p, the number of predictors. 
+
+Example 
+
+The goal is now to fit a bagged model, by using the package `randomForest`. 
+
+
+```{r, message = FALSE, warning = FALSE}
+require(randomForest)
+require(MASS)
+
+boston_idx = sample(1:nrow(Boston),nrow(Boston)/2)
+boston_trn = Boston [boston_idx,]
+boston_tst = Boston [-boston_idx,]
+
+boston_bag = randomForest(medv ~ ., data = boston_trn, mtry = 13, 
+                          importance = TRUE, ntrees = 500)
+boston_bag
+```
+
+```{r}
+boston_bag_tst_pred = predict(boston_bag, newdata = boston_tst)
+plot(boston_bag_tst_pred,boston_tst$medv,
+     xlab = "Predicted", ylab = "Actual",
+     main = "Predicted vs Actual: Bagged Model, Test Data",
+     col = "dodgerblue", pch = 20)
+grid()
+abline(0, 1, col = "darkorange", lwd = 2)
+```
+
+```{r}
+(bag_tst_rmse = calc_rmse(boston_bag_tst_pred, boston_tst$medv))
+```
+Interpratation: Two interesting results can be seen. 
+
+- The first interesting result is that the predicted vs actual plot has no longer a small number of predicted valued. 
+- The second interesting result is that the test error has dropped immemsely. 
+Note: the Mean of squared residuals, which is the outbut by the `randomForest`is the Oit of Bag estimate of the error. 
+
+```{r}
+plot(boston_bag, col = "dodgerblue", lwd = 2, main = "Bagged Trees: Error vs Number of Trees")
+grid()
+```
+
+## Random Forest 
+
+Random forests provide an improvement over bagged trees by way of small tweak that decorrelates the trees. Hence, this reduces the variance when averaging the trees. Further, as already seen in bagging, here a number of decision trees are build on bootstrapping training samples. However, when decision trees are build, every time a split in a tree is considered, a random selection of m predictors is chosen as split candidates from the full set of p predictors. The split is allowed to use only one of those m predictors. 
+
+Note: Now a random forest is tried. For regression, the suggestion is to use `mtry` equal to $p/3$. 
+```{r}
+boston_forest = randomForest(medv ~ ., data = boston_trn, mtry = 4, 
+                             importance = TRUE, ntrees = 500)
+boston_forest
+```
+
+```{r}
+importance(boston_forest, type = 1)
+varImpPlot(boston_forest, type = 1)
+```
+
+```{r}
+boston_forest_tst_pred = predict(boston_forest, newdata = boston_tst)
+plot(boston_forest_tst_pred, boston_tst$medv,
+     xlab = "Predicted", ylab = "Actual",
+     main = "Predicted vs Actual: Random Forest, Test Data",
+     col = "dodgerblue", pch = 20)
+grid()
+abline(0, 1, col = "darkorange", lwd = 2)
+```
+
+```{r}
+(forest_tst_rmse = calc_rmse(boston_forest_tst_pred, boston_tst$medv))
+boston_forest_trn_pred = predict(boston_forest, newdata = boston_trn)
+forest_trn_rmse = calc_rmse(boston_forest_trn_pred, boston_trn$medv)
+forest_oob_rmse = calc_rmse(boston_forest$predicted, boston_trn$medv)
+```
+
+Interpretation: Here are three RMSEs noted. The training RMSE, which is optimistic and the OOB RMSE which is a reasonable estimate of the test erro and the test RMSE. Further, the variables importance was calculated. 
+
+
+```{r, echo = FALSE}
+(forst_errors = data.frame(
+  Data = c("Training", "OOB", "Test"),
+  Error = c(forest_trn_rmse, forest_oob_rmse, forest_tst_rmse)
+  )
+)
+```
+
+
+## Boosting 
+
+Similar to bagging, boosting is a general approach which can be applied to many methods in statistical learning for regression or classification. When recalling that bagging involves creating multiple copies of the orginal training data set using the bootstrap, fitting a separate decision tree to each copy, and then combining all of the trees in order to each copy, and then combining all of the trees in order to create a single predictive model. Every tree is built on a bootstrap data set, independent of the other trees. 
+Here, booting runs in a similar way, except that the trees are grown sequentially, meaning that each tree is grown using information from previously grown trees. 
+
+Example 
+
+In this example, it is tried to boost a model, which by default will produce a nice variable importance plot as well as plots of marginal effects of the predictors. The package `gbm` is used. 
+
+```{r}
+library(gbm)
+```
+
+```{r, fig.height = 6, fig.width = 8, message = FALSE, warning = FALSE}
+booston_boost = gbm(medv ~ ., data = boston_trn, distribution = "gaussian", 
+                    n.trees = 5000, interaction.depth = 4, shrinkage = 0.01)
+booston_boost
+```
+```{r, fig.height = 8, fig.width = 8, message = FALSE, warning = FALSE}
+tibble::as_tibble(summary(booston_boost))
+```
+
+```{r, fig.height = 5, fig.width = 12, message = FALSE, warning = FALSE}
+par(mfrow = c(1, 3))
+plot(booston_boost, i = "rm", col = "dodgerblue", lwd = 2)
+plot(booston_boost, i = "lstat", col = "dodgerblue", lwd = 2)
+plot(booston_boost, i = "dis", col = "dodgerblue", lwd = 2)
+```
+
+```{r}
+boston_boost_tst_pred = predict(booston_boost, newdata = boston_tst, n.trees = 5000)
+(boost_tst_rmse = calc_rmse(boston_boost_tst_pred, boston_tst$medv))
+```
+
+```{r}
+plot(boston_boost_tst_pred, boston_tst$medv,
+     xlab = "Predicted", ylab = "Actual", 
+     main = "Predicted vs Actual: Boosted Model, Test Data",
+     col = "dodgerblue", pch = 20)
+grid()
+abline(0, 1, col = "darkorange", lwd = 2)
+```
+ 
+ 
+## Summary 
+
+Decision trees can be used for regression and classification when they are simple and interpretable. However, decision tres are often not competitive with other methods in terms of prediction accuracy. Further, bagging, random forest and boosting are good methods for imporving the prediction accuracy of trees. They work by growing many trees on the training data and then combining the predictions of the resulting ensemble of trees. 
+Random forests and boosting are among the state-of-the-art methods for supervised learning. Howeverm their results can be difficult to predict. 
