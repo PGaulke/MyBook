@@ -23,7 +23,6 @@ require(magrittr)
 require(tidyverse)
 require(ISLR)
 require(gbm)
-require(MASS)
 require(caret)
 require(FNN)
 require(rpart)
@@ -1176,6 +1175,7 @@ Before we start with the above mentioned functions, first things first, under th
 As you already met the piping operator `%>%`  in the chapter about magrittr(HIER REF), we will apply it within this chapter. Especially, when manipulating a data set, piping provides an easier and more efficient approach than base R. Furthermore, you can combine different functions of manipulation in one step.
 
 ```{r}
+require(dplyr)
 starwars
 ```
 
@@ -1183,7 +1183,7 @@ starwars
 First we will start with the operator `select`. 
 
 
-```{r, eval= FALSE}
+```{r}
 # The empty call is (base R)
 # select(df, var1, ..., varn)
 # or with piping...
@@ -1203,7 +1203,7 @@ mtcars %>%
 ```
 Furthermore, you can select in the following ways:
 
-```{r, eval= FALSE}
+```{r}
 #by columns
 
 mtcars %>%

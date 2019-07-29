@@ -383,6 +383,7 @@ Before we start with the above mentioned functions, first things first, under th
 As you already met the piping operator `%>%`  in the chapter about magrittr(HIER REF), we will apply it within this chapter. Especially, when manipulating a data set, piping provides an easier and more efficient approach than base R. Furthermore, you can combine different functions of manipulation in one step.
 
 ```{r}
+require(dplyr)
 starwars
 ```
 
@@ -472,7 +473,7 @@ You find all operators for conditions in the help section: ?Comparison
 
 The function `arrange` enables you to create a new order by considering the value of variable.
 
-```{r}
+```{r, eval= FALSE}
 # The empty call is (base R)
 # arrange(df, var1)
 # or with piping...
